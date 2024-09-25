@@ -187,7 +187,7 @@
       
 
     const [orderProduct, setOrderProduct] = useState({
-      userId:userDetail.data.user._id, 
+      userId:userDetail?.data?.user?._id ,
       items: [],
     });
 
