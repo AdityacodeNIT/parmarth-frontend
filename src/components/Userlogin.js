@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // 1. Import useHistory
+import { useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 
 const Userlogin = () => {
@@ -10,13 +10,15 @@ const Userlogin = () => {
     password: "",
   });
 
-  const navigate = useNavigate(); // intializing use navigate method
+  const navigate = useNavigate();
+
   const handleInputChange = (e) => {
     setLoginData({
       ...loginData,
       [e.target.name]: e.target.value,
     });
   };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -28,27 +30,24 @@ const Userlogin = () => {
         console.error("Unable to login");
       }
       if (response.status >= 200 && response.status < 300) {
-        // Store the access token in a cookie
         document.cookie = `accessToken=${response.data.data.accessToken}; path=/`;
         getUserDetail(response.data);
         navigate("/user");
-        // navigate the user to home page
       }
     } catch (error) {
       console.error("Issue in login", error);
     }
   };
+
   return (
-    <div>
-      <h1 className="w-full text-white text-2xl font-extrabold bg-rose-400 p-2 flex justify-center">
-        Login
-      </h1>
-      <div className="  border-8  border-rose-300 mt-4 bg-pink-100  pb-9 mx-36 ">
-        <p className="w-full text-white text-2xl font-extrabold bg-rose-600 p-2 flex justify-center">
-          Addhyan Login Page
-        </p>
-        <form onSubmit={handleFormSubmit} encType="multipart/form-data">
-          <div className="w-auto mx-36 mt-16 ">
+    <div className="h-screen flex flex-col md:flex-row bg-gradient-to-r from-pink-400 mt-2 to-purple-500">
+      {/* Left section - Login form */}
+      <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-4">
+        <div className="w-full md:w-3/4 p-8 bg-pink-300 shadow-xl rounded-lg border border-white">
+          <h1 className="text-3xl font-extrabold text-blue-600 text-center mb-6">
+            Login
+          </h1>
+          <form onSubmit={handleFormSubmit} encType="multipart/form-data">
             <input
               type="text"
               name="username"
@@ -56,7 +55,7 @@ const Userlogin = () => {
               value={loginData.username}
               onChange={handleInputChange}
               required
-              className=" mt-3 border-2 border-rose-900 w-full p-3 rounded-md"
+              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 focus:outline-none bg-gray-600 focus:border-rose-600"
             />
             <input
               type="password"
@@ -65,17 +64,25 @@ const Userlogin = () => {
               value={loginData.password}
               onChange={handleInputChange}
               required
-              className=" mt-3 border-2 border-rose-900 w-full p-3 rounded-md"
+              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 focus:outline-none bg-gray-600 focus:border-rose-600"
             />
-
             <button
               type="submit"
-              className="m-2 border-2 p-2 ml-auto bg-rose-400 rounded-md align-middle"
+              className="w-full p-3 bg-blue-800 text-white font-bold rounded-md transition duration-200 hover:bg-rose-600"
             >
               Login
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
+      </div>
+
+      {/* Right section - Image */}
+      <div className="hidden md:block md:w-1/2">
+        <img
+          src="/design/login.jpeg" // Update with your image path
+          alt="Login Page Illustration"
+          className="w-full h-screen object-cover"
+        />
       </div>
     </div>
   );

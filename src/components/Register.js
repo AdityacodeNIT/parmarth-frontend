@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
-import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -50,93 +48,88 @@ const Register = () => {
       if (response.status >= 200 && response.status < 300) {
         navigate("/userlogin");
       }
-
-      // Optionally, you can redirect the user to another page after successful registration
     } catch (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.error("Server response error:", error.response.data);
-        console.error("Status code:", error.response.status);
-        console.error("Headers:", error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received from server:", error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error("Error in request setup:", error.message);
-      }
-
-      console.error("Axios config details:", error.config);
-      // You can also set error state here and display a custom error message to the user
+      console.error("Registration error:", error);
     }
   };
 
   return (
-    <div>
-      <h1 className="w-full text-yellow-500 text-2xl font-extrabold bg-slate-600 p-2 flex justify-center">
-        Register
-      </h1>
-      <div className=" w-auto mx-32 mt-3">
-        <form onSubmit={handleFormSubmit} encType="multipart/form-data">
-          <input
-            type="text"
-            name="fullName"
-            placeholder="Enter your full name"
-            value={formData.fullName}
-            onChange={handleInputChange}
-            required
-            className=" mt-3 border-2 border-rose-600 w-full p-3 rounded-md"
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-            className=" mt-3 border-2 border-rose-600 w-full p-3 rounded-md"
-          />
-          <input
-            type="text"
-            name="username"
-            placeholder="Enter your username"
-            value={formData.username}
-            onChange={handleInputChange}
-            required
-            className=" mt-3 border-2 border-rose-600 w-full p-3 rounded-md"
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter your password"
-            value={formData.password}
-            onChange={handleInputChange}
-            required
-            className=" mt-3 border-2 border-rose-600 w-full p-3 rounded-md"
-          />
-          <input
-            type="file"
-            name="avatar"
-            onChange={handleFileChange}
-            required
-            className=" mt-3 border-2 border-rose-600 w-full p-3 rounded-md"
-          />
-          {/* Add input for cover image if needed */}
-          {/* <input type="file" name="coverImage" onChange={handleFileChange} /> */}
-          <button
-            type="submit"
-            className="border-2 bg-rose-600 mt-3 text-white p-2 ml-4"
-          >
+    <div className="h-screen flex flex-col md:flex-row bg-gradient-to-r mt-2 from-blue-800 to-gray-500">
+      {/* Left section - Register form */}
+      <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-4">
+        <div className="w-full md:w-3/4 p-8 bg-purple-400 shadow-xl rounded-lg border border-white-300">
+          <h1 className="text-3xl font-extrabold text-blue-600 text-center mb-6">
             Register
-          </button>
-          <p className="flex">
-            Already a user{" "}
-            <Link to="/userLogin" className="text-blue-400 mx-2">
-              Login
-            </Link>
-          </p>
-        </form>
+          </h1>
+          <form onSubmit={handleFormSubmit} encType="multipart/form-data">
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Enter your full name"
+              value={formData.fullName}
+              onChange={handleInputChange}
+              required
+              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 bg-gray-600 focus:outline-none focus:border-blue-600"
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 bg-gray-600 focus:outline-none focus:border-blue-600"
+            />
+            <input
+              type="text"
+              name="username"
+              placeholder="Enter your username"
+              value={formData.username}
+              onChange={handleInputChange}
+              required
+              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 bg-gray-600  focus:outline-none focus:border-blue-600"
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 bg-gray-600 focus:outline-none focus:border-blue-600"
+            />
+            <input
+              type="file"
+              name="avatar"
+              onChange={handleFileChange}
+              required
+              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 bg-gray-600  focus:outline-none focus:border-blue-600"
+            />
+            {/* Add input for cover image if needed */}
+            {/* <input type="file" name="coverImage" onChange={handleFileChange} /> */}
+            <button
+              type="submit"
+              className="w-full p-3 bg-blue-600 text-white font-bold rounded-md transition duration-200 hover:bg-rose-700"
+            >
+              Register
+            </button>
+            <p className="mt-4 text-center">
+              Already a user?{" "}
+              <Link to="/userLogin" className="text-blue-400">
+                Login
+              </Link>
+            </p>
+          </form>
+        </div>
+      </div>
+
+      {/* Right section - Image */}
+      <div className="hidden md:block md:w-1/2">
+        <img
+          src="/design/register.jpeg" // Update with your image path
+          alt="Register Page Illustration"
+          className="w-full h-screen object-cover"
+        />
       </div>
     </div>
   );

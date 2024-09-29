@@ -6,8 +6,8 @@ import Categories from "../Categories";
 
 const Reusable = () => {
   const { childToParent } = useContext(UserContext);
-
   const [products, setProducts] = useState([]);
+
   const getProductDetail = async () => {
     try {
       const response = await axios.get(
@@ -16,10 +16,8 @@ const Reusable = () => {
       if (response) {
         setProducts(response.data);
       }
-      // Optionally, you can redirect the user to another page after successful registration
     } catch (error) {
-      console.error("Failed to register", error);
-      // Handle error here - display error message to the user or perform other actions
+      console.error("Failed to fetch products", error);
     }
   };
 
@@ -28,27 +26,33 @@ const Reusable = () => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-white">
       <Categories />
 
-      <div className="productlist1 bg-green-800 mx-10 text-white">
-        <ul>
+      <div className="productlist1 mx-10">
+        <ul className="flex flex-wrap justify-center">
           {products.map((product) => (
-            <li key={product.id}>
+            <li key={product.id} className="m-4">
               <div
-                className="border-10 border-indigo-600 bg-blue-100 px-4 py-4 w-60 m-4 h-96 object-contain  mx-3 shadow-2xx shadow-slate-400"
+                className="relative bg-green-300 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 hover:scale-105 w-60 h-96"
                 onClick={() => childToParent(product)}
               >
-                <Link to={"/About"} style={{ textDecoration: "none" }}>
-                  <img
-                    src={product.ProductImage}
-                    alt={product.name}
-                    className="product-img"
-                  />
-
-                  <div>Name: {product.name}</div>
-                  <div>Price: ₹{product.price}</div>
-                  {/* <div>Description: {product.description}</div> */}
+                <Link to="/About" style={{ textDecoration: "none" }}>
+                  <div className="overflow-hidden h-72 rounded-t-lg">
+                    <img
+                      src={product.ProductImage}
+                      alt={product.name}
+                      className="w-full h-full object-contain transition-transform duration-500 ease-in-out"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="text-gray-800 font-bold text-lg text-center truncate">
+                      {product.name}
+                    </h3>
+                    <p className="text-gray-700 font-semibold text-center mt-2">
+                      Price: ₹{product.price}
+                    </p>
+                  </div>
                 </Link>
               </div>
             </li>
