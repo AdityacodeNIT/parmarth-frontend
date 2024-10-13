@@ -11,6 +11,7 @@ const Cart = () => {
     removingElements,
     totalCartPrice,
     cartDesccription,
+    childToParent,
   } = useContext(UserContext);
 
   return (
@@ -34,24 +35,31 @@ const Cart = () => {
                   <div
                     className="flex items-center justify-between p-5 bg-white border-b-2 border-gray-300 shadow-sm rounded-lg mb-4"
                     key={item.id}
+                    onClick={() => {
+                      childToParent(item);
+                    }}
                   >
-                    <div className="flex items-center">
-                      <li>
-                        <img
-                          src={item.imgLink || item.ProductImage}
-                          alt={item.name}
-                          className="w-24 h-24 object-cover rounded-lg"
-                        />
-                      </li>
-                      <div className="ml-4 text-center">
-                        <div className="font-semibold text-indigo-700 text-2xl">
-                          {item.name}
-                        </div>
-                        <div className="text-xl text-gray-700 mt-2">
-                          Price: ₹{item.price}
+                    <Link to="/About">
+                      <div className="flex items-center">
+                        <li>
+                          <img
+                            src={item.imgLink || item.ProductImage}
+                            alt={item.name}
+                            className="w-24 h-24 object-cover rounded-lg"
+                          />
+                        </li>
+
+                        <div className="ml-4 text-center">
+                          <div className="font-semibold text-indigo-700 text-2xl">
+                            {item.name}
+                          </div>
+                          <div className="text-xl text-gray-700 mt-2">
+                            Price: ₹{item.price}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
+
                     <div className="flex items-center">
                       <button
                         className="mx-2 border-2 p-2 border-slate-900 rounded-lg font-bold text-xl"

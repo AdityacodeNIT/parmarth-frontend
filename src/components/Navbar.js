@@ -4,6 +4,7 @@ import UserContext from "../context/UserContext";
 import { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import SearchBar from "./SearchBar";
 
 const Navbar = () => {
   const { userDetail } = useContext(UserContext);
@@ -23,6 +24,10 @@ const Navbar = () => {
               <Link to="/Aboutus">About Us</Link>{" "}
             </li>
           </ul>
+        </div>
+
+        <div>
+          <SearchBar />
         </div>
         <div className="flex">
           <button className="text-white mr-8 lg:text-xl text-md  p-1 px-3 rounded-2xl  bg-pink-700">

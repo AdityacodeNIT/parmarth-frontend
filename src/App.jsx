@@ -22,7 +22,8 @@ import Myorder from "./components/Myorder.js";
 import Helpdesk from "./components/Helpdesk.js";
 import BulkAddProduct from "./components/BulkAddProduct.js";
 import UserUpdateDetails from "./components/UserUpdateDetails.js";
-import Reminder from "./components/Reminder.js"
+import Reminder from "./components/Reminder.js";
+import Wishlisted from "./components/Wishllisted.js";
 
 function App() {
 
@@ -55,6 +56,8 @@ function App() {
           <Route path="/Writing" element={<Writing />} />
           <Route path="/BuyProduct" element={<BuyProduct />} />
           <Route path="/addressUpdate" element={<UserAddress />} />
+          <Route path="/user/wishlist" element={<Wishlisted/>} />
+
           <Route path="/payments" element={<Payment />} />
           <Route path="/myOrder" element={<Myorder />} />
           <Route path="/helpdesk" element={<Helpdesk/>} />

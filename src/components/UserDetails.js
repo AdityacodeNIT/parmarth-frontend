@@ -36,7 +36,10 @@ const UserDetails = () => {
               {" "}
               <div className="text-white text-md">My Orders</div>
             </Link>
-            <div className="text-white text-md">Favourites</div>
+
+            <Link to="Wishlist">
+              <div className="text-white text-md">WishList</div>
+            </Link>
             <Link to="/helpdesk">
               <div className="text-white text-md">Helpdesk</div>
             </Link>

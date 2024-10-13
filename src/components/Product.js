@@ -50,23 +50,27 @@ const Product = () => {
   return (
     <div key={data._id}>
       <div className="w-full text-yellow-500 text-2xl font-extrabold bg-slate-600 p-2 flex justify-center">
-        {data.name}
+        {data.name || data.productId.name}
       </div>
       <div className="p-5 w-full m-2 flex justify-around">
         <div className="list-none w-auto">
           <li>
             <img
-              src={data.imgLink || data.ProductImage}
+              src={
+                data.imgLink || data.ProductImage || data.productId.ProductImage}
               alt={data.name}
               className="shadow-2xl bg-slate-100 font-bold w-96 h-96"
             />
           </li>
         </div>
         <div className="grid">
-          <div className="font-extrabold text-4xl"> {data.name}</div>
+          <div className="font-extrabold text-4xl">
+            {" "}
+            {data.name || data.productId.name}
+          </div>
           <button
-            className="text-3xl text-white font-semibold rounded-md"
-            onClick={() => addToFavourite(data, data._id)}
+            className="text-1xl text-black font-semibold rounded-md"
+            onClick={() => addToFavourite(data._id)}
           >
             Favourites
           </button>
@@ -90,7 +94,9 @@ const Product = () => {
             </div>
           </div>
 
-          <div className="text-2xl font-semibold">Price: ₹{data.price}</div>
+          <div className="text-2xl font-semibold">
+            Price: ₹{data.price || data.productId.price}
+          </div>
 
           <button
             className="text-3xl border-2 text-white font-semibold border-slate-600 bg-blue-600 px-40 py-2 rounded-md"
@@ -120,7 +126,7 @@ const Product = () => {
             Description:
           </h2>
           <p className="text-lg text-gray-700 leading-relaxed font-semibold">
-            {data.description}
+            {data.description || data.productId.description}
           </p>
         </div>
 
