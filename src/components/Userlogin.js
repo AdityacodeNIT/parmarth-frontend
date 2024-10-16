@@ -23,7 +23,7 @@ const Userlogin = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/login",
+        `${process.env.REACT_APP_API_URL}/api/v1/users/login`,
         loginData
       );
       if (!response) {
@@ -32,6 +32,7 @@ const Userlogin = () => {
       if (response.status >= 200 && response.status < 300) {
         document.cookie = `accessToken=${response.data.data.accessToken}; path=/`;
         getUserDetail(response.data);
+
         navigate("/user");
       }
     } catch (error) {

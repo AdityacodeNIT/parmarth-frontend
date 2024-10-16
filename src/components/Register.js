@@ -42,7 +42,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/register",
+        `${process.env.REACT_APP_API_URL}/api/v1/users/register`,
         formDataToSend
       );
       if (response.status >= 200 && response.status < 300) {

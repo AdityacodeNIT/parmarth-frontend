@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import UserContext from "./UserContext";
 import axios from "axios";
 
+
+
 const UserContextProvider = ({ children }) => {
   // State to manage the selected product details
   const [data, setData] = useState(JSON.parse(localStorage.getItem("product")) || null);
@@ -169,6 +171,7 @@ const UserContextProvider = ({ children }) => {
   }, [orderSuccess]);
 
   // State to manage user details
+  
   const [userDetail, setUserDetail] = useState(JSON.parse(localStorage.getItem("details")) || null);
   const getUserDetail = async (details) => {
     if (details) {
@@ -227,7 +230,7 @@ const UserContextProvider = ({ children }) => {
   const getMyOrder = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/v2/order/orders/${userDetail.data.user._id}`
+        `${process.env.REACT_APP_API_URL}/api/v2/order/orders/${userDetail.data.user._id}`
       );
       if (response.data) {
         setMyOrder(response.data);
@@ -255,7 +258,7 @@ const UserContextProvider = ({ children }) => {
   const handleFormSubmit = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v2/order/getOrders",
+        `${process.env.REACT_APP_API_URL}/api/v2/order/getOrders`,
         orderProduct
       );
       if (!response) {
@@ -300,7 +303,7 @@ const UserContextProvider = ({ children }) => {
       setWishlist(updatedWishlist);  // Update state first
     
       try {
-        const response = await axios.post('http://localhost:8000/api/v2/wishlist/addWishlist', updatedWishlist);
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/v2/wishlist/addWishlist`, updatedWishlist);
         if (response.data) {
           localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
         }
@@ -315,7 +318,7 @@ const UserContextProvider = ({ children }) => {
     const fetchFavourites = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v2/wishlist/Wishlists/${userDetail.data.user._id}`
+          `${process.env.REACT_APP_API_URL}/api/v2/wishlist/Wishlists/${userDetail.data.user._id}`
         );
         if (response.data ) {
           setMyWishlist(response.data); // Make sure `response.data.items` is an array
@@ -361,7 +364,7 @@ const UserContextProvider = ({ children }) => {
   // Fetching average reviews for a product
   useEffect(() => {
     axios
-      .post("http://localhost:8000/api/v2/feedback/average", productReview)
+      .post(`${process.env.REACT_APP_API_URL}/api/v2/feedback/average`, productReview)
       .then((response) => {
         setTotalProductReview(response.data);
       })
@@ -373,7 +376,7 @@ const UserContextProvider = ({ children }) => {
   // Fetching total ratings of a product
   useEffect(() => {
     axios
-      .post("http://localhost:8000/api/v2/feedback/setAverage", ratings)
+      .post(`${process.env.REACT_APP_API_URL}/api/v2/feedback/setAverage`, ratings)
       .then((response) => {
         setTotalRatings(response.data);
       })
@@ -448,6 +451,7 @@ const UserContextProvider = ({ children }) => {
         myWishlist,
        handleSearch,
        searchResult
+     
     }}
     >
       {children}

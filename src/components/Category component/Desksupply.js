@@ -11,7 +11,7 @@ const Desksupply = () => {
   const getProductDetail = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8000/api/v1/product/DeskSupplies"
+        `${process.env.REACT_APP_API_URL}/api/v1/product/DeskSupplies`
       );
       if (response) {
         setProducts(response.data);
@@ -27,8 +27,7 @@ const Desksupply = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-300">
-      {/* Hero Banner */}
-      <section className="relative bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 py-20">
+      <section className="relative bg-gradient-to-r from orange-500 via-red-500 to-yellow-500 py-20">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl font-extrabold text-white mb-4">
             Discover Top-Quality Desk Supplies
@@ -42,13 +41,8 @@ const Desksupply = () => {
         </div>
       </section>
 
-      {/* Product Categories */}
       <Categories />
-      {/* <div
-        className="bg-cover bg-center m-h-screen w-auto"
-        style={{ backgroundImage: 'url("/design/ab.jpg")' }}
-      > */}
-      {/* Product Grid */}
+
       <div className="container mx-auto px-4 py-8">
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {products.map((product) => (
@@ -82,7 +76,6 @@ const Desksupply = () => {
         </div>
       </div>
     </div>
-    // </div>
   );
 };
 
