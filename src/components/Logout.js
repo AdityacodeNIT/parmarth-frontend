@@ -4,7 +4,7 @@ import UserContext from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
-  const { getUserDetail, handleLogout } = useContext(UserContext);
+  const { getUserDetail } = useContext(UserContext);
   const navigate = useNavigate();
 
   const logoutUser = async (e) => {
