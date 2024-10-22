@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import UserContext from "./UserContext";
 import axios from "axios";
 
-
-
 const UserContextProvider = ({ children }) => {
   // State to manage the selected product details
-  const [data, setData] = useState(JSON.parse(localStorage.getItem("product")) || null);
+  const [data, setData] = useState(
+    JSON.parse(localStorage.getItem("product")) || null
+  );
 
   // State to manage detailed information of a product
   const [productDetails, setProductDetails] = useState();
@@ -33,14 +33,10 @@ const UserContextProvider = ({ children }) => {
     setData(product);
   };
 
-
- 
-
   useEffect(() => {
     localStorage.setItem("product", JSON.stringify(data));
   }, [data]);
 
-  
   const [quantity, setQuantity] = useState(1);
 
   // State to manage items in the cart
@@ -55,7 +51,9 @@ const UserContextProvider = ({ children }) => {
 
   // Cart Management: Adding, removing, and updating cart items
   const addToCart = (product, productId) => {
-    let existingProduct = cartItems.find((item) => item._id.toString() === productId);
+    let existingProduct = cartItems.find(
+      (item) => item._id.toString() === productId
+    );
 
     if (existingProduct) {
       // If product already exists in cart, increment its quantity
@@ -83,13 +81,18 @@ const UserContextProvider = ({ children }) => {
 
   // Remove a specific item from the cart
   const removeFromCart = (productId) => {
-    const updatedCartItems = cartItems.filter(item => item._id.toString() !== productId);
+    const updatedCartItems = cartItems.filter(
+      (item) => item._id.toString() !== productId
+    );
     setCartItems(updatedCartItems);
   };
 
   // Calculate the total price of all items in the cart
   const totalCartPrice = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
   };
 
   // Generate a description of items in the cart
@@ -105,7 +108,9 @@ const UserContextProvider = ({ children }) => {
   };
 
   // Product Management: Handling products marked for buying with localStorage persistence
-  const [buyProduct, setBuyProduct] = useState(JSON.parse(localStorage.getItem("buyProduct")) || []);
+  const [buyProduct, setBuyProduct] = useState(
+    JSON.parse(localStorage.getItem("buyProduct")) || []
+  );
 
   useEffect(() => {
     localStorage.setItem("buyProduct", JSON.stringify(buyProduct));
@@ -113,7 +118,9 @@ const UserContextProvider = ({ children }) => {
 
   // Buying a product and adding it to the buyProduct state
   const buyingProduct = (bought, boughtId) => {
-    let existingitem = buyProduct.find((item) => item._id.toString() === boughtId);
+    let existingitem = buyProduct.find(
+      (item) => item._id.toString() === boughtId
+    );
     if (existingitem) {
       const updateProduct = buyProduct.map((item) =>
         boughtId === item._id.toString()
@@ -134,12 +141,15 @@ const UserContextProvider = ({ children }) => {
 
   // Calculate the total price of all bought items
   const totalProductPrice = () => {
-    return buyProduct.reduce((total, item) => total + item.quantity * item.price, 0);
+    return buyProduct.reduce(
+      (total, item) => total + item.quantity * item.price,
+      0
+    );
   };
 
   // Generate product price list for all bought items
   const totalPrice = (buyProduct) => {
-    return buyProduct.map(product => product.quantity * product.price);
+    return buyProduct.map((product) => product.quantity * product.price);
   };
 
   // Generate product descriptions for bought items
@@ -170,8 +180,10 @@ const UserContextProvider = ({ children }) => {
   }, [orderSuccess]);
 
   // State to manage user details
-  
-  const [userDetail, setUserDetail] = useState(JSON.parse(localStorage.getItem("details")) || null);
+
+  const [userDetail, setUserDetail] = useState(
+    JSON.parse(localStorage.getItem("details")) || null
+  );
   const getUserDetail = async (details) => {
     if (details) {
       setUserDetail(details);
@@ -229,7 +241,9 @@ const UserContextProvider = ({ children }) => {
   const getMyOrder = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v2/order/orders/${userDetail.data.user._id}`
+        `${import.meta.env.VITE_API_URL}/api/v2/order/orders/${
+          userDetail.data.user._id
+        }`
       );
       if (response.data) {
         setMyOrder(response.data);
@@ -244,8 +258,7 @@ const UserContextProvider = ({ children }) => {
     if (userDetail?.data?.user?._id) {
       getMyOrder();
     }
-  }, [userDetail,getMyOrder]);
-
+  }, [userDetail, getMyOrder]);
 
   // Handling successful order submission
   const orderSuccessful = async (order) => {
@@ -269,12 +282,9 @@ const UserContextProvider = ({ children }) => {
   };
 
   const [wishlist, setWishlist] = useState(() => ({
-    userId: userDetail?.data?.user?._id, 
-    items: [] 
+    userId: userDetail?.data?.user?._id,
+    items: [],
   }));
-  
-  
-
 
   // const addToFavourite = async (itemId) => {
   //   // const updatedWishlist = {
@@ -290,126 +300,141 @@ const UserContextProvider = ({ children }) => {
   //     },
   //   }));
 
-
-    const addToFavourite = async (itemId) => {
-   
-
-      const updatedWishlist = {
-        ...wishlist,
-        items: [...wishlist.items, { productId: itemId, quantity: 1 }],
-      };
-      
-      setWishlist(updatedWishlist);  // Update state first
-    
-      try {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/v2/wishlist/addWishlist`, updatedWishlist);
-        if (response.data) {
-          localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
-        }
-      } catch (error) {
-        console.error('Error adding to wishlist:', error);
-      }
+  const addToFavourite = async (itemId) => {
+    const updatedWishlist = {
+      ...wishlist,
+      items: [...wishlist.items, { productId: itemId, quantity: 1 }],
     };
-    
+
+    setWishlist(updatedWishlist); // Update state first
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/v2/wishlist/addWishlist`,
+        updatedWishlist
+      );
+      if (response.data) {
+        localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+      }
+    } catch (error) {
+      console.error("Error adding to wishlist:", error);
+    }
+  };
 
   const [myWishlist, setMyWishlist] = useState([]);
 
-    const fetchFavourites = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v2/wishlist/Wishlists/${userDetail.data.user._id}`
-        );
-        if (response.data ) {
-          setMyWishlist(response.data); // Make sure `response.data.items` is an array
-        } 
-      } catch (error) {
-        console.error("Error fetching favourites:", error);
-        setWishlist({ userId: userDetail?.data?.user?._id, items: [] }); // Set default empty array on error
+  const fetchFavourites = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/v2/wishlist/Wishlists/${
+          userDetail.data.user._id
+        }`
+      );
+      if (response.data) {
+        setMyWishlist(response.data); // Make sure `response.data.items` is an array
       }
-    };
-    
-  
+    } catch (error) {
+      console.error("Error fetching favourites:", error);
+      setWishlist({ userId: userDetail?.data?.user?._id, items: [] }); // Set default empty array on error
+    }
+  };
 
-    useEffect(() => {
-      if (userDetail?.data?.user?._id) {
-        fetchFavourites(); // Fetch only when user ID is available
+  useEffect(() => {
+    if (userDetail?.data?.user?._id) {
+      fetchFavourites(); // Fetch only when user ID is available
+    }
+  }, [wishlist]); // Include user ID in the dependency array
+
+  const [review, setReview] = useState({ rating: 0, description: "" });
+  const [productReview, setProductReview] = useState({});
+  const [productId, setProductId] = useState(data?._id);
+  const [totalRatings, setTotalRatings] = useState([]);
+  const [averageRatings, setAverageRatings] = useState([]);
+
+  const handleFormClick = (e) => {
+    setProductReview({ ...review, productId });
+    setReview({ rating: 0, description: "" });
+  };
+
+  useEffect(() => {
+    if (productReview.rating && productReview.description) {
+      axios
+        .post(
+          `${import.meta.env.VITE_API_URL}/api/v2/feedback/review`,
+          productReview
+        )
+        .then((response) => {
+          console.log("Review posted successfully:", response.data);
+        })
+        .catch((error) => {
+          console.error("There was an error posting the review!", error);
+        });
+    }
+  }, [productReview]);
+
+  useEffect(
+    () => {
+      if (productId) {
+        axios
+          .post(`${import.meta.env.VITE_API_URL}/api/v2/feedback/average`, {
+            productId,
+          })
+          .then((response) => {
+            console.log("Average ratings fetched successfully:", response.data);
+            setAverageRatings(response.data.averageRating);
+            setTotalRatings(response.data.count);
+            console.log("the value is" + response.data.averageRating); // Uncomment if you have a state for total ratings
+          })
+          .catch((error) => {
+            console.error(
+              "There was an error fetching the average ratings!",
+              error
+            );
+          });
       }
-    }, [wishlist]); // Include user ID in the dependency array
-
-
-
-  // Review Management: Handling product reviews and ratings
-  const [totalProductReview, setTotalProductReview] = useState(0
+    },
+    [productReview],
+    []
   );
 
-  // State to manage individual product reviews
-  const [productReview, setProductReview] = useState({
-    productId: data?._id,
-  });
-
-  // State to manage total ratings
-  const [totalRatings, setTotalRatings] = useState(0);
-
-  // State to manage product ratings (e.g., rating a product after purchase)
-  const [ratings, setRatings] = useState({
-    productId: data?._id,
-  });
-
-
-
-  // State to manage average rating of a product
-  const [averagereview, setAverageReview] = useState(0);
-
-  // Fetching average reviews for a product
   useEffect(() => {
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/api/v2/feedback/average`, productReview)
-      .then((response) => {
-        setTotalProductReview(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  }, [productReview, totalRatings]);
-
-  // Fetching total ratings of a product
-  useEffect(() => {
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/api/v2/feedback/setAverage`, ratings)
-      .then((response) => {
-        setTotalRatings(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  }, [productReview, totalRatings, ratings]);
+    if (productId) {
+      axios
+        .post(`${import.meta.env.VITE_API_URL}/api/v2/feedback/average`, {
+          productId,
+        })
+        .then((response) => {
+          console.log("Average ratings fetched successfully:", response.data);
+          setAverageRatings(response.data.averageRating);
+          console.log("the value is" + response.data.averageRating); // Uncomment if you have a state for total ratings
+        })
+        .catch((error) => {
+          console.error(
+            "There was an error fetching the average ratings!",
+            error
+          );
+        });
+    }
+  }, []);
 
   // Calculating average rating for the product
-  useEffect(() => {
-    if (totalRatings > 0) {
-      setAverageReview(Math.floor(totalRatings / totalProductReview));
+
+  const [searchResult, setSearchResult] = useState([]);
+
+  const handleSearch = (query) => {
+    if (!query) {
+      setSearchResult([]); // Clear results if query is empty
+      return;
     }
-    if (totalRatings === 0) {
-      setAverageReview(0);
-    }
-  }, [totalRatings]);
 
+    // Implement your search logic
+    const results = data.filter((data) =>
+      data.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setSearchResult(results);
+  };
 
-
-  const [searchResult,setSearchResult]=useState([]);
-
-  const handleSearch=(query)=>{
-      if (!query) {
-        setSearchResult([]); // Clear results if query is empty
-        return;
-      }
-  
-      // Implement your search logic
-      const results = data.filter(data => data.name.toLowerCase().includes(query.toLowerCase()));
-      setSearchResult(results);
-  }
-
-  // User Activity 
+  // User Activity
 
   return (
     <UserContext.Provider
@@ -442,18 +467,23 @@ const UserContextProvider = ({ children }) => {
         orderSuccessful,
         setOrderSuccess,
         myOrder,
-        averagereview,
-        productReview,
-        totalProductReview,
         handleAddToCart,
         notification,
         addToFavourite,
         wishlist,
         myWishlist,
-       handleSearch,
-       searchResult
-     
-    }}
+        handleSearch,
+        searchResult,
+        review,
+        setReview,
+        productReview,
+        setProductReview,
+        productId,
+        setProductId,
+        handleFormClick,
+        totalRatings,
+        averageRatings,
+      }}
     >
       {children}
     </UserContext.Provider>
