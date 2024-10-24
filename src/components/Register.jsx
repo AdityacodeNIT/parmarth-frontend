@@ -126,7 +126,7 @@ const Register = () => {
       {/* Right section - Image */}
       <div className="hidden md:block md:w-1/2">
         <img
-          src="/src/assets/design/register.jpeg" // Update with your image path
+          src="/assets/design/register.jpeg" // Update with your image path
           alt="Register Page Illustration"
           className="w-full h-screen object-cover"
         />

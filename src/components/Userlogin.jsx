@@ -80,7 +80,7 @@ const Userlogin = () => {
       {/* Right section - Image */}
       <div className="hidden md:block md:w-1/2">
         <img
-          src="/src/assets/design/login.jpeg" // Update with your image path
+          src="/assets/design/login.jpeg" 
           alt="Login Page Illustration"
           className="w-full h-screen object-cover"
         />

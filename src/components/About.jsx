@@ -1,7 +1,6 @@
 import React from "react";
-import myImage from "/src/assets/myImage.jpg";
 
-const About  = () => {
+const About = () => {
   return (
     <div className="about-us-section justify-center text-center p-8 bg-gradient-to-r from-blue-50 via-rose-50 to-blue-50 rounded-lg shadow-lg">
       <h1 className="text-4xl font-bold text-center mb-8 text-blue-800">
@@ -27,7 +26,7 @@ const About  = () => {
       <div className="team-grid grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
         <div className="team-member text-center">
           <img
-            src={myImage}
+            src="/assets/myImage.jpg" // Direct reference to the public folder
             alt="Team Member"
             className="rounded-full mx-auto mb-4 w-32 h-32 object-cover border-4 border-blue-800"
           />
