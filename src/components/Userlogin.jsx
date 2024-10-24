@@ -24,8 +24,14 @@ const Userlogin = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/users/login`,
-        loginData
+        loginData,
+
+        {
+          withCredentials: true,
+          credentials: "include",
+        }
       );
+
       if (!response) {
         console.error("Unable to login");
       }
@@ -80,7 +86,7 @@ const Userlogin = () => {
       {/* Right section - Image */}
       <div className="hidden md:block md:w-1/2">
         <img
-          src="/assets/design/login.jpeg" 
+          src="/assets/design/login.jpeg"
           alt="Login Page Illustration"
           className="w-full h-screen object-cover"
         />

@@ -23,7 +23,6 @@ const Logout = () => {
       }
 
       if (response) {
-        // On success, call the logout handler and navigate to home
         navigate("/");
         getUserDetail(response.data); // Clear user detail
         // Redirect to home page
