@@ -372,32 +372,12 @@ const UserContextProvider = ({ children }) => {
     }
   }, [productReview]);
 
-  useEffect(
-    () => {
-      if (productId) {
-        axios
-          .post(`${import.meta.env.VITE_API_URL}/api/v2/feedback/average`, {
-            productId,
-          })
-          .then((response) => {
-            console.log("Average ratings fetched successfully:", response.data);
-            setAverageRatings(response.data.averageRating);
-            setTotalRatings(response.data.count);
-            console.log("the value is" + response.data.averageRating); // Uncomment if you have a state for total ratings
-          })
-          .catch((error) => {
-            console.error(
-              "There was an error fetching the average ratings!",
-              error
-            );
-          });
-      }
-    },
-    [productReview],
-    []
-  );
-
   useEffect(() => {
+    // Clear state when component mounts
+    setAverageRatings(0);
+    setTotalRatings(0);
+
+    // Fetch new reviews
     if (productId) {
       axios
         .post(`${import.meta.env.VITE_API_URL}/api/v2/feedback/average`, {
@@ -406,7 +386,7 @@ const UserContextProvider = ({ children }) => {
         .then((response) => {
           console.log("Average ratings fetched successfully:", response.data);
           setAverageRatings(response.data.averageRating);
-          console.log("the value is" + response.data.averageRating); // Uncomment if you have a state for total ratings
+          setTotalRatings(response.data.count);
         })
         .catch((error) => {
           console.error(
@@ -415,23 +395,37 @@ const UserContextProvider = ({ children }) => {
           );
         });
     }
-  }, []);
+  }, [productId, productReview]);
+
+  // useEffect(() => {
+  //   if (productId) {
+  //     axios
+  //       .post(`${import.meta.env.VITE_API_URL}/api/v2/feedback/average`, {
+  //         productId,
+  //       })
+  //       .then((response) => {
+  //         console.log("Average ratings fetched successfully:", response.data);
+  //         setAverageRatings(response.data.averageRating);
+  //         console.log("the value is" + response.data.averageRating); // Uncomment if you have a state for total ratings
+  //       })
+  //       .catch((error) => {
+  //         console.error(
+  //           "There was an error fetching the average ratings!",
+  //           error
+  //         );
+  //       });
+  //   }
+  // }, []);
 
   // Calculating average rating for the product
 
   const [searchResult, setSearchResult] = useState([]);
 
   const handleSearch = (query) => {
-    if (!query) {
-      setSearchResult([]); // Clear results if query is empty
-      return;
-    }
+    setSearchResult(query.result);
+    console.log(query.result);
 
     // Implement your search logic
-    const results = data.filter((data) =>
-      data.name.toLowerCase().includes(query.toLowerCase())
-    );
-    setSearchResult(results);
   };
 
   // User Activity
