@@ -13,19 +13,13 @@ const Logout = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/users/logout`,
         {},
-        {
-          withCredentials: true,
-          credentials: "include",
-        }
+        { withCredentials: true }
       );
-      if (!response) {
-        console.error("User logged out");
-      }
 
-      if (response) {
-        navigate("/");
-        getUserDetail(response.data); // Clear user detail
-        // Redirect to home page
+      if (response.status === 200) {
+        getUserDetail(null); // Clear user detail
+        console.log("User logged out successfully");
+        navigate("/"); // Redirect to home page
       } else {
         console.error("Unexpected response status:", response.status);
       }
