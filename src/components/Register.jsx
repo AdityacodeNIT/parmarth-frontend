@@ -42,11 +42,11 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/v1/users/register`,
+        `${import.meta.env.VITE_API_URL}/api/v1/users/register`,
         formDataToSend
       );
       if (response.status >= 200 && response.status < 300) {
-        navigate("/userlogin");
+        navigate("/userLogin");
       }
     } catch (error) {
       console.error("Registration error:", error);

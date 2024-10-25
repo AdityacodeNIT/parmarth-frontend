@@ -17,7 +17,7 @@ const Logout = () => {
       );
 
       if (response.status === 200) {
-        getUserDetail(null); // Clear user detail
+        getUserDetail(response.data); // Clear user detail
         console.log("User logged out successfully");
         navigate("/"); // Redirect to home page
       } else {
