@@ -187,10 +187,12 @@ const UserContextProvider = ({ children }) => {
   const getUserDetail = async (details) => {
     if (details) {
       setUserDetail(details);
+      console.log(details);
     } else {
       console.error("Invalid details passed to getUserDetail");
     }
   };
+
   useEffect(() => {
     localStorage.setItem("details", JSON.stringify(userDetail));
   }, [userDetail]);
