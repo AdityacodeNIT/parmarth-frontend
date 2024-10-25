@@ -43,7 +43,9 @@ const Register = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/users/register`,
-        formDataToSend
+        formDataToSend,
+
+        { withCredentials: true }
       );
       if (response.status >= 200 && response.status < 300) {
         navigate("/userLogin");

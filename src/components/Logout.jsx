@@ -13,7 +13,7 @@ const Logout = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/users/logout`,
         {},
-        { withCredentials: true }
+        { withCredentials: true, credentials: "include" }
       );
 
       if (response.status === 200) {
