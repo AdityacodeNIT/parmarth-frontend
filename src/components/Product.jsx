@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useContext, useEffect } from "react";
+import { CiHeart } from "react-icons/ci";
 import UserContext from "../context/UserContext";
 
 const Product = () => {
@@ -54,10 +55,11 @@ const Product = () => {
           </div>
 
           <button
-            className="text-1xl text-black font-semibold rounded-md"
+            className="text-xl text-black font-semibold rounded-md flex items-center space-x-2"
             onClick={() => addToFavourite(data._id)}
           >
-            Favourites
+            <span>Add to Favourites</span>
+            <CiHeart className="text-3xl text-purple-500" />
           </button>
 
           <div className="text-3xl inline-flex">
