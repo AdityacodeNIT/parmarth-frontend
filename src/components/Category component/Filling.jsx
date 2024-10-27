@@ -42,13 +42,8 @@ const Filling = () => {
         </div>
       </section>
 
-      {/* Product Categories */}
       <Categories />
-      {/* <div
-        className="bg-cover bg-center m-h-screen w-auto"
-        style={{ backgroundImage: 'url("/design/ab.jpg")' }}
-      > */}
-      {/* Product Grid */}
+
       <div className="container mx-auto px-4 py-8">
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {products.map((product) => (
@@ -69,9 +64,6 @@ const Filling = () => {
                   <h3 className="text-gray-900 font-semibold text-lg md:text-xl text-center truncate">
                     {product.name}
                   </h3>
-                  <p className="text-gray-700 text-center mt-2 text-sm">
-                    {product.description || "No description available."}
-                  </p>
                   <p className="text-yellow-600 font-bold text-xl text-center mt-3">
                     ₹{product.price}
                   </p>
@@ -82,7 +74,6 @@ const Filling = () => {
         </div>
       </div>
     </div>
-    // </div>
   );
 };
 

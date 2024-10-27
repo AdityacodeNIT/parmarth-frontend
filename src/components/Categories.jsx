@@ -19,7 +19,7 @@ const Categories = () => {
           <Link to="/Filling">Filling and Storage</Link>
         </div>
         <div className="p-2 hover:border-2 hover:bg-red-200">
-          <Link to="/Electronics">Reusable</Link>
+          <Link to="/Reusable">Reusable</Link>
         </div>
       </nav>
     </div>

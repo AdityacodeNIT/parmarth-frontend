@@ -70,9 +70,7 @@ const Paperproducts = () => {
                   <h3 className="text-gray-900 font-semibold text-lg md:text-xl text-center truncate">
                     {product.name}
                   </h3>
-                  <p className="text-gray-700 text-center mt-2 text-sm">
-                    {product.description || "No description available."}
-                  </p>
+
                   <p className="text-teal-600 font-bold text-xl text-center mt-3">
                     ₹{product.price}
                   </p>

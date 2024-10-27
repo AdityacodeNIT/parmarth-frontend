@@ -12,7 +12,7 @@ const Navbar = () => {
     <nav className="navbar w-full  text-white bg-gradient-to-r  from-slate-800 to-blue-600 h-20 mr-8">
       <div className="flex  w-full items-center justify-between ">
         <div className="text-pink-700 lg:text-3xl text-xl mb-2  font-bold shadow-lg ml-4">
-          ई-Cart
+          Parmarth E-Com
         </div>
         <div>
           <ul className="flex  w-full justify-evenly ml-16">

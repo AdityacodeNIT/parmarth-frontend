@@ -46,7 +46,7 @@ function App() {
           <Route path="/logout" element={<Logout />} />
           <Route path="/PaperProduct" element={<Paperproducts />} />
           <Route path="/DeskSupply" element={<Desksupply />} />
-          <Route path="/Electronics" element={<Reusable />} />
+          <Route path="/Reusable" element={<Reusable />} />
           <Route path="/Filling" element={<Filling />} />
           <Route path="/Writing" element={<Writing />} />
           <Route path="/BuyProduct" element={<BuyProduct />} />

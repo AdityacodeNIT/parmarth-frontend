@@ -39,7 +39,7 @@ const Writing = () => {
         </p>
         <Link
           to="/products"
-          className="bg-white text-blue-600 font-bold px-6 py-2 rounded-full shadow-lg hover:bg-gray-200 transition"
+          className="bg-white text-blue font-bold px-6 py-2 rounded-full shadow-lg hover:bg-gray-200 transition"
         >
           Shop Now
         </Link>
@@ -56,7 +56,7 @@ const Writing = () => {
           {products.map((product) => (
             <li key={product.id} className="m-4">
               <div
-                className="relative bg-blue-400 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 hover:scale-105 w-60 h-96"
+                className="relative rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 hover:scale-105 w-60 h-96"
                 onClick={() => childToParent(product)}
               >
                 <Link to="/About" style={{ textDecoration: "none" }}>
