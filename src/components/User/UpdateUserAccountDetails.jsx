@@ -1,20 +1,22 @@
-import React, { useContext, useState } from "react";
+import React from "react";
 import axios from "axios";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import UserContext from "../context/UserContext";
+import { useContext } from "react";
+import UserContext from "../../context/UserContext";
 
-const Userlogin = () => {
+const UpdateUserAccountDetails = () => {
   const { getUserDetail } = useContext(UserContext);
-  const [loginData, setLoginData] = useState({
-    username: "",
-    password: "",
+  const [updateData, setUpdatedata] = useState({
+    fullName: "",
+    email: "",
   });
 
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
-    setLoginData({
-      ...loginData,
+    setUpdatedata({
+      ...updateData,
       [e.target.name]: e.target.value,
     });
   };
@@ -23,8 +25,8 @@ const Userlogin = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/login`,
-        loginData,
+        `${import.meta.env.VITE_API_URL}/api/v1/users/updateUserdetail`,
+        updateData,
 
         {
           withCredentials: true,
@@ -33,16 +35,16 @@ const Userlogin = () => {
       );
 
       if (!response) {
-        console.error("Unable to login");
+        console.error("check the data it is unable to update");
       }
       if (response.status >= 200 && response.status < 300) {
-        document.cookie = `accessToken=${response.data.data.accessToken}; path=/`;
+        // document.cookie = `accessToken=${response.data.data.accessToken}; path=/`;
         getUserDetail(response.data);
 
         navigate("/user");
       }
     } catch (error) {
-      console.error("Issue in login", error);
+      console.error("Issue in updates", error);
     }
   };
 
@@ -52,23 +54,23 @@ const Userlogin = () => {
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-4">
         <div className="w-full md:w-3/4 p-8 bg-pink-300 shadow-xl rounded-lg border border-white">
           <h1 className="text-3xl font-extrabold text-blue-600 text-center mb-6">
-            Login
+            Update Details
           </h1>
           <form onSubmit={handleFormSubmit} encType="multipart/form-data">
             <input
               type="text"
-              name="username"
-              placeholder="Enter your username"
-              value={loginData.username}
+              name="fullName"
+              placeholder="Enter your fullName"
+              value={updateData.fullName}
               onChange={handleInputChange}
               required
               className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 focus:outline-none bg-gray-600 focus:border-rose-600"
             />
             <input
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={loginData.password}
+              type="email"
+              name="email"
+              placeholder="Enter your new email"
+              value={updateData.email}
               onChange={handleInputChange}
               required
               className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 focus:outline-none bg-gray-600 focus:border-rose-600"
@@ -95,4 +97,4 @@ const Userlogin = () => {
   );
 };
 
-export default Userlogin;
+export default UpdateUserAccountDetails;

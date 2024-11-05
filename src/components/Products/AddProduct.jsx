@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const BulkAddProduct = () => {
+const AddProduct = () => {
   const [ProductData, setProductData] = useState({
     name: "",
     price: "",
@@ -36,6 +36,8 @@ const BulkAddProduct = () => {
     formDataToSend.append("description", ProductData.description);
     formDataToSend.append("ProductImage", ProductData.ProductImage);
     formDataToSend.append("Category", ProductData.Category);
+    formDataToSend.append("stocks", ProductData.stocks);
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/product/addProduct`,
@@ -71,6 +73,16 @@ const BulkAddProduct = () => {
             onChange={handleInputChange}
             className=" mt-3 border-2 border-cyan-600 w-full p-3 rounded-md"
           />
+
+          <input
+            type="text"
+            name="stocks"
+            placeholder="Enter stocks"
+            value={ProductData.stocks}
+            onChange={handleInputChange}
+            className=" mt-3 border-2 border-cyan-600 w-full p-3 rounded-md"
+          />
+
           <input
             type="text"
             name="description"
@@ -112,4 +124,4 @@ const BulkAddProduct = () => {
   );
 };
 
-export default BulkAddProduct;
+export default AddProduct;

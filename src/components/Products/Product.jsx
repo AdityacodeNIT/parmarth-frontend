@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { CiHeart } from "react-icons/ci";
-import UserContext from "../context/UserContext";
+import UserContext from "../../context/UserContext";
 
 const Product = () => {
   const {

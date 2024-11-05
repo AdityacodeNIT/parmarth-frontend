@@ -1,6 +1,6 @@
 import React from "react";
 import { FaRocket, FaHistory, FaUserAlt } from "react-icons/fa";
-import myImage from "../assets/images/myImage.png"; // Importing icons
+import myImage from "../../assets/images/myImage.png"; // Importing icons
 
 const About = () => {
   return (

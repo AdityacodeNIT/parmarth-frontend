@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import axios from "axios";
-import UserContext from "../context/UserContext.jsx";
+import UserContext from "../../context/UserContext.jsx";
 import Categories from "./Categories.jsx";
-import Reminder from "./Reminder.jsx";
+import Reminder from "../App/Reminder.jsx";
 
 const ProductList = () => {
   const { childToParent } = useContext(UserContext);

@@ -1,31 +1,38 @@
 import "./App.css";
-import Product from "./components/Product.jsx";
-import ProductList from "./components/ProductList.jsx";
+import Product from "./components/Products/Product.jsx";
+import ProductList from "./components/Products/ProductList.jsx";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Navbar from "./components/Navbar.jsx";
-import Cart from "./components/Cart.jsx";
-import About from "./components/About.jsx";
-import Register from "./components/Register.jsx";
+import About from "./components/App/About.jsx";
+import Cart from "./components/Products/Cart.jsx";
+import Navbar from "./components/App/Navbar.jsx";
+
+import Register from "./components/User/Register.jsx";
 import UserContextProvider from "./context/UserContextProvider.jsx";
-import Userlogin from "./components/Userlogin.jsx";
-import UserDetails from "./components/UserDetails.jsx";
-import Logout from "./components/Logout.jsx";
+import Userlogin from "./components/User/Userlogin.jsx";
+import UserDetails from "./components/User/UserDetails.jsx";
+import Logout from "./components/User/Logout.jsx";
+
 import Paperproducts from "./components/Category component/Paperproducts.jsx";
 import Desksupply from "./components/Category component/Desksupply.jsx";
 import Reusable from "./components/Category component/Reusable.jsx";
 import Filling from "./components/Category component/Filling.jsx";
 import Writing from "./components/Category component/Writing.jsx";
-import BuyProduct from "./components/BuyProduct.jsx";
-import UserAddress from "./components/UserAddress.jsx";
-import Payment from "./components/Payment.jsx";
+import BuyProduct from "./components/Products/BuyProduct.jsx";
+import UserAddress from "./components/User/UserAddress.jsx";
+import Payment from "./components/Payment/Payment.jsx";
 removeEventListener;
-import Myorder from "./components/Myorder.jsx";
-import Helpdesk from "./components/Helpdesk.jsx";
-import BulkAddProduct from "./components/BulkAddProduct.jsx";
-import UserUpdateDetails from "./components/UserUpdateDetails.jsx";
-import Reminder from "./components/Reminder.jsx";
-import Wishlisted from "./components/Wishllisted.jsx";
-import SearchResult from "./components/SearchResult.jsx";
+import Myorder from "./components/Products/Myorder.jsx";
+import Helpdesk from "./components/App/Helpdesk.jsx";
+import AddProduct from "./components/Products/AddProduct.jsx";
+import UserUpdateDetails from "./components/User/UserUpdateDetails.jsx";
+import Reminder from "./components/App/Reminder.jsx";
+import Wishlisted from "./components/Products/Wishllisted.jsx";
+import SearchResult from "./components/App/SearchResult.jsx";
+import ChangePassword from "./components/User/ChangePassword.jsx";
+import UpdateUserAccountDetails from "./components/User/UpdateUserAccountDetails.jsx";
+import UpdateDetails from "./components/User/UpdateDetails.jsx";
+import UpdateAvatar from "./components/User/UpdateAvatar.jsx";
+import AdminSection from "./components/Admin/AdminSection.jsx";
 
 function App() {
   return (
@@ -55,9 +62,14 @@ function App() {
           <Route path="/payments" element={<Payment />} />
           <Route path="/myOrder" element={<Myorder />} />
           <Route path="/helpdesk" element={<Helpdesk />} />
-          <Route path="/bulkAdd" element={<BulkAddProduct />} />
+          <Route path="/AddProduct" element={<AddProduct />} />
           <Route path="/update" element={<UserUpdateDetails />} />
           <Route path="/searchResult" element={<SearchResult />} />
+          <Route path="/changePassword" element={<ChangePassword />} />
+          <Route path="/changeDetails" element={<UpdateUserAccountDetails />} />
+          <Route path="/updateDetails" element={<UpdateDetails />} />
+          <Route path="/updateAvatar" element={<UpdateAvatar />} />
+          <Route path="/admin" element={<AdminSection />} />
         </Routes>
       </BrowserRouter>
     </UserContextProvider>

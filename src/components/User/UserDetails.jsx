@@ -1,6 +1,6 @@
 import React from "react";
 import { useContext } from "react";
-import UserContext from "../context/UserContext";
+import UserContext from "../../context/UserContext";
 import { Link } from "react-router-dom";
 
 const UserDetails = () => {
@@ -43,12 +43,21 @@ const UserDetails = () => {
               >
                 My Orders
               </Link>
+
+              <Link
+                to="/updateDetails"
+                className="block py-2 bg-purple-600 px-2   hover:bg-yellow-500 transition text-center"
+              >
+                Update Details
+              </Link>
+
               <Link
                 to="/Wishlist"
                 className="block py-2 bg-purple-600 px-2   hover:bg-yellow-500 transition text-center"
               >
                 Wishlist
               </Link>
+
               <Link
                 to="/helpdesk"
                 className="block py-2 bg-purple-600 px-2  hover:bg-red-500 transition text-center"

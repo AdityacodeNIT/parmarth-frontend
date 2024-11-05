@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Categories from "../Categories";
+import Categories from "../Products/Categories";
 
 const Desksupply = () => {
   const { childToParent } = useContext(UserContext);

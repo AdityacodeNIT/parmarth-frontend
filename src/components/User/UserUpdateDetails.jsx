@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import UserContext from "../context/UserContext";
+import UserContext from "../../context/UserContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const UserUpdateDetails = () => {
