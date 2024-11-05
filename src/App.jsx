@@ -33,6 +33,7 @@ import UpdateUserAccountDetails from "./components/User/UpdateUserAccountDetails
 import UpdateDetails from "./components/User/UpdateDetails.jsx";
 import UpdateAvatar from "./components/User/UpdateAvatar.jsx";
 import AdminSection from "./components/Admin/AdminSection.jsx";
+import KeepAlive from "./keepAlive.jsx";
 
 function App() {
   return (
@@ -71,6 +72,7 @@ function App() {
           <Route path="/updateAvatar" element={<UpdateAvatar />} />
           <Route path="/admin" element={<AdminSection />} />
         </Routes>
+        <KeepAlive />
       </BrowserRouter>
     </UserContextProvider>
   );

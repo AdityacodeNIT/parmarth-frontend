@@ -21,11 +21,11 @@ const KeepAlive = () => {
         });
     };
 
-    const timerId = setInterval(keepAlive, "30000");
+    const timerId = setInterval(keepAlive, 300000); // 300000 ms = 5 minutes
 
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(timerId);
-  }, [url, interval]);
+  }, []);
 
   return null; // This component doesn't render anything
 };
