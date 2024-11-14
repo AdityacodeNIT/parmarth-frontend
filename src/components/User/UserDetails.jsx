@@ -31,48 +31,61 @@ const UserDetails = () => {
               </p>
             </div>
             <div className="space-y-3">
-              <Link
-                to="/cart"
-                className="block py-2 bg-purple-600 px-2   hover:bg-blue-500 transition text-center"
-              >
-                My Cart
-              </Link>
-              <Link
-                to="/myOrder"
-                className="block py-2 bg-purple-600 px-2   hover:bg-green-500 transition text-center"
-              >
-                My Orders
-              </Link>
-
-              <Link
-                to="/updateDetails"
-                className="block py-2 bg-purple-600 px-2   hover:bg-yellow-500 transition text-center"
-              >
-                Update Details
-              </Link>
-
-              <Link
-                to="/Wishlist"
-                className="block py-2 bg-purple-600 px-2   hover:bg-yellow-500 transition text-center"
-              >
-                Wishlist
-              </Link>
-
-              <Link
-                to="/helpdesk"
-                className="block py-2 bg-purple-600 px-2  hover:bg-red-500 transition text-center"
-              >
-                Helpdesk
-              </Link>
-              <div className="block py-2 bg-purple-600 px-2   cursor-default text-center">
-                Admin Panel
-              </div>
-              <Link
-                to="/logOut"
-                className="block py-2 bg-purple-600 px-2   hover:bg-indigo-500 transition text-center"
-              >
-                LogOut
-              </Link>
+              {userDetail.data.user.isAdmin === "true" ? (
+                <>
+                  <Link
+                    to="/Admin"
+                    className="block py-2 bg-purple-600 px-2 hover:bg-indigo-500 transition text-center"
+                  >
+                    Admin Panel
+                  </Link>
+                  <Link
+                    to="/helpdesk"
+                    className="block py-2 bg-purple-600 px-2 hover:bg-red-500 transition text-center"
+                  >
+                    Helpdesk
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/cart"
+                    className="block py-2 bg-purple-600 px-2 hover:bg-blue-500 transition text-center"
+                  >
+                    My Cart
+                  </Link>
+                  <Link
+                    to="/myOrder"
+                    className="block py-2 bg-purple-600 px-2 hover:bg-green-500 transition text-center"
+                  >
+                    My Orders
+                  </Link>
+                  <Link
+                    to="/updateDetails"
+                    className="block py-2 bg-purple-600 px-2 hover:bg-yellow-500 transition text-center"
+                  >
+                    Update Details
+                  </Link>
+                  <Link
+                    to="/Wishlist"
+                    className="block py-2 bg-purple-600 px-2 hover:bg-yellow-500 transition text-center"
+                  >
+                    Wishlist
+                  </Link>
+                  <Link
+                    to="/helpdesk"
+                    className="block py-2 bg-purple-600 px-2 hover:bg-red-500 transition text-center"
+                  >
+                    Helpdesk
+                  </Link>
+                  <Link
+                    to="/logOut"
+                    className="block py-2 bg-purple-600 px-2 hover:bg-indigo-500 transition text-center"
+                  >
+                    LogOut
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}

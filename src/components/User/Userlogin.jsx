@@ -37,6 +37,7 @@ const Userlogin = () => {
       }
       if (response.status >= 200 && response.status < 300) {
         document.cookie = `accessToken=${response.data.data.accessToken}; path=/`;
+        console.log(response.data);
         getUserDetail(response.data);
 
         navigate("/user");

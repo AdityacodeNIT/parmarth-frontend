@@ -64,19 +64,6 @@ const AdminSection = () => {
             </div>
           )}
         </div>
-
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <button>
-            Order List
-          </button>
-          
-          {activeSection === "orderlist" && (
-            <div className="p-4 border-t">
-              <Orderlist />
-            </div>
-          )}
-        </div>
-        
       </div>
     </div>
   );
