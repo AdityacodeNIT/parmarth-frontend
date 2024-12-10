@@ -34,6 +34,7 @@ import UpdateDetails from "./components/User/UpdateDetails.jsx";
 import UpdateAvatar from "./components/User/UpdateAvatar.jsx";
 import AdminSection from "./components/Admin/AdminSection.jsx";
 import KeepAlive from "./keepAlive.jsx";
+// import ServerCharacter from "./ServerCharacter.jsx";
 
 function App() {
   return (
@@ -71,6 +72,7 @@ function App() {
           <Route path="/updateDetails" element={<UpdateDetails />} />
           <Route path="/updateAvatar" element={<UpdateAvatar />} />
           <Route path="/admin" element={<AdminSection />} />
+          {/* <Route path="/sleep" element={<ServerCharacter />} /> */}
         </Routes>
         <KeepAlive />
       </BrowserRouter>

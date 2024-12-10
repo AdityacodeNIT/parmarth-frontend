@@ -14,20 +14,6 @@ const UserContextProvider = ({ children }) => {
     setProductDetails(detail);
   };
 
-  // Address Section: Initializing and managing address details with localStorage persistence
-  const [addressDetails, setAddressDetails] = useState(() => {
-    const savedAddressDetails = localStorage.getItem("addDetails");
-    return savedAddressDetails ? JSON.parse(savedAddressDetails) : {};
-  });
-
-  const getAddressDetail = (addDetails) => {
-    setAddressDetails(addDetails);
-  };
-
-  useEffect(() => {
-    localStorage.setItem("addDetails", JSON.stringify(addressDetails));
-  }, [addressDetails]);
-
   // Product Management: Handling selected product information with localStorage persistence
   const childToParent = (product) => {
     setData(product);
@@ -210,7 +196,6 @@ const UserContextProvider = ({ children }) => {
 
   // Order Management: Creating an order from cart and buyProduct items
   const [orderProduct, setOrderProduct] = useState({
-    userId: userDetail?.data?.user?._id,
     items: [],
   });
 
@@ -243,13 +228,12 @@ const UserContextProvider = ({ children }) => {
   const getMyOrder = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v2/order/orders/${
-          userDetail.data.user._id
-        }`
+        `${import.meta.env.VITE_API_URL}/api/v2/order/orders`,
+        { withCredentials: true }
       );
       if (response.data) {
         setMyOrder(response.data);
-        console.log(response);
+        // console.log(response);
       }
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -271,15 +255,43 @@ const UserContextProvider = ({ children }) => {
   // Handling form submission to create an order
   const handleFormSubmit = async () => {
     try {
+      console.log("Submitting order:", orderProduct); // Log the order data being sent
+
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v2/order/getOrders`,
+        `${import.meta.env.VITE_API_URL}/shiprocket/order`,
         orderProduct
       );
-      if (!response) {
-        console.error("Unable to place order");
+
+      if (response && response.data) {
+        console.log(
+          "Order placed successfully. Response received:",
+          response.data
+        );
+
+        // Assuming the response includes order details from Shiprocket
+        const { orderId, trackingNumber, shippingStatus, estimatedDelivery } =
+          response.data;
+
+        // Log the Shiprocket-related details
+        console.log("Order ID:", orderId);
+        console.log("Tracking Number:", trackingNumber);
+        console.log("Shipping Status:", shippingStatus);
+        console.log("Estimated Delivery:", estimatedDelivery);
+
+        // Update the UI with order details
+        setOrderDetails({
+          orderId,
+          trackingNumber,
+          shippingStatus,
+          estimatedDelivery,
+        });
+
+        console.log("Order details updated in state:", orderDetails);
+      } else {
+        console.error("No response data received");
       }
     } catch (error) {
-      console.error("Issue in placing order", error);
+      console.error("Error placing the order:", error);
     }
   };
 
@@ -287,20 +299,6 @@ const UserContextProvider = ({ children }) => {
     userId: userDetail?.data?.user?._id,
     items: [],
   }));
-
-  // const addToFavourite = async (itemId) => {
-  //   // const updatedWishlist = {
-  //   //   ...wishlist,
-  //   //   items: [...item, { productId: itemId, quantity: 1 }],
-  //   // };
-
-  //   setWishlist((prevWishlist) => ({
-  //     ...prevWishlist,
-  //     items: {
-  //       productId: itemId,
-  //      quantity:1,
-  //     },
-  //   }));
 
   const addToFavourite = async (itemId) => {
     const updatedWishlist = {
@@ -399,42 +397,17 @@ const UserContextProvider = ({ children }) => {
     }
   }, [productId, productReview]);
 
-  // useEffect(() => {
-  //   if (productId) {
-  //     axios
-  //       .post(`${import.meta.env.VITE_API_URL}/api/v2/feedback/average`, {
-  //         productId,
-  //       })
-  //       .then((response) => {
-  //         console.log("Average ratings fetched successfully:", response.data);
-  //         setAverageRatings(response.data.averageRating);
-  //         console.log("the value is" + response.data.averageRating); // Uncomment if you have a state for total ratings
-  //       })
-  //       .catch((error) => {
-  //         console.error(
-  //           "There was an error fetching the average ratings!",
-  //           error
-  //         );
-  //       });
-  //   }
-  // }, []);
-
-  // Calculating average rating for the product
-
   const [searchResult, setSearchResult] = useState([]);
 
   const handleSearch = (query) => {
     setSearchResult(query.result);
     console.log(query.result);
-
-    // Implement your search logic
   };
-
-  // User Activity
 
   return (
     <UserContext.Provider
       value={{
+        setUserDetail,
         // Cart items and management functions
         cartItems,
         addToCart,
@@ -451,10 +424,9 @@ const UserContextProvider = ({ children }) => {
         quantity,
         removingElements,
         totalCartPrice,
+
         totalProductPrice,
         cartDesccription,
-        addressDetails,
-        getAddressDetail,
         removeItemfromCheckout,
         productName,
         totalPrice,

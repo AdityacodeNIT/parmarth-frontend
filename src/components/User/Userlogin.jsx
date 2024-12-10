@@ -9,7 +9,7 @@ const Userlogin = () => {
     username: "",
     password: "",
   });
-
+  const [errorMessage, setErrorMessage] = useState(""); // For storing error messages
   const navigate = useNavigate();
 
   const handleInputChange = (e) => {
@@ -17,6 +17,7 @@ const Userlogin = () => {
       ...loginData,
       [e.target.name]: e.target.value,
     });
+    setErrorMessage(""); // Clear error message on input change
   };
 
   const handleFormSubmit = async (e) => {
@@ -25,25 +26,26 @@ const Userlogin = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/users/login`,
         loginData,
-
         {
           withCredentials: true,
-          credentials: "include",
         }
       );
 
-      if (!response) {
-        console.error("Unable to login");
-      }
       if (response.status >= 200 && response.status < 300) {
-        document.cookie = `accessToken=${response.data.data.accessToken}; path=/`;
-        console.log(response.data);
         getUserDetail(response.data);
-
         navigate("/user");
+
+        console.log("Cookies in browser:", document.cookie);
       }
     } catch (error) {
-      console.error("Issue in login", error);
+      if (error.response) {
+        setErrorMessage(
+          error.response.data.message || "Invalid login credentials."
+        );
+      } else {
+        console.error("Issue in login", error);
+        setErrorMessage("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
@@ -56,24 +58,34 @@ const Userlogin = () => {
             Login
           </h1>
           <form onSubmit={handleFormSubmit} encType="multipart/form-data">
-            <input
-              type="text"
-              name="username"
-              placeholder="Enter your username"
-              value={loginData.username}
-              onChange={handleInputChange}
-              required
-              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 focus:outline-none bg-gray-600 focus:border-rose-600"
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={loginData.password}
-              onChange={handleInputChange}
-              required
-              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 focus:outline-none bg-gray-600 focus:border-rose-600"
-            />
+            <div className="mb-4">
+              <input
+                type="text"
+                name="username"
+                placeholder="Enter your username"
+                value={loginData.username}
+                onChange={handleInputChange}
+                required
+                className="p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 focus:outline-none bg-gray-600 focus:border-rose-600"
+              />
+              {errorMessage && !loginData.username && (
+                <p className="text-red-600 text-sm mt-1">{errorMessage}</p>
+              )}
+            </div>
+            <div className="mb-4">
+              <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                value={loginData.password}
+                onChange={handleInputChange}
+                required
+                className="p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 focus:outline-none bg-gray-600 focus:border-rose-600"
+              />
+              {errorMessage && loginData.username && (
+                <p className="text-red-600 text-sm mt-1">{errorMessage}</p>
+              )}
+            </div>
             <button
               type="submit"
               className="w-full p-3 bg-blue-800 text-white font-bold rounded-md transition duration-200 hover:bg-rose-600"

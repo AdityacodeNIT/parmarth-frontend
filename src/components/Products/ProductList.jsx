@@ -7,7 +7,6 @@ import Reminder from "../App/Reminder.jsx";
 
 const ProductList = () => {
   const { childToParent } = useContext(UserContext);
-
   const [productsData, setProductsData] = useState([]);
 
   const getProductDetail = async () => {

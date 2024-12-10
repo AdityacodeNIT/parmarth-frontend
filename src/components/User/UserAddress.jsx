@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // This import is already correct
 import UserContext from "../../context/UserContext";
 
 const UserAddress = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Correctly initialized navigate
   const { getAddressDetail } = useContext(UserContext);
   const [AddressData, setAddressData] = useState({
     name: "",
@@ -23,39 +23,39 @@ const UserAddress = () => {
       [e.target.name]: e.target.value,
     });
   };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    const formDataToSend = new FormData();
-    formDataToSend.append("name", AddressData.name);
-    formDataToSend.append("streetAddress", AddressData.streetAddress);
-    formDataToSend.append("city", AddressData.city);
-    formDataToSend.append("state", AddressData.state);
-    formDataToSend.append(" country", AddressData.country);
-    formDataToSend.append(" postalCode", AddressData.postalCode);
-    formDataToSend.append(" phoneNumber", AddressData.phoneNumber);
-    formDataToSend.append(" alternateNumber", AddressData.alternateNumber);
+    const formDataToSend = {
+      name: AddressData.name,
+      streetAddress: AddressData.streetAddress,
+      city: AddressData.city,
+      state: AddressData.state,
+      country: AddressData.country,
+      postalCode: AddressData.postalCode,
+      phoneNumber: AddressData.phoneNumber,
+      alternateNumber: AddressData.alternateNumber,
+    };
+
     try {
+      console.log(formDataToSend);
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/address/getAddress`,
-        formDataToSend
+        `${import.meta.env.VITE_API_URL}/api/v1/address/addAddress`,
+        formDataToSend,
+        { withCredentials: true }
       );
 
       if (response) {
-        getAddressDetail(response.data);
         navigate("/BuyProduct");
-      } else console.log("Unable to get the response");
+      } else {
+        console.log("Unable to get the response");
+      }
     } catch (error) {
-      console.log(error, "Issue in login:");
+      console.log(error, "Issue in Adding the Addresses:");
     }
   };
-  useEffect(() => {
-    if (AddressData) {
-      getAddressDetail(AddressData);
-    }
-  }, [AddressData]);
 
-  // Your component return
   return (
     <div>
       <div className="w-auto mx-32 mt-6">
@@ -132,8 +132,6 @@ const UserAddress = () => {
             required
             className="border-2 border-cyan-600 w-full p-3 rounded-md"
           />
-          {/* Add input for cover image if needed */}
-          {/* <input type="file" name="coverImage" onChange={handleFileChange} /> */}
           <button
             type="submit"
             className="border-2 border-blue-600 bg-blue-600 text-white p-2 rounded-md mt-4 hover:bg-blue-700"

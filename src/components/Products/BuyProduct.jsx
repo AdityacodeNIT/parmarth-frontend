@@ -1,12 +1,41 @@
-import React, { useContext } from "react";
-import UserContext from "../../context/UserContext";
+import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
-
-//import products from "razorpay/dist/types/products";
+import UserContext from "../../context/UserContext";
 
 const BuyProduct = () => {
-  const { addressDetails, totalProductPrice, productDesccription } =
-    useContext(UserContext);
+  const { totalProductPrice, productDesccription } = useContext(UserContext);
+
+  const [addressDetails, setAddressDetails] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch address details from the backend
+  useEffect(() => {
+    const fetchAddressDetails = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/v1/address/getAddress`,
+          { withCredentials: true }
+        );
+        setAddressDetails(response.data); // Save the fetched address data to context
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to load address details.");
+        setLoading(false);
+      }
+    };
+
+    fetchAddressDetails();
+  }, [setAddressDetails]); // Empty dependency array to fetch once when the component mounts
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div>
@@ -49,31 +78,31 @@ const BuyProduct = () => {
               </p>
               <div className="w-full max-w-3xl bg-white p-8 rounded-lg shadow-lg">
                 <div className="mb-4 text-xl font-bold text-gray-800">
-                  {addressDetails.name}
+                  {addressDetails?.name}
                 </div>
                 <div className="border-2 border-white-400 bg-gray-900 text-white p-8 rounded-lg shadow-xl">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 text-md md:text-lg">
                     <div>
                       <strong>Street Address:</strong>{" "}
-                      {addressDetails.streetAddress}
+                      {addressDetails?.streetAddress}
                     </div>
                     <div>
-                      <strong>City:</strong> {addressDetails.city}
+                      <strong>City:</strong> {addressDetails?.city}
                     </div>
                     <div>
-                      <strong>State:</strong> {addressDetails.state}
+                      <strong>State:</strong> {addressDetails?.state}
                     </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm md:text-md">
                     <div>
-                      <strong>Postal Code:</strong> {addressDetails.postalCode}
+                      <strong>Postal Code:</strong> {addressDetails?.postalCode}
                     </div>
                     <div>
-                      <strong>Phone:</strong> {addressDetails.phoneNumber}
+                      <strong>Phone:</strong> {addressDetails?.phoneNumber}
                     </div>
                     <div>
                       <strong>Alternate Phone:</strong>{" "}
-                      {addressDetails.alternateNumber}
+                      {addressDetails?.alternateNumber}
                     </div>
                   </div>
                 </div>

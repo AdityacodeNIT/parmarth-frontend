@@ -1,15 +1,46 @@
-import React from "react";
-import { useContext } from "react";
+import React, { useEffect, useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import UserContext from "../../context/UserContext";
-import { Link } from "react-router-dom";
 
 const UserDetails = () => {
-  const { userDetail } = useContext(UserContext);
+  const { userDetail, setUserDetail } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const validateRefreshToken = async () => {
+      if (!userDetail) {
+        return; // Exit if user details are not available
+      }
+
+      try {
+        // Validate the refresh token with the backend
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/v1/users/refresh-token`,
+          {},
+          { withCredentials: true } // Cookies contain the refresh token
+        );
+
+        // Update access token in context or storage if valid
+        const { accessToken } = response.data;
+        if (accessToken) {
+          axios.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${accessToken}`;
+        }
+      } catch (error) {
+        setUserDetail(null);
+        console.error("Error validating refresh token 12329hehf:", error);
+      }
+    };
+
+    validateRefreshToken();
+  }, [userDetail]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-800 to-indigo-900 flex flex-col md:flex-row">
       <div className="md:w-1/2 flex flex-col justify-center items-center bg-gray-800 p-4 md:p-0">
-        {userDetail && (
+        {userDetail ? (
           <div key={userDetail.id} className="text-white w-full max-w-lg">
             <div className="flex items-center space-x-4 mb-6 justify-center">
               <img
@@ -88,10 +119,19 @@ const UserDetails = () => {
               )}
             </div>
           </div>
+        ) : (
+          <div className="text-center text-white">
+            <h2 className="text-lg font-bold">You are not logged in</h2>
+            <Link
+              to="/login"
+              className="block py-2 mt-4 bg-purple-600 px-4 hover:bg-indigo-500 transition text-center text-white rounded"
+            >
+              Log In
+            </Link>
+          </div>
         )}
       </div>
       <div className="md:w-1/2 flex items-center justify-center p-6 md:p-0">
-        {/* Future development can be added here */}
         <div className="text-white text-xl">
           Placeholder for future content or components.
         </div>
