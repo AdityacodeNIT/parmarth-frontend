@@ -28,7 +28,9 @@ const Payment = () => {
     e.preventDefault();
 
     try {
-      const keyResponse = await axios.get("http://localhost:8000/api/getkey");
+      const keyResponse = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/getkey`
+      );
       const { key } = keyResponse.data;
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v2/payments/paid`,
@@ -46,7 +48,9 @@ const Payment = () => {
         description: "Test Transaction",
         image: "https://example.com/your_logo",
         order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-        callback_url: "http://localhost:8000/api/v2/payments/paymentcallback",
+        callback_url: `${
+          import.meta.env.VITE_API_URL
+        }/api/v2/payments/paymentcallback`,
         prefill: {
           //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
           name: "Gaurav Kumar", //your customer's name
