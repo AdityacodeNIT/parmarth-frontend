@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import About from "./components/App/About.jsx";
 import Cart from "./components/Products/Cart.jsx";
 import Navbar from "./components/App/Navbar.jsx";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 import Register from "./components/User/Register.jsx";
 import UserContextProvider from "./context/UserContextProvider.jsx";
@@ -71,6 +72,7 @@ function App() {
           <Route path="/myOrder" element={<AllOrders />} />
         </Routes>
         <KeepAlive />
+        <SpeedInsights />
       </BrowserRouter>
     </UserContextProvider>
   );
