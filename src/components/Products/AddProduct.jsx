@@ -51,11 +51,6 @@ const AddProduct = () => {
         `${import.meta.env.VITE_API_URL}/api/v1/product/addProduct`,
         formDataToSend
       );
-
-      if (response) {
-        console.log("Product added Succesfully");
-        //  navigate("/writing");
-      }
     } catch (error) {
       console.error(error, "Problem in adding product");
     }

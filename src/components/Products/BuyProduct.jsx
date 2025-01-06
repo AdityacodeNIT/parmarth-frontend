@@ -20,7 +20,6 @@ const BuyProduct = () => {
           { withCredentials: true }
         );
         if (response.data) {
-          console.log(response.data);
           setAddressDetails(response.data.data);
           setAddressId(response.data.data._id); // Save the fetched address data to context
           setLoading(false);

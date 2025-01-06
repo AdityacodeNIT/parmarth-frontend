@@ -55,8 +55,6 @@ const UserAddress = () => {
 
       if (response.status === 201) {
         navigate("/BuyProduct");
-      } else {
-        console.log("Unable to get the response");
       }
     } catch (error) {
       console.log("Issue in Adding the Addresses:", error);

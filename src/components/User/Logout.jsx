@@ -18,7 +18,6 @@ const Logout = () => {
 
       if (response.status === 200) {
         getUserDetail(response.data); // Clear user detail
-        console.log("User logged out successfully");
         navigate("/"); // Redirect to home page
       } else {
         console.error("Unexpected response status:", response.status);

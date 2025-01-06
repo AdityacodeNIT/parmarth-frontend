@@ -23,7 +23,6 @@ const AllOrders = () => {
 
       if (response && response.data.data.data) {
         setOrders(response.data.data.data);
-        console.log("Fetched orders:", response.data.data.data);
       }
     } catch (err) {
       setError(err.message || "Failed to fetch orders.");

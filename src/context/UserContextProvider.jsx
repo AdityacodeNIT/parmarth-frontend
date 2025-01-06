@@ -184,7 +184,6 @@ const UserContextProvider = ({ children }) => {
   const getUserDetail = async (details) => {
     if (details) {
       setUserDetail(details);
-      console.log(details);
     } else {
       console.error("Invalid details passed to getUserDetail");
     }
@@ -232,10 +231,6 @@ const UserContextProvider = ({ children }) => {
     }));
   }, [cartItems]);
 
-  useEffect(() => {
-    console.log(orderProduct);
-  }, [orderProduct]);
-
   // Handling successful order submission
   const orderSuccessful = async (order) => {
     setOrderSuccess((prevOrders) => [...prevOrders, order]);
@@ -247,8 +242,6 @@ const UserContextProvider = ({ children }) => {
   // Handling form submission to create an order
   const handleFormSubmit = async () => {
     try {
-      console.log("Submitting order:", orderProduct); // Log the order data being sent
-
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/shiprocket/order`,
         orderProduct,
@@ -257,7 +250,6 @@ const UserContextProvider = ({ children }) => {
 
       if (response) {
         setOrderDetails(response.data);
-        console.log("Order placed successfully.", response.data);
       }
     } catch (error) {
       console.error("Error placing the order:", error);
@@ -332,9 +324,7 @@ const UserContextProvider = ({ children }) => {
           `${import.meta.env.VITE_API_URL}/api/v2/feedback/review`,
           productReview
         )
-        .then((response) => {
-          console.log("Review posted successfully:", response.data);
-        })
+
         .catch((error) => {
           console.error("There was an error posting the review!", error);
         });
@@ -352,7 +342,6 @@ const UserContextProvider = ({ children }) => {
           productId,
         })
         .then((response) => {
-          console.log("Average ratings fetched successfully:", response.data);
           setAverageRatings(response.data.averageRating);
           setTotalRatings(response.data.count);
         })
@@ -369,7 +358,6 @@ const UserContextProvider = ({ children }) => {
 
   const handleSearch = (query) => {
     setSearchResult(query.result);
-    console.log(query.result);
   };
 
   const [orderItem, setOrderItems] = useState([]);
@@ -382,7 +370,6 @@ const UserContextProvider = ({ children }) => {
       );
       if (response) {
         setOrderItems(response.data.data);
-        console.log("Fetched ordr:", response.data.data);
       }
     } catch (error) {
       console.error("Failed to register", error);

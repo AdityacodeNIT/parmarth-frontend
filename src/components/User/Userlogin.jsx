@@ -34,8 +34,6 @@ const Userlogin = () => {
       if (response.status >= 200 && response.status < 300) {
         getUserDetail(response.data);
         navigate("/user");
-
-        console.log("Cookies in browser:", document.cookie);
       }
     } catch (error) {
       if (error.response) {
