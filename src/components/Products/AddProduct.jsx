@@ -9,6 +9,10 @@ const AddProduct = () => {
     description: "",
     ProductImage: null,
     Category: "",
+    length: "", // Added for length
+    breadth: "", // Added for breadth
+    height: "", // Added for height
+    weight: "",
   });
 
   const navigate = useNavigate();
@@ -37,6 +41,10 @@ const AddProduct = () => {
     formDataToSend.append("ProductImage", ProductData.ProductImage);
     formDataToSend.append("Category", ProductData.Category);
     formDataToSend.append("stocks", ProductData.stocks);
+    formDataToSend.append("length", ProductData.length); // Append length
+    formDataToSend.append("breadth", ProductData.breadth); // Append breadth
+    formDataToSend.append("height", ProductData.height); // Append height
+    formDataToSend.append("weight", ProductData.weight);
 
     try {
       const response = await axios.post(
@@ -91,6 +99,7 @@ const AddProduct = () => {
             onChange={handleInputChange}
             className=" mt-3 border-2 border-cyan-600 w-full p-3 rounded-md"
           />
+
           <select
             name="Category"
             value={ProductData.Category}
@@ -104,6 +113,39 @@ const AddProduct = () => {
             <option value="Filling">Filling</option>
             <option value="Reusable">Reusable</option>
           </select>
+
+          <input
+            type="text"
+            name="length"
+            placeholder="Enter length (in cm)"
+            value={ProductData.length}
+            onChange={handleInputChange}
+            className=" mt-3 border-2 border-cyan-600 w-full p-3 rounded-md"
+          />
+          <input
+            type="text"
+            name="breadth"
+            placeholder="Enter breadth (in cm)"
+            value={ProductData.breadth}
+            onChange={handleInputChange}
+            className=" mt-3 border-2 border-cyan-600 w-full p-3 rounded-md"
+          />
+          <input
+            type="text"
+            name="height"
+            placeholder="Enter height (in cm)"
+            value={ProductData.height}
+            onChange={handleInputChange}
+            className=" mt-3 border-2 border-cyan-600 w-full p-3 rounded-md"
+          />
+          <input
+            type="text"
+            name="weight"
+            placeholder="Enter weight (in kg)"
+            value={ProductData.weight}
+            onChange={handleInputChange}
+            className=" mt-3 border-2 border-cyan-600 w-full p-3 rounded-md"
+          />
           <input
             type="file"
             name="ProductImage"

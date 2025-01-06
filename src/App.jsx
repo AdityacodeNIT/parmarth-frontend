@@ -21,11 +21,9 @@ import BuyProduct from "./components/Products/BuyProduct.jsx";
 import UserAddress from "./components/User/UserAddress.jsx";
 import Payment from "./components/Payment/Payment.jsx";
 removeEventListener;
-import Myorder from "./components/Products/Myorder.jsx";
 import Helpdesk from "./components/App/Helpdesk.jsx";
 import AddProduct from "./components/Products/AddProduct.jsx";
 import UserUpdateDetails from "./components/User/UserUpdateDetails.jsx";
-import Reminder from "./components/App/Reminder.jsx";
 import Wishlisted from "./components/Products/Wishllisted.jsx";
 import SearchResult from "./components/App/SearchResult.jsx";
 import ChangePassword from "./components/User/ChangePassword.jsx";
@@ -34,7 +32,7 @@ import UpdateDetails from "./components/User/UpdateDetails.jsx";
 import UpdateAvatar from "./components/User/UpdateAvatar.jsx";
 import AdminSection from "./components/Admin/AdminSection.jsx";
 import KeepAlive from "./keepAlive.jsx";
-// import ServerCharacter from "./ServerCharacter.jsx";
+import AllOrders from "./components/Products/AllOrders.jsx";
 
 function App() {
   return (
@@ -43,7 +41,6 @@ function App() {
         <Navbar />
         {/* Log statement to check if Navbar is rendering */}
         {console.log("Navbar component rendered")}
-        {/* <Reminder/> */}
         <Routes>
           <Route path="/" element={<ProductList />} />
           <Route path="/About" element={<Product />} />]
@@ -62,7 +59,6 @@ function App() {
           <Route path="/addressUpdate" element={<UserAddress />} />
           <Route path="/wishlist" element={<Wishlisted />} />
           <Route path="/payments" element={<Payment />} />
-          <Route path="/myOrder" element={<Myorder />} />
           <Route path="/helpdesk" element={<Helpdesk />} />
           <Route path="/AddProduct" element={<AddProduct />} />
           <Route path="/update" element={<UserUpdateDetails />} />
@@ -72,7 +68,7 @@ function App() {
           <Route path="/updateDetails" element={<UpdateDetails />} />
           <Route path="/updateAvatar" element={<UpdateAvatar />} />
           <Route path="/admin" element={<AdminSection />} />
-          {/* <Route path="/sleep" element={<ServerCharacter />} /> */}
+          <Route path="/myOrder" element={<AllOrders />} />
         </Routes>
         <KeepAlive />
       </BrowserRouter>

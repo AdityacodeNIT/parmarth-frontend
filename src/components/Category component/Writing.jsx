@@ -46,11 +46,6 @@ const Writing = () => {
       </div>
 
       <Categories />
-
-      {/* <div
-        className="bg-cover bg-center m-h-screen w-auto"
-        style={{ backgroundImage: 'url("/design/ab.jpg")' }}
-      > */}
       <div className="productlist1 mx-10">
         <ul className="flex flex-wrap justify-center">
           {products.map((product) => (

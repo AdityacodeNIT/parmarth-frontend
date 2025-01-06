@@ -14,10 +14,10 @@ const GetProduct = async () => {
     if (response) {
       getProductDetail(response);
     }
-    // Optionally, you can redirect the user to another page after successful registration
+  
   } catch (error) {
     console.error("Failed to register", error);
-    // Handle error here - display error message to the user or perform other actions
+ 
   }
   return <div></div>;
 };

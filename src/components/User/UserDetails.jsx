@@ -14,7 +14,7 @@ const UserDetails = () => {
       }
 
       try {
-        // Validate the refresh token with the backend
+        // Validate the refresh token with the backend. If valid, the backend will return a new access token
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/api/v1/users/refresh-token`,
           {},
@@ -123,7 +123,7 @@ const UserDetails = () => {
           <div className="text-center text-white">
             <h2 className="text-lg font-bold">You are not logged in</h2>
             <Link
-              to="/login"
+              to="/userLogin"
               className="block py-2 mt-4 bg-purple-600 px-4 hover:bg-indigo-500 transition text-center text-white rounded"
             >
               Log In

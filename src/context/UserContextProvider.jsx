@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
 import UserContext from "./UserContext";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const UserContextProvider = ({ children }) => {
-  // State to manage the selected product details
+  // State to manage the selected product details.
   const [data, setData] = useState(
     JSON.parse(localStorage.getItem("product")) || null
   );
 
-  // State to manage detailed information of a product
+  // State to manage detailed information of a product.
   const [productDetails, setProductDetails] = useState();
   const getProductDetail = (detail) => {
     setProductDetails(detail);
   };
 
-  // Product Management: Handling selected product information with localStorage persistence
+  // Product Management: Handling selected product information with localStorage persistence.
   const childToParent = (product) => {
     setData(product);
   };
@@ -25,24 +26,24 @@ const UserContextProvider = ({ children }) => {
 
   const [quantity, setQuantity] = useState(1);
 
-  // State to manage items in the cart
+  // State to manage items in the cart.
   const [cartItems, setCartItems] = useState(
     JSON.parse(localStorage.getItem("cartItems")) || []
   );
 
-  // Save cart items to localStorage whenever there's a change in cartItems state
+  // Save cart items to localStorage whenever there's a change in cartItems state.
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Cart Management: Adding, removing, and updating cart items
+  // Cart Management: Adding, removing, and updating cart items..
   const addToCart = (product, productId) => {
     let existingProduct = cartItems.find(
       (item) => item._id.toString() === productId
     );
 
     if (existingProduct) {
-      // If product already exists in cart, increment its quantity
+      // If product already exists in cart, increment its quantity.
       const updatedCartItems = cartItems.map((item) =>
         item._id.toString() === productId
           ? { ...item, quantity: item.quantity + 1 }
@@ -50,12 +51,11 @@ const UserContextProvider = ({ children }) => {
       );
       setCartItems(updatedCartItems);
     } else {
-      // If the product is not in the cart, add it with a quantity of 1
+      // If the product is not in the cart, add it with a quantity of 1.
       setCartItems([...cartItems, { ...product, quantity: 1 }]);
     }
   };
-
-  // Reducing item quantity in the cart or removing it
+  // Reducing item quantity in the cart or removing it.
   const removingElements = (productId) => {
     const removingCartItems = cartItems.map((item) =>
       item.quantity >= 2 && item._id === productId
@@ -65,7 +65,7 @@ const UserContextProvider = ({ children }) => {
     setCartItems(removingCartItems);
   };
 
-  // Remove a specific item from the cart
+  // Remove a specific item from the cart.
   const removeFromCart = (productId) => {
     const updatedCartItems = cartItems.filter(
       (item) => item._id.toString() !== productId
@@ -73,7 +73,7 @@ const UserContextProvider = ({ children }) => {
     setCartItems(updatedCartItems);
   };
 
-  // Calculate the total price of all items in the cart
+  // Calculate the total price of all items in the cart.
   const totalCartPrice = () => {
     return cartItems.reduce(
       (total, item) => total + item.price * item.quantity,
@@ -81,7 +81,18 @@ const UserContextProvider = ({ children }) => {
     );
   };
 
-  // Generate a description of items in the cart
+  const [addressId, setAddressId] = useState(() => {
+    return localStorage.getItem("addressId") || undefined;
+  });
+
+  // Sync the state value to localStorage whenever it changes
+  useEffect(() => {
+    if (addressId !== undefined) {
+      localStorage.setItem("addressId", addressId);
+    }
+  }, [addressId]);
+
+  // Generate a description of items in the cart.
   const cartDesccription = () => {
     return cartItems.map((item) => (
       <div key={item._id}>
@@ -93,7 +104,7 @@ const UserContextProvider = ({ children }) => {
     ));
   };
 
-  // Product Management: Handling products marked for buying with localStorage persistence
+  // Product Management: Handling products marked for buying with localStorage persistence.
   const [buyProduct, setBuyProduct] = useState(
     JSON.parse(localStorage.getItem("buyProduct")) || []
   );
@@ -102,7 +113,7 @@ const UserContextProvider = ({ children }) => {
     localStorage.setItem("buyProduct", JSON.stringify(buyProduct));
   }, [buyProduct]);
 
-  // Buying a product and adding it to the buyProduct state
+  // Buying a product and adding it to the buyProduct state.
   const buyingProduct = (bought, boughtId) => {
     let existingitem = buyProduct.find(
       (item) => item._id.toString() === boughtId
@@ -110,12 +121,12 @@ const UserContextProvider = ({ children }) => {
     if (existingitem) {
       const updateProduct = buyProduct.map((item) =>
         boughtId === item._id.toString()
-          ? { ...item, quantity: item.quantity + 1 }
+          ? { ...item, addressId, quantity: item.quantity + 1 }
           : item
       );
       setBuyProduct(updateProduct);
     } else {
-      setBuyProduct([...buyProduct, { ...bought, quantity: 1 }]);
+      setBuyProduct([...buyProduct, { ...bought, addressId, quantity: 1 }]);
     }
   };
 
@@ -205,6 +216,7 @@ const UserContextProvider = ({ children }) => {
       items: buyProduct.map((item) => ({
         productId: item._id,
         quantity: item.quantity,
+        Address_id: addressId,
       })),
     }));
   }, [buyProduct]);
@@ -215,6 +227,7 @@ const UserContextProvider = ({ children }) => {
       items: cartItems.map((item) => ({
         productId: item._id,
         quantity: item.quantity,
+        Address_id: addressId,
       })),
     }));
   }, [cartItems]);
@@ -223,34 +236,13 @@ const UserContextProvider = ({ children }) => {
     console.log(orderProduct);
   }, [orderProduct]);
 
-  // State to manage user's order details
-  const [myOrder, setMyOrder] = useState([]);
-  const getMyOrder = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v2/order/orders`,
-        { withCredentials: true }
-      );
-      if (response.data) {
-        setMyOrder(response.data);
-        // console.log(response);
-      }
-    } catch (error) {
-      console.error("Error fetching orders:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (userDetail?.data?.user?._id) {
-      getMyOrder();
-    }
-  }, [userDetail, getMyOrder]);
-
   // Handling successful order submission
   const orderSuccessful = async (order) => {
     setOrderSuccess((prevOrders) => [...prevOrders, order]);
     handleFormSubmit();
   };
+
+  const [orderDetails, setOrderDetails] = useState(null);
 
   // Handling form submission to create an order
   const handleFormSubmit = async () => {
@@ -259,36 +251,13 @@ const UserContextProvider = ({ children }) => {
 
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/shiprocket/order`,
-        orderProduct
+        orderProduct,
+        { withCredentials: true }
       );
 
-      if (response && response.data) {
-        console.log(
-          "Order placed successfully. Response received:",
-          response.data
-        );
-
-        // Assuming the response includes order details from Shiprocket
-        const { orderId, trackingNumber, shippingStatus, estimatedDelivery } =
-          response.data;
-
-        // Log the Shiprocket-related details
-        console.log("Order ID:", orderId);
-        console.log("Tracking Number:", trackingNumber);
-        console.log("Shipping Status:", shippingStatus);
-        console.log("Estimated Delivery:", estimatedDelivery);
-
-        // Update the UI with order details
-        setOrderDetails({
-          orderId,
-          trackingNumber,
-          shippingStatus,
-          estimatedDelivery,
-        });
-
-        console.log("Order details updated in state:", orderDetails);
-      } else {
-        console.error("No response data received");
+      if (response) {
+        setOrderDetails(response.data);
+        console.log("Order placed successfully.", response.data);
       }
     } catch (error) {
       console.error("Error placing the order:", error);
@@ -376,7 +345,6 @@ const UserContextProvider = ({ children }) => {
     // Clear state when component mounts
     setAverageRatings(0);
     setTotalRatings(0);
-
     // Fetch new reviews
     if (productId) {
       axios
@@ -404,11 +372,27 @@ const UserContextProvider = ({ children }) => {
     console.log(query.result);
   };
 
+  const [orderItem, setOrderItems] = useState([]);
+
+  const GetOrderId = async (id) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/shiprocket/getOrder/${id}`,
+        { withCredentials: true }
+      );
+      if (response) {
+        setOrderItems(response.data.data);
+        console.log("Fetched ordr:", response.data.data);
+      }
+    } catch (error) {
+      console.error("Failed to register", error);
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
         setUserDetail,
-        // Cart items and management functions
         cartItems,
         addToCart,
         userDetail,
@@ -418,13 +402,14 @@ const UserContextProvider = ({ children }) => {
         productDetails,
         buyingProduct,
         getUserDetail,
+        GetOrderId,
+        orderItem,
         data,
         childToParent,
         removeFromCart,
         quantity,
         removingElements,
         totalCartPrice,
-
         totalProductPrice,
         cartDesccription,
         removeItemfromCheckout,
@@ -434,7 +419,6 @@ const UserContextProvider = ({ children }) => {
         orderSuccess,
         orderSuccessful,
         setOrderSuccess,
-        myOrder,
         handleAddToCart,
         notification,
         addToFavourite,
@@ -442,6 +426,7 @@ const UserContextProvider = ({ children }) => {
         myWishlist,
         handleSearch,
         searchResult,
+        orderDetails,
         review,
         setReview,
         productReview,
@@ -451,6 +436,7 @@ const UserContextProvider = ({ children }) => {
         handleFormClick,
         totalRatings,
         averageRatings,
+        setAddressId,
       }}
     >
       {children}

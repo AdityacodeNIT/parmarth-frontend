@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CiHeart } from "react-icons/ci";
 import UserContext from "../../context/UserContext";
 
@@ -18,6 +18,8 @@ const Product = () => {
     averageRatings,
     totalRatings,
   } = useContext(UserContext);
+
+  const [showMore, setShowMore] = useState(false);
 
   useEffect(() => {
     if (data?._id) {
@@ -81,8 +83,7 @@ const Product = () => {
               </button>
             </div>
           </div>
-
-          <div className="text-2xl font-semibold">
+          <div className="text-xl  text-black">
             Price: ₹{data.price || data.productId?.price}
           </div>
 
@@ -110,7 +111,7 @@ const Product = () => {
         </div>
       </div>
 
-      <div className="shadow-lg h-auto bg-green-100 mx-4 p-6 rounded-lg">
+      <div className="shadow-lg h-auto bg-white-100 mx-4 p-6 rounded-lg">
         <div className="mt-10 mx-4 h-auto p-6 rounded-lg">
           <div className="text-2xl font-semibold mb-4 text-gray-800">
             Description:
@@ -118,6 +119,34 @@ const Product = () => {
           <p className="text-lg text-gray-700 leading-relaxed font-semibold">
             {data.description || data.productId?.description}
           </p>
+
+          <button
+            className="text-xl text-blue-500 font-semibold mt-4"
+            onClick={() => setShowMore(!showMore)}
+          >
+            {" "}
+            {showMore ? "See Less" : "See More"}
+          </button>
+          {showMore && (
+            <div>
+              {" "}
+              <div className="text-xl">
+                Weight: {data.weight || data.productId?.weight} g{" "}
+              </div>
+              <div className="text-xl">
+                {" "}
+                Height: {data.height || data.productId?.height} cm{" "}
+              </div>
+              <div className="text-xl">
+                {" "}
+                Length: {data.length || data.productId?.length} cm{" "}
+              </div>
+              <div className="text-xl">
+                {" "}
+                Width: {data.width || data.productId?.width} cm{" "}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="m-2 h-96 text-2xl font-semibold">
