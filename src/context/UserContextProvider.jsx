@@ -212,24 +212,21 @@ const UserContextProvider = ({ children }) => {
   useEffect(() => {
     setOrderProduct((prevOrderProduct) => ({
       ...prevOrderProduct,
-      items: buyProduct.map((item) => ({
-        productId: item._id,
-        quantity: item.quantity,
-        Address_id: addressId,
-      })),
+      items: [
+        ...buyProduct.map((item) => ({
+          productId: item._id,
+          quantity: item.quantity,
+          Address_id: addressId,
+        })),
+        ...cartItems.map((item) => ({
+          productId: item._id,
+          quantity: item.quantity,
+          Address_id: addressId,
+        })),
+      ],
     }));
-  }, [buyProduct]);
-
-  useEffect(() => {
-    setOrderProduct((prevOrderProduct) => ({
-      ...prevOrderProduct,
-      items: cartItems.map((item) => ({
-        productId: item._id,
-        quantity: item.quantity,
-        Address_id: addressId,
-      })),
-    }));
-  }, [cartItems]);
+  }, [buyProduct, cartItems, addressId]);
+  
 
   // Handling successful order submission
   const orderSuccessful = async (order) => {
