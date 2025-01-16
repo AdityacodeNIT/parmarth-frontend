@@ -3,11 +3,14 @@ import UserContext from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
+
 const UserContextProvider = ({ children }) => {
   // State to manage the selected product details.
   const [data, setData] = useState(
     JSON.parse(localStorage.getItem("product")) || null
   );
+  
 
   // State to manage detailed information of a product.
   const [productDetails, setProductDetails] = useState();
@@ -328,11 +331,11 @@ const UserContextProvider = ({ children }) => {
     }
   }, [productReview]);
 
+
   useEffect(() => {
-    // Clear state when component mounts
     setAverageRatings(0);
     setTotalRatings(0);
-    // Fetch new reviews
+    // Fetch reviews
     if (productId) {
       axios
         .post(`${import.meta.env.VITE_API_URL}/api/v2/feedback/average`, {
@@ -357,7 +360,7 @@ const UserContextProvider = ({ children }) => {
     setSearchResult(query.result);
   };
 
-  const [orderItem, setOrderItems] = useState([]);
+  const [orderItems, setOrderItems] = useState([]);
 
   const GetOrderId = async (id) => {
     try {
@@ -366,7 +369,9 @@ const UserContextProvider = ({ children }) => {
         { withCredentials: true }
       );
       if (response) {
-        setOrderItems(response.data.data);
+        setOrderItems(response.data.data.data);
+      
+        console.log(response.data.data.data.billing_country_name);
       }
     } catch (error) {
       console.error("Failed to register", error);
@@ -387,7 +392,7 @@ const UserContextProvider = ({ children }) => {
         buyingProduct,
         getUserDetail,
         GetOrderId,
-        orderItem,
+        orderItems,
         data,
         childToParent,
         removeFromCart,

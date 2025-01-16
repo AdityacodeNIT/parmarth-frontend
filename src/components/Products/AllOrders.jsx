@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Spinner } from "@material-tailwind/react";
 import UserContext from "../../context/UserContext";
+import { Link } from "react-router-dom";
 
 const AllOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -65,6 +66,8 @@ const AllOrders = () => {
       {orders.length > 0 ? (
         <div className="grid gap-4">
           {orders.map((order) => (
+            <Link to="/OrderItems">
+
             <div
               key={order.id}
               className="border p-4 rounded shadow-sm bg-white"
@@ -98,8 +101,12 @@ const AllOrders = () => {
               <p>
                 <strong>Total:</strong> ₹{order.total}
               </p>
+             
             </div>
+            </Link>
           ))}
+        
+       
         </div>
       ) : (
         <div className="text-center">

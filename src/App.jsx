@@ -1,11 +1,16 @@
 import "./App.css";
+
+
 import Product from "./components/Products/Product.jsx";
 import ProductList from "./components/Products/ProductList.jsx";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import About from "./components/App/About.jsx";
+
+
 import Cart from "./components/Products/Cart.jsx";
 import Navbar from "./components/App/Navbar.jsx";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+
 
 import Register from "./components/User/Register.jsx";
 import UserContextProvider from "./context/UserContextProvider.jsx";
@@ -13,15 +18,20 @@ import Userlogin from "./components/User/Userlogin.jsx";
 import UserDetails from "./components/User/UserDetails.jsx";
 import Logout from "./components/User/Logout.jsx";
 
+
 import Paperproducts from "./components/Category component/Paperproducts.jsx";
 import Desksupply from "./components/Category component/Desksupply.jsx";
 import Reusable from "./components/Category component/Reusable.jsx";
 import Filling from "./components/Category component/Filling.jsx";
+
+
 import Writing from "./components/Category component/Writing.jsx";
 import BuyProduct from "./components/Products/BuyProduct.jsx";
 import UserAddress from "./components/User/UserAddress.jsx";
 import Payment from "./components/Payment/Payment.jsx";
 removeEventListener;
+
+
 import Helpdesk from "./components/App/Helpdesk.jsx";
 import AddProduct from "./components/Products/AddProduct.jsx";
 import UserUpdateDetails from "./components/User/UserUpdateDetails.jsx";
@@ -29,11 +39,15 @@ import Wishlisted from "./components/Products/Wishllisted.jsx";
 import SearchResult from "./components/App/SearchResult.jsx";
 import ChangePassword from "./components/User/ChangePassword.jsx";
 import UpdateUserAccountDetails from "./components/User/UpdateUserAccountDetails.jsx";
+
+
 import UpdateDetails from "./components/User/UpdateDetails.jsx";
 import UpdateAvatar from "./components/User/UpdateAvatar.jsx";
 import AdminSection from "./components/Admin/AdminSection.jsx";
 import KeepAlive from "./keepAlive.jsx";
 import AllOrders from "./components/Products/AllOrders.jsx";
+import OrderDetails from "./components/Products/OrderDetails.jsx";
+
 
 function App() {
   return (
@@ -70,6 +84,7 @@ function App() {
           <Route path="/updateAvatar" element={<UpdateAvatar />} />
           <Route path="/admin" element={<AdminSection />} />
           <Route path="/myOrder" element={<AllOrders />} />
+          <Route path="/orderitems" element={<OrderDetails />} />
         </Routes>
         <KeepAlive />
         <SpeedInsights />
