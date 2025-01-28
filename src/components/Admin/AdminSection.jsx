@@ -6,8 +6,6 @@ import { MdAdminPanelSettings } from "react-icons/md";
 
 const AdminSection = () => {
   const [activeSection, setActiveSection] = useState(null);
-
-  // Toggle function to expand or collapse sections
   const toggleSection = (section) => {
     setActiveSection(activeSection === section ? null : section);
   };

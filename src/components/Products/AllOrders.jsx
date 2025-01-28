@@ -27,7 +27,7 @@ const AllOrders = () => {
       }
     } catch (err) {
       setError(err.message || "Failed to fetch orders.");
-      console.error(err); // Log error details for debugging
+      console.error(err.data); // Log error details for debugging
     } finally {
       setLoading(false);
     }
@@ -67,8 +67,7 @@ const AllOrders = () => {
         <div className="grid gap-4">
           {orders.map((order) => (
             <Link to="/OrderItems">
-
-            <div
+ <div
               key={order.id}
               className="border p-4 rounded shadow-sm bg-white"
               onClick={() => GetOrderId(order.id)}
