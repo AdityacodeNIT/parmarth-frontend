@@ -3,14 +3,11 @@ import UserContext from "./UserContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-
-
 const UserContextProvider = ({ children }) => {
   // State to manage the selected product details.
   const [data, setData] = useState(
     JSON.parse(localStorage.getItem("product")) || null
   );
-  
 
   // State to manage detailed information of a product.
   const [productDetails, setProductDetails] = useState();
@@ -23,6 +20,7 @@ const UserContextProvider = ({ children }) => {
     setData(product);
   };
 
+  // Save selected product to localStorage whenever there's a change in data state.
   useEffect(() => {
     localStorage.setItem("product", JSON.stringify(data));
   }, [data]);
@@ -39,7 +37,7 @@ const UserContextProvider = ({ children }) => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Cart Management: Adding, removing, and updating cart items..
+  // Cart Management: Adding, removing, and updating cart items.
   const addToCart = (product, productId) => {
     let existingProduct = cartItems.find(
       (item) => item._id.toString() === productId
@@ -58,6 +56,7 @@ const UserContextProvider = ({ children }) => {
       setCartItems([...cartItems, { ...product, quantity: 1 }]);
     }
   };
+
   // Reducing item quantity in the cart or removing it.
   const removingElements = (productId) => {
     const removingCartItems = cartItems.map((item) =>
@@ -84,11 +83,12 @@ const UserContextProvider = ({ children }) => {
     );
   };
 
+  // State to manage address ID.
   const [addressId, setAddressId] = useState(() => {
     return localStorage.getItem("addressId") || undefined;
   });
 
-  // Sync the state value to localStorage whenever it changes
+  // Sync the state value to localStorage whenever it changes.
   useEffect(() => {
     if (addressId !== undefined) {
       localStorage.setItem("addressId", addressId);
@@ -107,11 +107,12 @@ const UserContextProvider = ({ children }) => {
     ));
   };
 
-  // Product Management: Handling products marked for buying with localStorage persistence.
+  // State to manage products marked for buying with localStorage persistence.
   const [buyProduct, setBuyProduct] = useState(
     JSON.parse(localStorage.getItem("buyProduct")) || []
   );
 
+  // Save buyProduct to localStorage whenever there's a change in buyProduct state.
   useEffect(() => {
     localStorage.setItem("buyProduct", JSON.stringify(buyProduct));
   }, [buyProduct]);
@@ -133,13 +134,13 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
-  // Remove all items from checkout and cart
+  // Remove all items from checkout and cart.
   const removeItemfromCheckout = () => {
     setBuyProduct([]);
     setCartItems([]);
   };
 
-  // Calculate the total price of all bought items
+  // Calculate the total price of all bought items.
   const totalProductPrice = () => {
     return buyProduct.reduce(
       (total, item) => total + item.quantity * item.price,
@@ -147,12 +148,12 @@ const UserContextProvider = ({ children }) => {
     );
   };
 
-  // Generate product price list for all bought items
+  // Generate product price list for all bought items.
   const totalPrice = (buyProduct) => {
     return buyProduct.map((product) => product.quantity * product.price);
   };
 
-  // Generate product descriptions for bought items
+  // Generate product descriptions for bought items.
   const productDesccription = () => {
     return buyProduct.map((item) => (
       <div key={item._id}>
@@ -164,7 +165,7 @@ const UserContextProvider = ({ children }) => {
     ));
   };
 
-  // Generate product names
+  // Generate product names.
   const productName = () => {
     return buyProduct.map((item) => (
       <div className="border-1 border-slate-300 flex bg-blue-100 p-2 text-xl rounded-xl px-4">
@@ -173,14 +174,13 @@ const UserContextProvider = ({ children }) => {
     ));
   };
 
-  // State to manage successful orders
+  // State to manage successful orders.
   const [orderSuccess, setOrderSuccess] = useState([]);
   useEffect(() => {
     localStorage.setItem("orderSuccess", JSON.stringify(orderSuccess));
   }, [orderSuccess]);
 
-  // State to manage user details
-
+  // State to manage user details.
   const [userDetail, setUserDetail] = useState(
     JSON.parse(localStorage.getItem("details")) || null
   );
@@ -192,11 +192,12 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
+  // Save user details to localStorage whenever there's a change in userDetail state.
   useEffect(() => {
     localStorage.setItem("details", JSON.stringify(userDetail));
   }, [userDetail]);
 
-  // Notification management for adding items to the cart
+  // Notification management for adding items to the cart.
   const [notification, setNotification] = useState("");
   const handleAddToCart = () => {
     addToCart(data, data._id.toString());
@@ -207,11 +208,12 @@ const UserContextProvider = ({ children }) => {
     }, 3000);
   };
 
-  // Order Management: Creating an order from cart and buyProduct items
+  // Order Management: Creating an order from cart and buyProduct items.
   const [orderProduct, setOrderProduct] = useState({
     items: [],
   });
 
+  // Update orderProduct state whenever buyProduct, cartItems, or addressId changes.
   useEffect(() => {
     setOrderProduct((prevOrderProduct) => ({
       ...prevOrderProduct,
@@ -229,9 +231,8 @@ const UserContextProvider = ({ children }) => {
       ],
     }));
   }, [buyProduct, cartItems, addressId]);
-  
 
-  // Handling successful order submission
+  // Handling successful order submission.
   const orderSuccessful = async (order) => {
     setOrderSuccess((prevOrders) => [...prevOrders, order]);
     handleFormSubmit();
@@ -239,7 +240,7 @@ const UserContextProvider = ({ children }) => {
 
   const [orderDetails, setOrderDetails] = useState(null);
 
-  // Handling form submission to create an order
+  // Handling form submission to create an order.
   const handleFormSubmit = async () => {
     try {
       const response = await axios.post(
@@ -256,11 +257,13 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
+  // State to manage wishlist.
   const [wishlist, setWishlist] = useState(() => ({
     userId: userDetail?.data?.user?._id,
     items: [],
   }));
 
+  // Add item to wishlist.
   const addToFavourite = async (itemId) => {
     const updatedWishlist = {
       ...wishlist,
@@ -284,6 +287,7 @@ const UserContextProvider = ({ children }) => {
 
   const [myWishlist, setMyWishlist] = useState([]);
 
+  // Fetch wishlist items.
   const fetchFavourites = async () => {
     try {
       const response = await axios.get(
@@ -292,31 +296,35 @@ const UserContextProvider = ({ children }) => {
         }`
       );
       if (response.data) {
-        setMyWishlist(response.data); // Make sure `response.data.items` is an array
+        setMyWishlist(response.data);
       }
     } catch (error) {
       console.error("Error fetching favourites:", error);
-      setWishlist({ userId: userDetail?.data?.user?._id, items: [] }); // Set default empty array on error
+      setWishlist({ userId: userDetail?.data?.user?._id, items: [] });
     }
   };
 
+  // Fetch wishlist items whenever wishlist changes.
   useEffect(() => {
     if (userDetail?.data?.user?._id) {
-      fetchFavourites(); // Fetch only when user ID is available
+      fetchFavourites();
     }
-  }, [wishlist]); // Include user ID in the dependency array
+  }, [wishlist]);
 
+  // State to manage product reviews.
   const [review, setReview] = useState({ rating: 0, description: "" });
   const [productReview, setProductReview] = useState({});
   const [productId, setProductId] = useState(data?._id);
   const [totalRatings, setTotalRatings] = useState([]);
   const [averageRatings, setAverageRatings] = useState([]);
 
+  // Handle form click for submitting a review.
   const handleFormClick = (e) => {
     setProductReview({ ...review, productId });
     setReview({ rating: 0, description: "" });
   };
 
+  // Submit product review whenever productReview changes.
   useEffect(() => {
     if (productReview.rating && productReview.description) {
       axios
@@ -324,18 +332,16 @@ const UserContextProvider = ({ children }) => {
           `${import.meta.env.VITE_API_URL}/api/v2/feedback/review`,
           productReview
         )
-
         .catch((error) => {
           console.error("There was an error posting the review!", error);
         });
     }
   }, [productReview]);
 
-
+  // Fetch average ratings and total ratings for a product.
   useEffect(() => {
     setAverageRatings(0);
     setTotalRatings(0);
-    // Fetch reviews
     if (productId) {
       axios
         .post(`${import.meta.env.VITE_API_URL}/api/v2/feedback/average`, {
@@ -354,14 +360,18 @@ const UserContextProvider = ({ children }) => {
     }
   }, [productId, productReview]);
 
+  // State to manage search results.
   const [searchResult, setSearchResult] = useState([]);
 
+  // Handle search query.
   const handleSearch = (query) => {
     setSearchResult(query.result);
   };
 
+  // State to manage order items.
   const [orderItems, setOrderItems] = useState([]);
 
+  // Fetch order details by order ID.
   const GetOrderId = async (id) => {
     try {
       const response = await axios.get(
@@ -370,7 +380,6 @@ const UserContextProvider = ({ children }) => {
       );
       if (response) {
         setOrderItems(response.data.data.data);
-      
         console.log(response.data.data.data.billing_country_name);
       }
     } catch (error) {

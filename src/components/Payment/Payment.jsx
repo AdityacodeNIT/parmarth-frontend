@@ -3,12 +3,16 @@ import axios from "axios";
 import UserContext from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 
+
+
 const Payment = () => {
+ const navigate=useNavigate()
   const {
     totalProductPrice,
     removeItemfromCheckout,
     totalCartPrice,
     orderSuccessful,
+    userDetail
   } = useContext(UserContext);
 
   const [paymentData, setPaymentData] = useState({
@@ -41,27 +45,30 @@ const Payment = () => {
       }
       const { order } = response.data;
       const options = {
-        key, // Enter the Key ID generated from the Dashboard
-        amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        key, 
+        amount: order.amount, 
         currency: "INR",
-        name: " ई-Cart Logistics", //your business name
+        name: " ई-Cart Logistics", 
         description: "Test Transaction",
         image: "https://example.com/your_logo",
-        order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        order_id: order.id, 
         callback_url: `${
           import.meta.env.VITE_API_URL
         }/api/v2/payments/paymentcallback`,
         prefill: {
-          //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
-          name: "Gaurav Kumar", //your customer's name
-          email: "gaurav.kumar@example.com",
-          contact: "9000090000", //Provide the customer's phone number for better conversion rates
+         
+          name: userDetail.data.user.username,
+          email:userDetail.data.user.email,
+          contact: "9000090000", 
         },
         notes: {
           address: "Razorpay Corporate Office",
         },
         theme: {
           color: "#3399cc",
+        },
+        handler: function (response) {
+          navigate(`/order-success/${order.id}`); // Navigate to the order success page
         },
       };
       const razor = new window.Razorpay(options);

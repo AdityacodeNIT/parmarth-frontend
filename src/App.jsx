@@ -47,6 +47,7 @@ import AdminSection from "./components/Admin/AdminSection.jsx";
 import KeepAlive from "./keepAlive.jsx";
 import AllOrders from "./components/Products/AllOrders.jsx";
 import OrderDetails from "./components/Products/OrderDetails.jsx";
+import OrderSuccess from "./components/Products/OrderSuccess.jsx";
 
 
 function App() {
@@ -85,6 +86,7 @@ function App() {
           <Route path="/admin" element={<AdminSection />} />
           <Route path="/myOrder" element={<AllOrders />} />
           <Route path="/orderitems" element={<OrderDetails />} />
+          <Route path="/order-success/:orderId" element={<OrderSuccess/>}/>
         </Routes>
         <KeepAlive />
         <SpeedInsights />
