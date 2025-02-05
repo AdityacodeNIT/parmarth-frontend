@@ -45,7 +45,6 @@ const Writing = () => {
         </Link>
       </div>
 
-      <Categories />
       <div className="productlist1 mx-10">
         <ul className="flex flex-wrap justify-center">
           {products.map((product) => (
@@ -71,6 +70,8 @@ const Writing = () => {
                     </p>
                   </div>
                 </Link>
+
+                
               </div>
             </li>
           ))}

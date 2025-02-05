@@ -68,7 +68,9 @@ const Payment = () => {
           color: "#3399cc",
         },
         handler: function (response) {
+          GetOrderId(order.id);
           navigate(`/order-success/${order.id}`); // Navigate to the order success page
+          
         },
       };
       const razor = new window.Razorpay(options);

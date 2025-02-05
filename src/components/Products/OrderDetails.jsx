@@ -38,7 +38,7 @@ const OrderDetails = () => {
     
 
         {/* Shipping Details */}
-    
+        
           <h2 className="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Shipping Information</h2>
           <p><strong>Address:</strong> {orderItems.customer_address}</p>
           <p><strong>City:</strong> {orderItems.customer_city}</p>

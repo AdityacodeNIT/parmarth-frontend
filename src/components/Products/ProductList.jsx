@@ -27,13 +27,14 @@ const ProductList = () => {
   }, []);
 
   return (
+
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-300">
       <Reminder />
 
       {/* Hero Banner */}
       <section className="relative bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 py-20">
         <div className="container mx-auto text-center">
-          <h1 className="text-5xl font-extrabold text-white mb-6">
+          <h1 className="text-4xl font-extrabold text-white mb-3">
             Discover Amazing Products
           </h1>
           <p className="text-lg text-gray-100 max-w-2xl mx-auto">
@@ -46,10 +47,6 @@ const ProductList = () => {
         </div>
       </section>
 
-      {/* Product Categories */}
-      <Categories />
-
-      {/* Background Image Section */}
       <div
         className="bg-cover bg-center w-full h-auto"
         style={{ backgroundImage: 'url("/src/assets/design/d.jpg")' }}

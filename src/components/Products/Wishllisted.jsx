@@ -17,14 +17,7 @@ const Wishlisted = () => {
               key={order._id}
               className="bg-green-100 rounded-lg shadow-md p-6"
             >
-              {/* <div className="mb-4">
-                <span className="text-sm text-gray-500">
-                  <strong>
-                    Order Date: {new Date(order.createdAt).toLocaleDateString()}
-                  </strong>
-                </span>
-              </div> */}
-              {/* Iterate over the items of each myWishlist order */}
+             
               {order.items.map((item) => (
                 <div
                   key={item._id}

@@ -27,7 +27,7 @@ const AllOrders = () => {
       }
     } catch (err) {
       setError(err.message || "Failed to fetch orders.");
-      console.error(err.data); // Log error details for debugging
+  
     } finally {
       setLoading(false);
     }

@@ -48,6 +48,7 @@ import KeepAlive from "./keepAlive.jsx";
 import AllOrders from "./components/Products/AllOrders.jsx";
 import OrderDetails from "./components/Products/OrderDetails.jsx";
 import OrderSuccess from "./components/Products/OrderSuccess.jsx";
+import Home from "./components/App/Home.jsx";
 
 
 function App() {
@@ -58,19 +59,20 @@ function App() {
         {/* Log statement to check if Navbar is rendering */}
         {console.log("Navbar component rendered")}
         <Routes>
-          <Route path="/" element={<ProductList />} />
-          <Route path="/About" element={<Product />} />]
+        <Route path="/" element={<Home />} />
+          <Route path="/shop" element={<ProductList />} />
+          <Route path="/About" element={<Product />} />
           <Route path="/Cart" element={<Cart />} />
           <Route path="/Aboutus" element={<About />} />
           <Route path="/register" element={<Register />} />
           <Route path="/userLogin" element={<Userlogin />} />
           <Route path="/user" element={<UserDetails />} />
           <Route path="/logout" element={<Logout />} />
-          <Route path="/PaperProduct" element={<Paperproducts />} />
-          <Route path="/DeskSupply" element={<Desksupply />} />
-          <Route path="/Reusable" element={<Reusable />} />
-          <Route path="/Filling" element={<Filling />} />
-          <Route path="/Writing" element={<Writing />} />
+          <Route path="/PaperProducts" element={<Paperproducts />} />
+          <Route path="/DeskSupplies" element={<Desksupply />} />
+          <Route path="/ReusableProducts" element={<Reusable />} />
+          <Route path="/Filing&Storage" element={<Filling />} />
+          <Route path="/WritingInstruments" element={<Writing />} />
           <Route path="/BuyProduct" element={<BuyProduct />} />
           <Route path="/addressUpdate" element={<UserAddress />} />
           <Route path="/wishlist" element={<Wishlisted />} />
