@@ -55,6 +55,7 @@ const Payment = () => {
         callback_url: `${
           import.meta.env.VITE_API_URL
         }/api/v2/payments/paymentcallback`,
+
         prefill: {
          
           name: userDetail.data.user.username,
@@ -67,11 +68,11 @@ const Payment = () => {
         theme: {
           color: "#3399cc",
         },
-        handler: function (response) {
-          GetOrderId(order.id);
-          navigate(`/order-success/${order.id}`); // Navigate to the order success page
-          
+        handler: (response) => {
+  
+          navigate(`/order-success/${order.id}`);
         },
+        
       };
       const razor = new window.Razorpay(options);
 
