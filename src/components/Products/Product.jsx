@@ -44,11 +44,11 @@ const Product = () => {
       {/* Product Image & Details */}
       <div className="p-5 m-2 flex flex-col lg:flex-row items-center justify-between space-y-6 lg:space-y-0">
         {/* Image Section */}
-        <div className="w-full md:w-1/2 flex justify-center">
+        <div className="w-full md:w-1/2 h-auto flex justify-center">
           <img
             src={product.imgLink || product.ProductImage || "/placeholder.png"}
             alt={product.name}
-            className="shadow-2xl bg-slate-100 font-bold w-full max-w-sm md:max-w-md lg:max-w-lg h-auto rounded-lg"
+            className="shadow-2xl bg-slate-100 font-bold w-96 h-96"
           />
         </div>
 
@@ -88,7 +88,7 @@ const Product = () => {
 
           {/* Add to Cart Button */}
           <button
-            className="w-full md:w-auto text-2xl border-2 text-white font-semibold border-slate-600 bg-blue-600 px-10 py-2 rounded-md"
+            className="text-3xl border-2 text-white font-semibold border-slate-600 bg-blue-600 px-40 py-2 rounded-md"
             onClick={() => handleAddToCart(product._id)}
           >
             Add to cart
@@ -104,7 +104,7 @@ const Product = () => {
           {/* Buy Now Button */}
           <Link to="/BuyProduct">
             <button
-              className="w-full md:w-auto text-2xl px-10 py-2 mt-3 font-semibold text-white bg-violet-600 rounded-lg"
+              className="text-3xl px-44 py-2 mt-3 font-semibold text-white bg-violet-600 rounded-lg"
               onClick={() => buyingProduct(product, product._id?.toString())}
             >
               Buy Now
