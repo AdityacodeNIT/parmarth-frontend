@@ -29,42 +29,49 @@ const Reusable = () => {
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-300">
       {/* Hero Banner */}
       <section className="relative bg-gradient-to-r from-teal-500 via-green-500 to-teal-300 py-20">
-        <div className="container mx-auto text-center">
-          <h1 className="text-4xl font-extrabold text-white mb-4">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">
             Eco-Friendly Stationery
           </h1>
           <p className="text-lg text-gray-100">
-            Discover Eco-friendly and Creative products that are made using the
-            waste Paperproducts Our goal is Save Envoirnment and Increase
-            Creativity.
+            Discover Eco-friendly and Creative products that are made using
+            waste paper products. Our goal is to save the environment and
+            increase creativity.
           </p>
-          <button className="mt-8 bg-white text-teal-600 py-3 px-6 rounded-full shadow-lg hover:bg-gray-200 transition">
+          <Link
+            to="/shop"
+            className="inline-block mt-6 bg-white text-teal-600 py-3 px-6 rounded-full shadow-lg hover:bg-gray-200 transition"
+          >
             Browse Reusable Products
-          </button>
+          </Link>
         </div>
       </section>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      {/* Categories Section */}
+      <Categories />
+
+      {/* Product Grid */}
+      <div className="container mx-auto px-4 py-6">
+        <div className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {products.map((product) => (
             <div
               key={product._id}
-              className="relative bg-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-2 hover:scale-105 border border-gray-200"
+              className="bg-white rounded-xl shadow-lg border border-gray-200 transition-shadow duration-300 transform hover:shadow-2xl hover:-translate-y-2 hover:scale-105"
               onClick={() => childToParent(product)}
             >
-              <Link to="/About" style={{ textDecoration: "none" }}>
-                <div className="relative overflow-hidden h-72 bg-gray-100 rounded-t-xl">
+              <Link to="/About" className="block">
+                <div className="relative overflow-hidden bg-gray-100 rounded-t-xl h-44 sm:h-52 md:h-60 lg:h-72">
                   <img
                     src={product.ProductImage}
                     alt={product.name}
                     className="w-full h-full object-contain transition-transform duration-500 ease-in-out transform hover:rotate-2 hover:scale-105"
                   />
                 </div>
-                <div className="p-5">
-                  <h3 className="text-gray-900 font-semibold text-lg md:text-xl text-center truncate">
+                <div className="p-4">
+                  <h3 className="text-gray-900 font-semibold text-sm sm:text-lg md:text-xl text-center truncate">
                     {product.name}
                   </h3>
-                  <p className="text-teal-600 font-bold text-xl text-center mt-3">
+                  <p className="text-teal-600 font-bold text-base sm:text-xl text-center mt-2">
                     ₹{product.price}
                   </p>
                 </div>
@@ -74,7 +81,6 @@ const Reusable = () => {
         </div>
       </div>
     </div>
-    //  </div>
   );
 };
 
