@@ -51,11 +51,11 @@ useEffect(() => {
         <h2 className="text-3xl font-bold text-center mb-6">Shop by Category</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {[
-            { name: "Writing Instruments", img: "https://files.oaiusercontent.com/file-LX9emr9rUVZNHbsfaizQVW?se=2025-01-30T13%3A31%3A50Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D4e6cc9b5-e634-4b32-a86a-f208fc5259ce.webp&sig=GXqgagRbJneBhlhHsklu2kRVsBBgoN4/ZPQK87hS8yQ%3D" },
-            { name: "Paper Products", img: "https://files.oaiusercontent.com/file-DAShraupvJZZF4CBBpJUXC?se=2025-01-30T13%3A32%3A54Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De00cc79d-8663-4763-bf15-199e58b96d54.webp&sig=8tJXm33NgteM%2BeO1bHv6/QhltsZwyiQo8uNkGQN8wOs%3D" },
-            { name: "Desk Supplies", img: "https://files.oaiusercontent.com/file-BwY4n6kYKRTaEFT2k34oq5?se=2025-01-30T13%3A34%3A23Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Df1617b28-099d-454b-8bb9-ccd35ed88479.webp&sig=wx7ANeSc9C//3OvsvgBsth0aGxqpzAemcLT4eB9Kh3I%3D" },
-            { name: "Filing & Storage", img: "https://files.oaiusercontent.com/file-J9oodcPMb8GWREmJAsKSC8?se=2025-01-30T13%3A36%3A20Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D17466555-7717-4b44-a52c-0b924c228508.webp&sig=Zhk1JQoBq10ZvDsTuKpP7ohrJjGmj7pBqvE8eAgGMkA%3D" },
-            { name: "Reusable Products", img: "https://files.oaiusercontent.com/file-RSbjkT7tdojM1rgDZdEGUN?se=2025-01-30T13%3A36%3A57Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D4d2b97ee-3d59-4ff0-893f-decd6fd39ccc.webp&sig=X4lNdi4OV69t%2BidIkuK1KIX7X3RNd62dndewTCpzc%2BU%3D" },
+           { name: "Writing Instruments", img: "/assets/10b1e33d-42e9-478b-a60e-59da139d2ecc.webp" },
+            { name: "Paper Products", img: "/assets/paperProducts.webp" },
+            { name: "Desk Supplies", img: "https://images.pexels.com/photos/5088007/pexels-photo-5088007.jpeg?auto=compress&cs=tinysrgb&w=600" },
+            { name: "Filing & Storage", img: "https://images.pexels.com/photos/10567177/pexels-photo-10567177.jpeg?auto=compress&cs=tinysrgb&w=600" },
+            { name: "Reusable Products", img: "https://images.pexels.com/photos/7488492/pexels-photo-7488492.jpeg?auto=compress&cs=tinysrgb&w=600" },
           ].map((category, index) => (
             <Link to={`/${category.name.replace(/\s+/g, '')}`} key={index}>
               <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105">
