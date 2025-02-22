@@ -3,116 +3,159 @@ import axios from "axios";
 import UserContext from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 
-
-
 const Payment = () => {
- const navigate=useNavigate()
+  const navigate = useNavigate();
   const {
     totalProductPrice,
     removeItemfromCheckout,
     totalCartPrice,
     orderSuccessful,
-    userDetail
+    userDetail,
   } = useContext(UserContext);
 
-  const [paymentData, setPaymentData] = useState({
-    amount: Math.ceil(
-      (totalProductPrice() || totalCartPrice()) * 0.18 +
-        (totalProductPrice() || totalCartPrice())
-    ),
-  });
+  // Initial amount calculation with 18% tax
+  const baseAmount = totalProductPrice() || totalCartPrice();
+  const totalAmount = Math.ceil(baseAmount * 1.18);
 
+  const [paymentData, setPaymentData] = useState({ amount: totalAmount });
+  const [loading, setLoading] = useState(false);
+  const [coupon, setCoupon] = useState(""); // Coupon state
+  const [discount, setDiscount] = useState(0); // Discount applied
+  const [paymentStatus, setPaymentStatus] = useState(null); // Success/Error message
+
+  // Handle input change for amount
   const handleInputChange = (e) => {
-    setPaymentData({
-      ...paymentData,
-      [e.target.name]: e.target.value,
-    });
+    setPaymentData({ ...paymentData, [e.target.name]: e.target.value });
   };
+
+  // Apply Discount Coupon
+  const applyCoupon = () => {
+    if (coupon === "DISCOUNT10") {
+      setDiscount(totalAmount * 0.1); // 10% discount
+    } else {
+      setPaymentStatus("Invalid Coupon Code");
+    }
+  };
+
+  // Handle Payment Process
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setPaymentStatus(null);
 
     try {
-      const keyResponse = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/getkey`
-      );
+      const keyResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/getkey`);
       const { key } = keyResponse.data;
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v2/payments/paid`,
-        paymentData
-      );
-      if (response) {
-        orderSuccessful(response.data);
-      }
-      const { order } = response.data;
-      const options = {
-        key, 
-        amount: order.amount, 
-        currency: "INR",
-        name: " ई-Cart Logistics", 
-        description: "Test Transaction",
-        image: "https://example.com/your_logo",
-        order_id: order.id, 
-        callback_url: `${
-          import.meta.env.VITE_API_URL
-        }/api/v2/payments/paymentcallback`,
 
+      const finalAmount = totalAmount - discount;
+
+      const paymentResponse = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/v2/payments/paid`,
+        { amount: finalAmount }
+      );
+
+      if (!paymentResponse || !paymentResponse.data) {
+        throw new Error("Payment initiation failed");
+      }
+
+      orderSuccessful(paymentResponse.data);
+      const { order } = paymentResponse.data;
+
+      const options = {
+        key,
+        amount: order.amount,
+        currency: "INR",
+        name: "ई-Cart Logistics",
+        description: "Secure Payment",
+        image: "https://example.com/your_logo",
+        order_id: order.id,
+        callback_url: `${import.meta.env.VITE_API_URL}/api/v2/payments/paymentcallback`,
         prefill: {
-         
-          name: userDetail.data.user.username,
-          email:userDetail.data.user.email,
-          contact: "9000090000", 
-        },
-        notes: {
-          address: "Razorpay Corporate Office",
+          name: userDetail?.data?.user?.username || "User",
+          email: userDetail?.data?.user?.email || "user@example.com",
+          contact: "9000090000",
         },
         theme: {
           color: "#3399cc",
         },
-        handler: (response) => {
-  
-          navigate(`/order-success/${order.id}`);
+        handler: () => {
+          setPaymentStatus("Payment Successful! Redirecting...");
+          setTimeout(() => navigate(`/order-success/${order.id}`), 2000);
+          removeItemfromCheckout();
         },
-        
       };
-      const razor = new window.Razorpay(options);
 
+      const razor = new window.Razorpay(options);
       razor.open();
-      if (response) {
-        removeItemfromCheckout();
-      }
     } catch (error) {
-      console.log(error, "Issue in login:");
+      console.error("Payment Error:", error);
+      setPaymentStatus("Payment Failed! Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Your component return
   return (
-    <div className="bg-slate-300 p-4 flex justify-center items-center h-screen">
-      <div className="w-full max-w-md mx-auto bg-white  rounded-lg shadow-md overflow-hidden p-4 py-4 md:max-w-2xl">
+    <div className="bg-slate-300 flex justify-center items-center h-screen p-4">
+      <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-2xl font-bold text-center mb-4">Payment</h2>
+
+        <div className="mb-4">
+          <p className="text-lg font-medium">Base Amount: ₹{baseAmount}</p>
+          <p className="text-lg font-medium">Tax (18%): ₹{Math.ceil(baseAmount * 0.18)}</p>
+          <p className="text-lg font-bold">
+            Final Amount: ₹{totalAmount - discount}{" "}
+            {discount > 0 && <span className="text-green-600">(-₹{discount} applied)</span>}
+          </p>
+        </div>
+
+        {/* Coupon Code Section */}
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Enter Coupon Code"
+            value={coupon}
+            onChange={(e) => setCoupon(e.target.value)}
+            className="w-full border p-2 rounded-md focus:ring-indigo-300 focus:ring-2"
+          />
+          <button
+            onClick={applyCoupon}
+            className="mt-2 w-full p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Apply Coupon
+          </button>
+        </div>
+
+        {/* Payment Form */}
         <form onSubmit={handleFormSubmit}>
-          <div className="text-2xl font-bold bg-white text-center ">
-            {" "}
-            Amount{" "}
-          </div>
           <input
             type="number"
             name="amount"
             id="amount"
-            placeholder="amount"
             value={paymentData.amount}
             onChange={handleInputChange}
             required
-            className=" mt-3   w-full  rounded-md font-semibold focus:ring-indigo-300 focus:ring-4 text-center"
+            className="w-full border rounded-md p-2 text-center focus:ring-indigo-300 focus:ring-2"
+            disabled
           />
-          {/* Add input for cover image if needed */}
-          {/* <input type="file" name="coverImage" onChange={handleFileChange} /> */}
+
           <button
             type="submit"
-            className="w-full max-w-md mx-auto bg-green-300 rounded-lg shadow-lg overflow-hidden md:max-w-2xl p-2"
+            className={`w-full mt-4 p-2 rounded-lg font-semibold ${
+              loading ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"
+            } text-white`}
+            disabled={loading}
           >
-            Confirm Payment
+            {loading ? "Processing..." : "Confirm Payment"}
           </button>
         </form>
+
+        {/* Payment Status Messages */}
+        {paymentStatus && (
+          <p className={`text-center mt-4 ${paymentStatus.includes("Failed") ? "text-red-600" : "text-green-600"}`}>
+            {paymentStatus}
+          </p>
+        )}
       </div>
     </div>
   );
