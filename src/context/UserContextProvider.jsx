@@ -227,6 +227,36 @@ const UserContextProvider = ({ children }) => {
     localStorage.setItem("details", JSON.stringify(userDetail));
   }, [userDetail]);
 
+
+
+ // State to manage user details.
+ const [sellerDetail, setSellerDetail] = useState(
+  JSON.parse(localStorage.getItem("sellerdetails")) || null
+);
+const getSellerDetail = async (selldetails) => {
+  if (selldetails) {
+    setSellerDetail(selldetails);
+  } else {
+    console.error("Invalid details passed to getUserDetail");
+  }
+};
+
+// Save user details to localStorage whenever there's a change in userDetail state.
+useEffect(() => {
+  localStorage.setItem("sellerdetails", JSON.stringify(sellerDetail));
+}, [sellerDetail]);
+
+
+
+
+
+
+
+
+
+
+
+
   // Notification management for adding items to the cart.
   const [notification, setNotification] = useState("");
   const handleAddToCart = () => {
@@ -499,7 +529,9 @@ const UserContextProvider = ({ children }) => {
         totalRatings,
         averageRatings,
         setAddressId,
-        removeFromWishlist
+        removeFromWishlist,
+        sellerDetail,
+        getSellerDetail
       }}
     >
       {children}

@@ -49,6 +49,9 @@ import AllOrders from "./components/Products/AllOrders.jsx";
 import OrderDetails from "./components/Products/OrderDetails.jsx";
 import OrderSuccess from "./components/Products/OrderSuccess.jsx";
 import Home from "./components/App/Home.jsx";
+import Seller from "./components/Seller/Seller.jsx";
+import SellerRegister from "./components/Seller/SellerRegister.jsx";
+import Sellerlogin from "./components/Seller/SellerLogin.jsx";
 
 
 function App() {
@@ -89,6 +92,9 @@ function App() {
           <Route path="/myOrder" element={<AllOrders />} />
           <Route path="/orderitems" element={<OrderDetails />} />
           <Route path="/order-success/:orderId" element={<OrderSuccess/>}/>
+          <Route path="/seller" element={<Seller/>} />
+          <Route path="/sellerRegister" element={<SellerRegister/>} />
+          <Route path="/sellerlogin" element={<Sellerlogin/>} />
         </Routes>
         <KeepAlive />
         <SpeedInsights />

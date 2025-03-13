@@ -103,6 +103,13 @@ const UserDetails = () => {
                   >
                     Wishlist
                   </Link>
+
+                  <Link
+                    to="/seller"
+                    className="block py-2 bg-purple-800 px-2 hover:bg-red-500 transition text-center"
+                  >
+                  Become A Seller
+                  </Link>
                   <Link
                     to="/helpdesk"
                     className="block py-2 bg-purple-800 px-2 hover:bg-red-500 transition text-center"
