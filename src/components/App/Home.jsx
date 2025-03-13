@@ -4,6 +4,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import UserContext from "../../context/UserContext";
+import SubscribeSection from "../User/SubscribeSection";
 
 
 
@@ -103,20 +104,7 @@ useEffect(() => {
       </div>
 
       {/* Newsletter Signup */}
-      <div className="py-12 px-6 bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-center">
-        <h2 className="text-3xl font-bold">Subscribe for Updates</h2>
-        <p className="mt-3">Get the latest offers and new arrivals straight to your inbox.</p>
-        <div className="mt-4 flex justify-center">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="p-3 rounded-l-lg w-64 text-black"
-          />
-          <button className="bg-pink-500 hover:bg-pink-600 px-6 py-3 rounded-r-lg font-semibold">
-            Subscribe
-          </button>
-        </div>
-      </div>
+      <div><SubscribeSection/>  </div>
     </div>
   );
 };

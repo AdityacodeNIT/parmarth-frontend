@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import { FaRocket, FaHistory, FaUserAlt, FaPhone } from "react-icons/fa";
-import { FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
-import myImage from "../../assets/images/myImage.png"; // Importing icons
+import { FaRocket, FaHistory, FaPhone, FaLinkedin, FaTwitter, FaInstagram } from "react-icons/fa";
 
 const About = () => {
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -11,79 +9,68 @@ const About = () => {
   };
 
   return (
-    <div className="about-us-section p-6 md:p-8 bg-gradient-to-r from-blue-50 via-rose-50 to-blue-50 rounded-lg shadow-xl">
-      <h1 className="text-4xl font-extrabold text-center mb-8 text-blue-800">
-        About Us
-      </h1>
-      <p className="text-lg mb-8 text-gray-700 text-center max-w-3xl mx-auto">
-        Parmarth E-com is an emerging e-commerce platform dedicated to providing
-        a comprehensive range of stationary items to customers across the globe.
+    <div className="p-8 bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen flex flex-col items-center gap-10 text-white">
+      
+      {/* Company Title */}
+      <h1 className="text-4xl font-extrabold text-center text-gray-100 mb-4">About Parmarth E-com</h1>
+
+      {/* Company Intro */}
+      <p className="text-lg text-gray-300 text-center max-w-4xl leading-relaxed">
+        Parmarth E-com is a next-generation e-commerce platform delivering high-quality stationery solutions for modern businesses, educational institutions, and tech-savvy individuals. We combine traditional stationery with cutting-edge tech products to meet the dynamic demands of professionals and learners.
       </p>
 
       {/* Mission Section */}
-      <div className="mission-section flex flex-col md:flex-row justify-center items-center gap-6 mb-8">
-        <FaRocket className="text-red-600 text-5xl md:text-6xl transform transition-transform duration-300 hover:scale-110" />
+      <section className="w-full max-w-5xl flex flex-col md:flex-row items-center gap-8 bg-gray-800 p-6 rounded-lg shadow-lg">
+        <FaRocket className="text-yellow-400 text-6xl" />
         <div>
-          <h2 className="text-3xl font-semibold text-red-700 mb-2">
-            Our Mission
-          </h2>
-          <p className="text-lg text-gray-700 text-center md:text-left">
-            Our mission is to simplify the process of purchasing stationary
-            items by offering a user-friendly online platform that caters to the
-            needs of individuals, educational institutions, and businesses
-            alike.
+          <h2 className="text-2xl font-semibold text-yellow-400 mb-2">Our Mission</h2>
+          <p className="text-gray-300 leading-relaxed">
+            To revolutionize the stationery industry by integrating technology, quality, and seamless user experiences. Our mission is to empower individuals and organizations with tools that foster creativity, productivity, and innovation — beyond the ordinary.
           </p>
         </div>
-      </div>
+      </section>
 
       {/* Story Section */}
-      <div className="story-section flex flex-col md:flex-row justify-center items-center gap-6 mb-8">
-        <FaHistory className="text-red-600 text-5xl md:text-6xl transform transition-transform duration-300 hover:scale-110" />
+      <section className="w-full max-w-5xl flex flex-col md:flex-row-reverse items-center gap-8 bg-gray-800 p-6 rounded-lg shadow-lg">
+        <FaHistory className="text-yellow-400 text-6xl" />
         <div>
-          <h2 className="text-3xl font-semibold text-red-700 mb-2">
-            Our Story
-          </h2>
-          <p className="text-lg text-gray-700 text-center md:text-left">
-            Founded on the principles of quality, convenience, and customer
-            satisfaction, Parmarth E-com aims to revolutionize the way
-            stationary items are purchased and delivered.
+          <h2 className="text-2xl font-semibold text-yellow-400 mb-2">Our Journey</h2>
+          <p className="text-gray-300 leading-relaxed">
+            Founded with a vision to redefine how stationery is perceived, Parmarth E-com brings together traditional supplies and smart, tech-enhanced tools — making workspaces future-ready. With a focus on reliability, innovation, and customer satisfaction, we are constantly evolving to meet global needs.
           </p>
         </div>
-      </div>
+      </section>
 
-      {/* Team Section */}
-      <div className="team-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 ">
-        <div className="team-member text-center">
-          <img
-            src={myImage}
-            alt="Aditya Srivastav, Designer and Developer"
-            className="rounded-full mx-auto mb-4 w-32 h-32 object-cover border-4 border-blue-800"
-          />
-          <h3 className="text-xl font-semibold text-blue-800">
-            Aditya Srivastav
-          </h3>
-          <p className="text-gray-600">Designer and Developer</p>
-          <FaUserAlt className="text-blue-600 text-3xl mt-2" />
-        </div>
-      </div>
+      {/* What We Offer */}
+      <section className="w-full max-w-5xl bg-gray-800 p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-semibold text-yellow-400 mb-4 text-center">What We Offer</h2>
+        <ul className="list-disc list-inside text-gray-300 space-y-3 text-lg">
+          <li>Tech-enabled stationery solutions for professionals and businesses.</li>
+          <li>Customizable supplies for schools, universities, and startups.</li>
+          <li>Office organization tools integrated with modern design.</li>
+          <li>Eco-friendly and sustainable stationery options.</li>
+          <li>Fast, reliable delivery with end-to-end tracking and support.</li>
+        </ul>
+      </section>
 
-      {/* Contact Icon Section */}
-      <div className="contact-section flex justify-center items-center mt-2 relative">
+      {/* Contact & Social */}
+      <div className="relative mt-8">
         <button
           onClick={toggleContact}
-          className="p-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 focus:outline-none transform transition duration-200 ease-in-out hover:scale-110"
+          className="p-3 rounded-full bg-yellow-500 text-black hover:bg-yellow-400 shadow-lg transition-transform transform hover:scale-110"
+          title="Contact Us"
         >
-          <FaPhone size={24} />
+          <FaPhone size={22} />
         </button>
 
-        {/* Dropdown Menu for Social Links */}
         {isContactOpen && (
-          <div className="absolute bg-white shadow-lg rounded-md p-4 flex gap-6 flex-wrap justify-center md:gap-8 w-40 md:w-auto">
+          <div className="absolute top-16 left-1/2 transform -translate-x-1/2 bg-gray-800 shadow-xl rounded-lg p-4 flex gap-6 border border-gray-600">
             <a
               href="https://www.linkedin.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-800 transition-all duration-300"
+              className="text-blue-400 hover:text-blue-500 transition-colors"
+              title="LinkedIn"
             >
               <FaLinkedin size={24} />
             </a>
@@ -91,7 +78,8 @@ const About = () => {
               href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 hover:text-blue-600 transition-all duration-300"
+              className="text-blue-300 hover:text-blue-400 transition-colors"
+              title="Twitter"
             >
               <FaTwitter size={24} />
             </a>
@@ -99,13 +87,19 @@ const About = () => {
               href="https://www.instagram.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-pink-600 hover:text-pink-800 transition-all duration-300"
+              className="text-pink-400 hover:text-pink-500 transition-colors"
+              title="Instagram"
             >
               <FaInstagram size={24} />
             </a>
           </div>
         )}
       </div>
+
+      {/* Footer or Company Tagline */}
+      <p className="text-gray-500 text-sm mt-8 text-center">
+        Empowering modern workspaces — one innovative tool at a time.
+      </p>
     </div>
   );
 };

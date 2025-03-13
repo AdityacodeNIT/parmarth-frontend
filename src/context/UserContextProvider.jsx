@@ -15,9 +15,33 @@ const UserContextProvider = ({ children }) => {
     setProductDetails(detail);
   };
 
+
+
+
+  const recordActivity = async (action, productId) => {
+    try {
+     
+      if (!productId) return;
+  
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/activity/record`, {
+      
+        action,
+        productId,
+      },
+      {
+        withCredentials:true,
+      }
+    );
+  
+    } catch (error) {
+      console.error("Error recording user activity:", error);
+    }
+  };
+  
   // Product Management: Handling selected product information with localStorage persistence.
   const childToParent = (product) => {
     setData(product);
+    recordActivity("show",product._id);
   };
 
   // Save selected product to localStorage whenever there's a change in data state.
@@ -67,6 +91,7 @@ const UserContextProvider = ({ children }) => {
     setCartItems(removingCartItems);
   };
 
+
   // Remove a specific item from the cart.
   const removeFromCart = (productId) => {
     const updatedCartItems = cartItems.filter(
@@ -74,6 +99,7 @@ const UserContextProvider = ({ children }) => {
     );
     setCartItems(updatedCartItems);
   };
+
 
   // Calculate the total price of all items in the cart.
   const totalCartPrice = () => {
@@ -83,10 +109,12 @@ const UserContextProvider = ({ children }) => {
     );
   };
 
+
   // State to manage address ID.
   const [addressId, setAddressId] = useState(() => {
     return localStorage.getItem("addressId") || undefined;
   });
+
 
   // Sync the state value to localStorage whenever it changes.
   useEffect(() => {
@@ -94,6 +122,7 @@ const UserContextProvider = ({ children }) => {
       localStorage.setItem("addressId", addressId);
     }
   }, [addressId]);
+
 
   // Generate a description of items in the cart.
   const cartDesccription = () => {
@@ -119,6 +148,7 @@ const UserContextProvider = ({ children }) => {
 
   // Buying a product and adding it to the buyProduct state.
   const buyingProduct = (bought, boughtId) => {
+    recordActivity("buy",boughtId);
     let existingitem = buyProduct.find(
       (item) => item._id.toString() === boughtId
     );
@@ -233,15 +263,22 @@ const UserContextProvider = ({ children }) => {
   }, [buyProduct, cartItems, addressId]);
 
   // Handling successful order submission.
-  const orderSuccessful = async (order) => {
-    setOrderSuccess((prevOrders) => [...prevOrders, order]);
-    handleFormSubmit();
+  const orderSuccessful = async () => {
+ // Ensure payment was successful
+      try {
+        await handleFormSubmit();  // Call function to create order
+        setOrderSuccess((prevOrders) => [...prevOrders, order]);
+      } catch (error) {
+        console.error("Error creating order after payment:", error);
+      }
+    
   };
 
   const [orderDetails, setOrderDetails] = useState(null);
 
   // Handling form submission to create an order.
   const handleFormSubmit = async () => {
+  
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/shiprocket/order`,
@@ -251,6 +288,7 @@ const UserContextProvider = ({ children }) => {
 
       if (response) {
         setOrderDetails(response.data);
+       
       }
     } catch (error) {
       console.error("Error placing the order:", error);
@@ -285,6 +323,21 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
+  const removeFromWishlist = async (productId) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/v2/wishlist/removeWishlistItem`,
+        {productId},
+        { withCredentials: true }
+
+      );
+     
+    } catch (error) {
+      console.error("Error fetching favourites:", error);
+    }
+  };
+  
+
   const [myWishlist, setMyWishlist] = useState([]);
 
   // Fetch wishlist items.
@@ -304,12 +357,19 @@ const UserContextProvider = ({ children }) => {
     }
   };
 
+  
+
+  
+
   // Fetch wishlist items whenever wishlist changes.
   useEffect(() => {
     if (userDetail?.data?.user?._id) {
       fetchFavourites();
     }
-  }, [wishlist]);
+  }, [wishlist,removeFromWishlist]);
+
+
+
 
   // State to manage product reviews.
   const [review, setReview] = useState({ rating: 0, description: "" });
@@ -337,6 +397,9 @@ const UserContextProvider = ({ children }) => {
         });
     }
   }, [productReview]);
+
+
+  
 
   // Fetch average ratings and total ratings for a product.
   useEffect(() => {
@@ -379,8 +442,9 @@ const UserContextProvider = ({ children }) => {
         { withCredentials: true }
       );
       if (response) {
+
         setOrderItems(response.data.data.data);
-        console.log(response.data.data.data.billing_country_name);
+        console.log(response.data.data.data);
       }
     } catch (error) {
       console.error("Failed to register", error);
@@ -435,6 +499,7 @@ const UserContextProvider = ({ children }) => {
         totalRatings,
         averageRatings,
         setAddressId,
+        removeFromWishlist
       }}
     >
       {children}
@@ -443,3 +508,5 @@ const UserContextProvider = ({ children }) => {
 };
 
 export default UserContextProvider;
+
+

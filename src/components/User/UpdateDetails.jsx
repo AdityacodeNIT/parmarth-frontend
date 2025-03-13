@@ -9,7 +9,7 @@ const UpdateDetails = () => {
       </h1>
 
       <div className="bg-white  shadow-xl p-4 w-full max-w-md flex flex-col space-y-4">
-        <Link to="/updateDetails" className="w-full">
+        <Link to="/changeDetails" className="w-full">
           <div className="font-semibold text-lg md:text-xl text-center py-3 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition">
             Update Details
           </div>

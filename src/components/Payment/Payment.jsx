@@ -58,7 +58,7 @@ const Payment = () => {
         throw new Error("Payment initiation failed");
       }
 
-      orderSuccessful(paymentResponse.data);
+   
       const { order } = paymentResponse.data;
 
       const options = {
@@ -80,6 +80,7 @@ const Payment = () => {
         },
         handler: () => {
           setPaymentStatus("Payment Successful! Redirecting...");
+          orderSuccessful();
           setTimeout(() => navigate(`/order-success/${order.id}`), 2000);
           removeItemfromCheckout();
         },

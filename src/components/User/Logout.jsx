@@ -17,24 +17,32 @@ const Logout = () => {
       );
 
       if (response.status === 200) {
-        getUserDetail(response.data); // Clear user detail
+        getUserDetail(null); // Clear user session
         navigate("/"); // Redirect to home page
       } else {
-        console.error("Unexpected response status:", response.status);
+        alert("Unexpected response from server. Please try again.");
       }
     } catch (error) {
-      console.error("Issue during logout:", error.message);
+      console.error("Logout failed:", error.message);
+      alert("Failed to logout. Please check your network.");
     }
   };
 
   return (
-    <div>
-      <button
-        className="text-lg m-auto border-2 bg-blue-300 p-4"
-        onClick={logoutUser}
-      >
-        Logout
-      </button>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800 text-white">
+      <div className="p-8 text-center">
+        <h2 className="text-3xl font-bold text-red-500 mb-6">Logout</h2>
+        <p className="text-gray-300 mb-6">
+          Are you sure you want to log out? You will need to log in again to access your account.
+        </p>
+
+        <button
+          className="text-lg bg-red-600 hover:bg-red-700 px-6 py-3 rounded-lg shadow-lg transition-transform transform hover:scale-105"
+          onClick={logoutUser}
+        >
+          Confirm Logout
+        </button>
+      </div>
     </div>
   );
 };

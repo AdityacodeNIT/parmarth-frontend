@@ -7,14 +7,14 @@ const Categories = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className="bg-cream-500">
-      <nav className="flex flex-wrap justify-between items-center h-14 px-6 border-b-4 border-pink-400 text-lg bg-gradient-to-r from-blue-700 via-indigo-600 to-violet-700 lg:font-semibold text-white">
+    <div className="bg-black">
+      <nav className="flex justify-between items-center h-16 px-6 border-b-4 border-teal-400 text-lg bg-gradient-to-r from-teal-700 via-gray-900 to-black lg:font-semibold text-white shadow-lg">
         {/* Title */}
-        <div className="font-bold text-xl">Categories</div>
+        <div className="font-extrabold text-xl text-teal-300">📂 Categories</div>
 
-        {/* Hamburger Menu Button for Mobile */}
+        {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-white text-2xl"
+          className="md:hidden text-white text-2xl focus:outline-none"
           onClick={() => setMenuOpen(!menuOpen)}
         >
           <FontAwesomeIcon icon={menuOpen ? faTimes : faBars} />
@@ -24,25 +24,30 @@ const Categories = () => {
         <div
           className={`${
             menuOpen ? "flex" : "hidden"
-          } md:flex flex-col md:flex-row absolute md:static top-14 left-0 w-full md:w-auto bg-blue-700 md:bg-transparent z-50 md:space-x-6 text-center`}
+          } md:flex flex-col md:flex-row absolute md:static top-16 left-0 w-full md:w-auto bg-gray-900 md:bg-transparent z-50 md:space-x-6 text-center md:text-left`}
         >
-          <div className="p-2 hover:border-2 hover:bg-red-200">
-            <Link to="/Writing" onClick={() => setMenuOpen(false)}>Writing Instruments</Link>
-          </div>
-          <div className="p-2 hover:border-2 hover:bg-red-200">
-            <Link to="/PaperProduct" onClick={() => setMenuOpen(false)}>Paper Products</Link>
-          </div>
-          <div className="p-2 hover:border-2 hover:bg-red-200">
-            <Link to="/DeskSupply" onClick={() => setMenuOpen(false)}>Desk Supplies</Link>
-          </div>
-          <div className="p-2 hover:border-2 hover:bg-red-200">
-            <Link to="/Filling" onClick={() => setMenuOpen(false)}>Filling and Storage</Link>
-          </div>
-          <div className="p-2 hover:border-2 hover:bg-red-200">
-            <Link to="/Reusable" onClick={() => setMenuOpen(false)}>Reusable</Link>
-          </div>
+          {[
+            { name: "Writing Instruments", path: "/WritingInstruments" },
+            { name: "Paper Products", path: "/PaperProducts" },
+            { name: "Desk Supplies", path: "/DeskSupplies" },
+            { name: "Filing & Storage", path: "/Filing&Storage" },
+            { name: "Reusable Products", path: "/ReusableProducts" },
+          ].map((category, index) => (
+            <div
+              key={index}
+              className="p-3 transition-all bg-transparent hover:bg-teal-500 hover:text-yellow-600 rounded-lg cursor-pointer shadow-md"
+            >
+              <Link to={category.path} onClick={() => setMenuOpen(false)}>
+                {category.name}
+              </Link>
+            </div>
+          ))}
         </div>
       </nav>
+
+      {/* Floating Glow Effects (Subtle Aesthetic) */}
+      <div className="absolute top-5 left-10 w-14 h-14 bg-teal-500 opacity-20 blur-2xl rounded-full animate-pulse"></div>
+      <div className="absolute bottom-10 right-10 w-20 h-20 bg-emerald-500 opacity-30 blur-2xl rounded-full animate-pulse"></div>
     </div>
   );
 };

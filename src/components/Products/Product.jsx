@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { CiHeart } from "react-icons/ci";
+import { FaStar, FaHeart, FaShoppingCart } from "react-icons/fa";
 import UserContext from "../../context/UserContext";
 
 const Product = () => {
@@ -35,92 +36,86 @@ const Product = () => {
   };
 
   return (
-    <div key={product._id} className="w-full">
+    <div key={product._id} className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-8">
       {/* Product Name */}
-      <div className="w-full text-yellow-500 text-2xl md:text-3xl font-extrabold bg-slate-600 p-2 flex justify-center">
+      <div className="w-full text-green-400 text-3xl md:text-4xl font-extrabold bg-gray-800 p-4 rounded-lg text-center shadow-md">
         {product.name}
       </div>
 
-      {/* Product Image & Details */}
-      <div className="p-5 m-2 flex flex-col lg:flex-row items-center justify-between space-y-6 lg:space-y-0">
+      {/* Product Section */}
+      <div className="p-6 mt-6 flex flex-col lg:flex-row items-center justify-between gap-10">
         {/* Image Section */}
-        <div className="w-full md:w-1/2 h-auto flex justify-center">
+        <div className="w-full md:w-1/2 flex justify-center">
           <img
             src={product.imgLink || product.ProductImage || "/placeholder.png"}
             alt={product.name}
-            className="shadow-2xl bg-slate-100 font-bold w-96 h-96"
+            className="shadow-lg bg-gray-700 w-96 h-96 rounded-lg transition-transform transform hover:scale-105"
           />
         </div>
 
-        {/* Product Info & Actions */}
-        <div className="w-full md:w-1/2 space-y-4 text-center lg:text-left">
-          <div className="font-extrabold text-3xl md:text-4xl">{product.name}</div>
+        {/* Product Details */}
+        <div className="w-full md:w-1/2 space-y-6 text-center lg:text-left">
+          <div className="text-3xl font-extrabold">{product.name}</div>
 
-          {/* Add to Favourites */}
+          {/* Wishlist Button */}
           <button
-            className="text-xl font-semibold flex items-center justify-center lg:justify-start space-x-2 text-black"
+            className="text-lg flex items-center justify-center lg:justify-start gap-2 text-red-500 font-semibold hover:text-red-600 transition"
             onClick={() => addToFavourite(product._id)}
           >
-            <span>Add to Favourites</span>
-            <CiHeart className="text-3xl text-purple-500" />
+            <FaHeart className="text-2xl" />
+            <span>Add to Wishlist</span>
           </button>
 
-          {/* Rating Stars */}
-          <div className="text-3xl flex justify-center lg:justify-start">
-            {[...Array(5)].map((_, i) => {
-              const ratingValue = i + 1;
-              return (
-                <span
-                  key={i}
-                  className={`fa fa-star ${
-                    ratingValue <= averageRatings ? "text-orange-300" : "text-gray-400"
-                  }`}
-                ></span>
-              );
-            })}
-            <button className="ml-2">({Math.round(averageRatings * 100) / 100})</button>
+          {/* Ratings */}
+          <div className="text-2xl flex justify-center lg:justify-start gap-1">
+            {[...Array(5)].map((_, i) => (
+              <FaStar key={i} className={i + 1 <= averageRatings ? "text-yellow-400" : "text-gray-500"} />
+            ))}
+            <span className="text-sm ml-2 text-gray-300">({Math.round(averageRatings * 100) / 100})</span>
           </div>
 
           {/* Price */}
-          <div className="text-xl font-semibold text-gray-900">
-            Price: <span className="text-green-600">₹{product.price}</span>
+          <div className="text-xl font-semibold">
+            Price: <span className="text-green-400">₹{product.price}</span>
           </div>
 
-          {/* Add to Cart Button */}
-          <button
-            className="text-3xl border-2 text-white font-semibold border-slate-600 bg-blue-600 px-40 py-2 rounded-md"
-            onClick={() => handleAddToCart(product._id)}
-          >
-            Add to cart
-          </button>
+          {/* Add to Cart & Buy Now Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              className="flex items-center justify-center gap-2 text-lg text-white bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-md shadow-md transition-transform transform hover:scale-105"
+              onClick={() => handleAddToCart(product._id)}
+            >
+              <FaShoppingCart />
+              Add to Cart
+            </button>
 
-          {/* Notification Popup */}
+            <Link to="/BuyProduct">
+              <button
+                className="flex items-center justify-center gap-2 text-lg text-white bg-violet-600 hover:bg-violet-700 px-8 py-3 rounded-md shadow-md transition-transform transform hover:scale-105"
+                onClick={() => buyingProduct(product, product._id?.toString())}
+              >
+                Buy Now
+              </button>
+            </Link>
+          </div>
+
+          {/* Notification */}
           {notification && (
-            <div className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-md shadow-lg">
+            <div className="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-md shadow-lg animate-bounce">
               {notification}
             </div>
           )}
-
-          {/* Buy Now Button */}
-          <Link to="/BuyProduct">
-            <button
-              className="text-3xl px-44 py-2 mt-3 font-semibold text-white bg-violet-600 rounded-lg"
-              onClick={() => buyingProduct(product, product._id?.toString())}
-            >
-              Buy Now
-            </button>
-          </Link>
         </div>
       </div>
 
       {/* Product Description */}
-      <div className="shadow-lg h-auto bg-white mx-4 p-6 rounded-lg text-center lg:text-left">
-        <div className="text-2xl font-semibold mb-4 text-gray-800">Description:</div>
-        <p className="text-lg text-gray-700 leading-relaxed font-semibold">{product.description}</p>
+      <div className="shadow-lg h-auto bg-gray-800 mx-4 p-6 rounded-lg">
+        <h2 className="text-2xl font-semibold mb-4 text-white">Description:</h2>
+        <p className="text-lg text-gray-300 leading-relaxed">{product.description}</p>
 
-        {/* Show More / Less Button */}
+        {/* Show More / Less */}
         <button
-          className="text-xl text-blue-500 font-semibold mt-4"
+          className="text-lg text-blue-400 font-semibold mt-4"
           onClick={() => setShowMore(!showMore)}
         >
           {showMore ? "See Less" : "See More"}
@@ -128,38 +123,32 @@ const Product = () => {
 
         {/* Additional Details */}
         {showMore && (
-          <div className="text-gray-800 font-medium space-y-2 mt-4">
-            <div>Weight: {product.weight} g</div>
-            <div>Height: {product.height} cm</div>
-            <div>Length: {product.length} cm</div>
-            <div>Width: {product.width} cm</div>
+          <div className="text-gray-400 font-medium space-y-2 mt-4">
+            {product.weight&&<div>Weight: {product.weight} g</div>}
+           {product.height&& <div>Height: {product.height} cm</div>}
+            {product.length&&<div>Length: {product.length} cm</div>}
+            {product.width&&<div>Width: {product.width} cm</div>}
+            {}
           </div>
         )}
       </div>
 
       {/* Product Reviews */}
-      <div className="m-4 text-2xl font-semibold text-center lg:text-left">
+      <div className="m-4 text-2xl font-semibold text-center text-white">
         Product Reviews
         <div className="flex flex-col md:flex-row justify-between items-center mx-4 space-y-6 md:space-y-0">
           {/* Review Summary */}
-          <div className="text-lg font-semibold">
+          <div className="text-lg font-semibold text-gray-300">
             <p>Total Reviews</p>
             <div>{totalRatings}</div>
           </div>
 
-          <div className="text-lg font-semibold">
+          {/* Average Rating */}
+          <div className="text-lg font-semibold text-gray-300">
             <p>Average Rating</p>
-            {[...Array(5)].map((_, i) => {
-              const ratingValue = i + 1;
-              return (
-                <span
-                  key={i}
-                  className={`fa fa-star ${
-                    ratingValue <= averageRatings ? "text-orange-300" : "text-gray-400"
-                  }`}
-                ></span>
-              );
-            })}
+            {[...Array(5)].map((_, i) => (
+              <FaStar key={i} className={i + 1 <= averageRatings ? "text-yellow-400" : "text-gray-500"} />
+            ))}
             <button onClick={handleDisplay} className="ml-2">
               {Math.round(averageRatings * 100) / 100}
             </button>
@@ -170,35 +159,28 @@ const Product = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex justify-center space-x-2">
                 {[1, 2, 3, 4, 5].map((value) => (
-                  <input
+                  <button
                     key={value}
                     type="button"
-                    name="rating"
-                    value={value}
                     className={`border-2 p-2 rounded-md transition duration-200 ${
-                      review.rating === value ? "bg-yellow-300" : "hover:bg-gray-200"
+                      review.rating === value ? "bg-yellow-400" : "hover:bg-gray-700"
                     }`}
                     onClick={() => setReview({ ...review, rating: value })}
-                  />
+                  >
+                    {value}
+                  </button>
                 ))}
               </div>
 
               <textarea
-                id="reviewDescription"
-                name="description"
-                value={review.description}
-                onChange={(e) =>
-                  setReview({ ...review, description: e.target.value })
-                }
-                className="w-full p-2 border-2 rounded-md resize-none"
+                className="w-full p-3 border-2 rounded-md resize-none bg-gray-700 text-white"
                 placeholder="Write your review..."
+                value={review.description}
+                onChange={(e) => setReview({ ...review, description: e.target.value })}
               ></textarea>
 
-              <button
-                type="submit"
-                className="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200"
-              >
-                Submit
+              <button className="w-full p-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200">
+                Submit Review
               </button>
             </form>
           </div>
