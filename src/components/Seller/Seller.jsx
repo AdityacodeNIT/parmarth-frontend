@@ -6,7 +6,8 @@ const Seller = () => {
   const { sellerDetail } = useContext(UserContext);
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-blue-800 to-gray-500">
+
+      <div className="h-screen flex items-center justify-center bg-gradient-to-r from-blue-800 to-gray-500">
       <div className="bg-white shadow-lg rounded-lg p-6 w-96 text-center">
         <h2 className="text-2xl font-bold text-gray-800">Become a Seller</h2>
         <p className="text-gray-600 mt-2">
@@ -36,13 +37,19 @@ const Seller = () => {
               </h3>
               <p className="text-gray-700">📧 {sellerDetail.data.user.email}</p>
               <p className="text-gray-700">👤 {sellerDetail.data.user.username}</p>
-
-              <Link
-                to="/addProduct"
-                className="mt-4 block w-full py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-500 transition text-center"
-              >
-                Add Product
-              </Link>
+              
+              {sellerDetail.data.user.approved ? (
+                <Link
+                  to="/addProduct"
+                  className="mt-4 block w-full py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-500 transition text-center"
+                >
+                  Add Product
+                </Link>
+              ) : (
+                <p className="mt-4 text-red-600 font-semibold">
+                  Your seller account is not approved yet.
+                </p>
+              )}
             </div>
           )}
         </div>
