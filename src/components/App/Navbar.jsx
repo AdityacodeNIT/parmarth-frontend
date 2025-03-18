@@ -42,7 +42,7 @@ const Navbar = () => {
           </ul>
 
           {/* Search Bar */}
-          <div className="mt-3 md:mt-0 w-full md:w-auto">
+          <div className="w-full md:w-auto">
             <SearchBar />
           </div>
         </div>

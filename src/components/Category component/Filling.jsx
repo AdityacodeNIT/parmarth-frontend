@@ -60,16 +60,16 @@ const Filling = () => {
         </div>
       ) : (
         /* Product Grid */
-        <div className="container mx-auto px-6 py-12">
+        <div className="container mx-auto px-6 py-12 bg-gray-900">
           <h2 className="text-3xl font-bold text-center mb-8 text-yellow-400">
             📁 Browse Filing & Storage Essentials
           </h2>
 
-          <div className="grid gap-8 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {products.map((product) => (
               <div
                 key={product._id}
-                className="relative bg-gray-900 rounded-xl shadow-lg border border-gray-700 transition-transform duration-300 transform hover:-translate-y-2 hover:scale-105 hover:shadow-2xl"
+                className="relative bg-gray-800 rounded-xl shadow-lg border border-gray-700 transition-transform duration-300 transform hover:-translate-y-2 hover:scale-105 hover:shadow-2xl"
                 onClick={() => childToParent(product)}
               >
                 <Link to="/About">
@@ -78,7 +78,7 @@ const Filling = () => {
                     <img
                       src={product.ProductImage}
                       alt={product.name}
-                      className="w-4/5 h-auto object-contain transition-transform duration-500 ease-in-out transform hover:scale-110"
+                      className="w-full h-44 object-contain transition-transform duration-500 ease-in-out transform hover:scale-110"
                     />
                   </div>
 
