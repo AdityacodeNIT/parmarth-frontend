@@ -92,7 +92,7 @@ const Home = () => {
                 <h2 className="text-4xl font-bold text-center mb-8 text-gray-800">Trending Now</h2>
                 <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                     {products.map((product) => (
-                        <div key={product._id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 hover:scale-105 transition-all border border-gray-200 p-5">
+                        <div key={product._id} onClick={() => childToParent(product)} className="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 hover:scale-105 transition-all border border-gray-200 p-5">
                             <Link to="/About">
                                 <img src={product.ProductImage} alt={product.name} className="w-full h-44 object-contain" />
                                 <h3 className="text-gray-800 font-semibold text-lg mt-3 text-center">{product.name}</h3>
@@ -108,7 +108,7 @@ const Home = () => {
                 <h2 className="text-4xl font-bold text-center mb-8 text-gray-800">Products You Might Like</h2>
                 <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                     {recommendations.map((product) => (
-                        <div key={product._id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 hover:scale-105 transition-all border border-gray-200 p-5">
+                        <div key={product._id}  onClick={()=>childToParent(product)} className="bg-white rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-2 hover:scale-105 transition-all border border-gray-200 p-5">
                             <Link to="/About">
                                 <img src={product.ProductImage} alt={product.name} className="w-full h-44 object-contain" />
                                 <h3 className="text-gray-800 font-semibold text-lg mt-3 text-center">{product.name}</h3>

@@ -62,7 +62,7 @@ const UserDetails = () => {
               </p>
             </div>
             <div className="space-y-3">
-              {userDetail.data.user.isAdmin === "true" ? (
+              {userDetail.data.user.role == "custiomer" ? (
                 <>
                   <Link
                     to="/Admin"

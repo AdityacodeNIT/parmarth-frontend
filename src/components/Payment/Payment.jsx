@@ -13,31 +13,27 @@ const Payment = () => {
     userDetail,
   } = useContext(UserContext);
 
-  // Initial amount calculation with 18% tax
   const baseAmount = totalProductPrice() || totalCartPrice();
   const totalAmount = Math.ceil(baseAmount * 1.18);
 
   const [paymentData, setPaymentData] = useState({ amount: totalAmount });
   const [loading, setLoading] = useState(false);
-  const [coupon, setCoupon] = useState(""); // Coupon state
-  const [discount, setDiscount] = useState(0); // Discount applied
-  const [paymentStatus, setPaymentStatus] = useState(null); // Success/Error message
+  const [coupon, setCoupon] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [paymentStatus, setPaymentStatus] = useState(null);
 
-  // Handle input change for amount
   const handleInputChange = (e) => {
     setPaymentData({ ...paymentData, [e.target.name]: e.target.value });
   };
 
-  // Apply Discount Coupon
   const applyCoupon = () => {
     if (coupon === "DISCOUNT10") {
-      setDiscount(totalAmount * 0.1); // 10% discount
+      setDiscount(totalAmount * 0.1);
     } else {
       setPaymentStatus("Invalid Coupon Code");
     }
   };
 
-  // Handle Payment Process
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -57,8 +53,7 @@ const Payment = () => {
       if (!paymentResponse || !paymentResponse.data) {
         throw new Error("Payment initiation failed");
       }
-
-   
+      
       const { order } = paymentResponse.data;
 
       const options = {
@@ -78,11 +73,40 @@ const Payment = () => {
         theme: {
           color: "#3399cc",
         },
-        handler: () => {
-          setPaymentStatus("Payment Successful! Redirecting...");
-          orderSuccessful();
-          setTimeout(() => navigate(`/order-success/${order.id}`), 2000);
-          removeItemfromCheckout();
+        handler: async (response) => {
+          try {
+            const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = response;
+
+            setPaymentStatus("Verifying Payment...");
+
+            const verifyResponse = await axios.post(
+              `${import.meta.env.VITE_API_URL}/api/v2/payments/paymentcallback`,
+              {
+                razorpay_order_id,
+                razorpay_payment_id,
+                razorpay_signature,
+              }
+            );
+
+            if (verifyResponse.data.success) {
+              setPaymentStatus("Payment Successful! Redirecting...");
+              orderSuccessful();
+              removeItemfromCheckout();
+              setTimeout(() => navigate(`/order-success/${order.id}`), 2000);
+              
+            } else {
+              setPaymentStatus("Payment Verification Failed! Please try again.");
+            }
+          } catch (error) {
+            console.error("Payment Verification Error:", error);
+            setPaymentStatus("Payment Failed! Please try again.");
+          }
+        },
+        modal: {
+          escape: false,
+          ondismiss: () => {
+            setPaymentStatus("Payment Cancelled! Please try again.");
+          },
         },
       };
 
@@ -110,7 +134,6 @@ const Payment = () => {
           </p>
         </div>
 
-        {/* Coupon Code Section */}
         <div className="mb-4">
           <input
             type="text"
@@ -127,7 +150,6 @@ const Payment = () => {
           </button>
         </div>
 
-        {/* Payment Form */}
         <form onSubmit={handleFormSubmit}>
           <input
             type="number"
@@ -151,7 +173,6 @@ const Payment = () => {
           </button>
         </form>
 
-        {/* Payment Status Messages */}
         {paymentStatus && (
           <p className={`text-center mt-4 ${paymentStatus.includes("Failed") ? "text-red-600" : "text-green-600"}`}>
             {paymentStatus}

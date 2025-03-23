@@ -52,6 +52,8 @@ import Home from "./components/App/Home.jsx";
 import Seller from "./components/Seller/Seller.jsx";
 import SellerRegister from "./components/Seller/SellerRegister.jsx";
 import Sellerlogin from "./components/Seller/SellerLogin.jsx";
+import AdminDashboard from "./components/Admin/AdminDashboard.jsx";
+import ManageSellers from "./components/Admin/ManageSellers.jsx";
 
 
 function App() {
@@ -91,10 +93,14 @@ function App() {
           <Route path="/admin" element={<AdminSection />} />
           <Route path="/myOrder" element={<AllOrders />} />
           <Route path="/orderitems" element={<OrderDetails />} />
+
           <Route path="/order-success/:orderId" element={<OrderSuccess/>}/>
           <Route path="/seller" element={<Seller/>} />
           <Route path="/sellerRegister" element={<SellerRegister/>} />
           <Route path="/sellerlogin" element={<Sellerlogin/>} />
+          <Route path="/admina" element={<AdminDashboard />}/>
+          
+                    <Route path="/sellers" element={<ManageSellers />} />
         </Routes>
         <KeepAlive />
         <SpeedInsights />
