@@ -401,6 +401,7 @@ useEffect(() => {
 
 
 
+
   // State to manage product reviews.
   const [review, setReview] = useState({ rating: 0, description: "" });
   const [productReview, setProductReview] = useState({});
@@ -411,12 +412,12 @@ useEffect(() => {
   // Handle form click for submitting a review.
   const handleFormClick = (e) => {
     setProductReview({ ...review, productId });
-    setReview({ rating: 0, description: "" });
+    setReview({ rating: 0, message: "" });
   };
 
   // Submit product review whenever productReview changes.
   useEffect(() => {
-    if (productReview.rating && productReview.description) {
+    if (productReview.rating && productReview.message) {
       axios
         .post(
           `${import.meta.env.VITE_API_URL}/api/v2/feedback/review`,
@@ -452,6 +453,20 @@ useEffect(() => {
         });
     }
   }, [productId, productReview]);
+
+
+  const[gotReview,setGotReview]=useState([]);
+
+
+  const getReview=async()=>{
+    const response =  await axios.get(`${import.meta.env.VITE_API_URL}/api/v2/feedback/getReview`
+    )
+    setGotReview(response.data);
+    console.log("hello ji ",response);
+  }
+
+
+
 
   // State to manage search results.
   const [searchResult, setSearchResult] = useState([]);
@@ -531,7 +546,9 @@ useEffect(() => {
         setAddressId,
         removeFromWishlist,
         sellerDetail,
-        getSellerDetail
+        getSellerDetail,
+        gotReview,
+        getReview
       }}
     >
       {children}

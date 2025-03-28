@@ -18,6 +18,7 @@ const Product = () => {
     handleFormClick,
     averageRatings = 0,
     totalRatings = 0,
+    getReview
   } = useContext(UserContext);
 
   const [showMore, setShowMore] = useState(false);
@@ -28,17 +29,26 @@ const Product = () => {
     }
   }, [data, setProductId]);
 
+  useEffect(() => {
+    if (data?._id) {
+      getReview(data._id);
+    }
+  }, []);
+
   const product = data?.productId || data || {};
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
     handleFormClick();
   };
 
+
   return (
-    <div key={product._id} className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-8">
+    <div key={product._id} className="min-h-screen bg-gradient-to-br from-gray-950 to-gray-800 text-gray-200 p-8">
       {/* Product Name */}
-      <div className="w-full text-green-400 text-3xl md:text-4xl font-extrabold bg-gray-800 p-4 rounded-lg text-center shadow-md">
+      <div className="w-full text-[#E5E7EB] text-3xl md:text-4xl font-extrabold bg-gray-800 p-4 rounded-lg text-center shadow-md">
         {product.name}
       </div>
 
@@ -62,7 +72,7 @@ const Product = () => {
             className="text-lg flex items-center justify-center lg:justify-start gap-2 text-red-500 font-semibold hover:text-red-600 transition"
             onClick={() => addToFavourite(product._id)}
           >
-            <FaHeart className="text-2xl" />
+            <FaHeart className="text-2xl text-[#EF4444]" />
             <span>Add to Wishlist</span>
           </button>
 
@@ -76,13 +86,13 @@ const Product = () => {
 
           {/* Price */}
           <div className="text-xl font-semibold">
-            Price: <span className="text-green-400">₹{product.price}</span>
+            Price: <span className="text-[#22C55E]">₹{product.price}</span>
           </div>
 
           {/* Add to Cart & Buy Now Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <button
-              className="flex items-center justify-center gap-2 text-lg text-white bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-md shadow-md transition-transform transform hover:scale-105"
+              className="flex items-center justify-center gap-2 text-lg text-white bg-[#6366F1] hover:bg-[#4F46E5] px-8 py-3 rounded-md shadow-md transition-transform transform hover:scale-105"
               onClick={() => handleAddToCart(product._id)}
             >
               <FaShoppingCart />
@@ -111,7 +121,7 @@ const Product = () => {
       {/* Product Description */}
       <div className="shadow-lg h-auto bg-gray-800 mx-4 p-6 rounded-lg">
         <h2 className="text-2xl font-semibold mb-4 text-white">Description:</h2>
-        <p className="text-lg text-gray-300 leading-relaxed">{product.description}</p>
+        <p className="text-lg text-[#9CA3AF] leading-relaxed">{product.description}</p>
 
         {/* Show More / Less */}
         <button
@@ -144,7 +154,7 @@ const Product = () => {
           </div>
 
           {/* Average Rating */}
-          <div className="text-lg font-semibold text-gray-300">
+          <div className="text-lg font-semibold text-[#FACC15]">
             <p>Average Rating</p>
             {[...Array(5)].map((_, i) => (
               <FaStar key={i} className={i + 1 <= averageRatings ? "text-yellow-400" : "text-gray-500"} />
@@ -175,8 +185,8 @@ const Product = () => {
               <textarea
                 className="w-full p-3 border-2 rounded-md resize-none bg-gray-700 text-white"
                 placeholder="Write your review..."
-                value={review.description}
-                onChange={(e) => setReview({ ...review, description: e.target.value })}
+                value={review.message}
+                onChange={(e) => setReview({ ...review, message: e.target.value })}
               ></textarea>
 
               <button className="w-full p-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200">
