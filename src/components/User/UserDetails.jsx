@@ -9,27 +9,29 @@ const UserDetails = () => {
 
   useEffect(() => {
     const validateRefreshToken = async () => {
-      if (!userDetail) return;
-
       try {
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/api/v1/users/refresh-token`,
           {},
           { withCredentials: true }
         );
-
+  
         const { accessToken } = response.data;
         if (accessToken) {
-          axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+          // Update global auth state instead of axios defaults
+          setUserDetail((prev) => ({ ...prev, accessToken }));
         }
       } catch (error) {
         setUserDetail(null);
         console.error("Error validating refresh token:", error);
       }
     };
-
+  
     validateRefreshToken();
-  }, [userDetail]);
+  
+    // Run only once when the component mounts
+  }, []); 
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-black flex flex-col md:flex-row">

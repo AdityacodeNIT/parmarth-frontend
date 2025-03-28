@@ -56,11 +56,11 @@ const Register = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col md:flex-row bg-gradient-to-r mt-2 from-blue-800 to-gray-500">
+    <div className="h-screen flex flex-col md:flex-row bg-gradient-to-r mt-2 from-gray-800 to-black">
       {/* Left section - Register form */}
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-4">
-        <div className="w-full md:w-3/4 p-8 bg-purple-400 shadow-xl rounded-lg border border-white-300">
-          <h1 className="text-3xl font-extrabold text-blue-600 text-center mb-6">
+        <div className="w-full md:w-3/4 p-8 bg-gray-900 shadow-xl rounded-lg border border-white-300">
+          <h1 className="text-3xl font-extrabold text-teal-500 text-center mb-6">
             Register
           </h1>
           <form onSubmit={handleFormSubmit} encType="multipart/form-data">
@@ -71,7 +71,7 @@ const Register = () => {
               value={formData.fullName}
               onChange={handleInputChange}
               required
-              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 bg-gray-600 focus:outline-none focus:border-blue-600"
+              className="mb-4 p-2 w-full border-2 border-teal-500 rounded-md transition duration-200 bg-gray-200 focus:outline-none focus:border-blue-600"
             />
             <input
               type="email"
@@ -80,7 +80,7 @@ const Register = () => {
               value={formData.email}
               onChange={handleInputChange}
               required
-              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 bg-gray-600 focus:outline-none focus:border-blue-600"
+              className="mb-4 p-2 w-full border-2 border-teal-500 rounded-md transition duration-200 bg-gray-200 focus:outline-none focus:border-blue-600"
             />
             <input
               type="text"
@@ -89,7 +89,7 @@ const Register = () => {
               value={formData.username}
               onChange={handleInputChange}
               required
-              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 bg-gray-600  focus:outline-none focus:border-blue-600"
+              className="mb-4 p-2 w-full border-2 border-teal-500 rounded-md transition duration-200 bg-gray-200  focus:outline-none focus:border-blue-600"
             />
             <input
               type="password"
@@ -98,26 +98,32 @@ const Register = () => {
               value={formData.password}
               onChange={handleInputChange}
               required
-              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 bg-gray-600 focus:outline-none focus:border-blue-600"
+              className="mb-4 p-2 w-full border-2 border-teal-500 rounded-md transition duration-200 bg-gray-200 focus:outline-none focus:border-blue-600"
             />
-            <input
-              type="file"
-              name="avatar"
-              onChange={handleFileChange}
-              required
-              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 bg-gray-600  focus:outline-none focus:border-blue-600"
-            />
+           <div className="mb-4">
+  <label className="text-gray-300 text-sm mb-1 block">
+    Upload Profile_Photo <span className="text-gray-400">(Optional)</span>
+  </label>
+  <input
+    type="file"
+    name="avatar"
+    onChange={handleFileChange}
+    className="p-2 w-full border-2 border-teal-500 rounded-md transition duration-200 bg-gray-200 focus:outline-none focus:border-blue-600"
+  />
+  
+</div>
+
             {/* Add input for cover image if needed */}
             {/* <input type="file" name="coverImage" onChange={handleFileChange} /> */}
             <button
               type="submit"
-              className="w-full p-3 bg-blue-600 text-white font-bold rounded-md transition duration-200 hover:bg-rose-700"
+              className="w-full p-3 bg-teal-600 text-white font-bold rounded-md transition duration-200 hover:bg-rose-700"
             >
               Register
             </button>
-            <p className="mt-4 text-center">
+            <p className="mt-4 text-center text-white">
               Already a user?{" "}
-              <Link to="/userLogin" className="text-blue-400">
+              <Link to="/userLogin" className="text-red-400">
                 Login
               </Link>
             </p>
