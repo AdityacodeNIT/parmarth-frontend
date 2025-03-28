@@ -9,28 +9,22 @@ const UserDetails = () => {
 
   useEffect(() => {
     const validateRefreshToken = async () => {
-      if (!userDetail) {
-        return; // Exit if user details are not available
-      }
+      if (!userDetail) return;
 
       try {
-        // Validate the refresh token with the backend. If valid, the backend will return a new access token
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/api/v1/users/refresh-token`,
           {},
-          { withCredentials: true } // Cookies contain the refresh token
+          { withCredentials: true }
         );
 
-        // Update access token in context or storage if valid
         const { accessToken } = response.data;
         if (accessToken) {
-          axios.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${accessToken}`;
+          axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
         }
       } catch (error) {
         setUserDetail(null);
-        console.error("Error validating refresh token 12329hehf:", error);
+        console.error("Error validating refresh token:", error);
       }
     };
 
@@ -38,97 +32,50 @@ const UserDetails = () => {
   }, [userDetail]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-800 to-indigo-900 flex flex-col md:flex-row">
-      <div className="md:w-1/2 flex flex-col justify-center items-center bg-blue-500 p-4 md:p-0">
+    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-black flex flex-col md:flex-row">
+      {/* User Profile Section */}
+      <div className="md:w-1/2 flex flex-col justify-center items-center bg-gray-700 p-8 md:p-12 rounded-xl shadow-2xl">
         {userDetail ? (
-          <div key={userDetail.id} className="text-yellow-200 w-full max-w-lg">
-            <div className="flex items-center space-x-4 mb-6 justify-center">
+          <div className="text-yellow-300 w-full max-w-lg text-center">
+            {/* Profile Image */}
+            <div className="flex flex-col items-center mb-6">
               <img
-                className="w-24 h-24  b-2 bg-black object-cover rounded-full shadow-lg"
-                src={userDetail.data.avatar || userDetail.data.user.avatar}
+                className="w-28 h-28 border-4 border-yellow-300 object-cover rounded-full shadow-xl"
+                src={userDetail.data?.avatar || userDetail.data?.user?.avatar || "/default-avatar.png"}
                 alt="User avatar"
               />
-              <div className="text-md font-semibold">
-                {userDetail.data.username || userDetail.data.user.username}
+              <div className="text-xl font-bold mt-4">
+                {userDetail.data?.username || userDetail.data?.user?.username}
               </div>
             </div>
-            <div className="text-sm mb-4">
+
+            {/* User Details */}
+            <div className="text-md mb-6">
               <p>
-                Name:{" "}
-                {userDetail.data.fullName || userDetail.data.user.fullName}
+                <span className="font-semibold">Name:</span> {userDetail.data?.fullName || userDetail.data?.user?.fullName}
               </p>
               <p>
-                Email: {userDetail.data.email || userDetail.data.user.email}
+                <span className="font-semibold">Email:</span> {userDetail.data?.email || userDetail.data?.user?.email}
               </p>
             </div>
-            <div className="space-y-3">
-              {userDetail.data.user.role != "customer" ? (
-                <>
-                  <Link
-                    to="/Admin"
-                    className="block py-2 bg-purple-800 px-2 hover:bg-indigo-500 transition text-center"
-                  >
-                    Admin Panel
-                  </Link>
-                  <Link
-                    to="/helpdesk"
-                    className="block py-2 bg-purple-800 px-2 hover:bg-red-500 transition text-center"
-                  >
-                    Helpdesk
-                  </Link>
 
-                  <Link
-                    to="/logOut"
-                    className="block py-2 bg-purple-800 px-2 hover:bg-indigo-500 transition text-center"
-                  >
-                    LogOut
-                  </Link>
+            {/* Buttons Section */}
+            <div className="space-y-3">
+              {userDetail.data?.user?.role !== "customer" ? (
+                <>
+                  <StyledLink to="/Admin" text="Admin Panel" color="purple" />
+                  <StyledLink to="/helpdesk" text="Helpdesk" color="red" />
+                  <StyledLink to="/logOut" text="Log Out" color="indigo" />
                 </>
               ) : (
                 <>
-                  <Link
-                    to="/cart"
-                    className="block py-2 bg-purple-800 px-2 hover:bg-blue-500 transition text-center"
-                  >
-                    My Cart
-                  </Link>
-                  <Link
-                    to="/myOrder"
-                    className="block py-2 bg-purple-800 px-2 hover:bg-green-500 transition text-center"
-                  >
-                    My Orders
-                  </Link>
-                  <Link
-                    to="/updateDetails"
-                    className="block py-2 bg-purple-800 px-2 hover:bg-yellow-500 transition text-center"
-                  >
-                    Update Details
-                  </Link>
-                  <Link
-                    to="/Wishlist"
-                    className="block py-2 bg-purple-800 px-2 hover:bg-yellow-500 transition text-center"
-                  >
-                    Wishlist
-                  </Link>
-
-                  <Link
-                    to="/seller"
-                    className="block py-2 bg-purple-800 px-2 hover:bg-red-500 transition text-center"
-                  >
-                  Become A Seller
-                  </Link>
-                  <Link
-                    to="/helpdesk"
-                    className="block py-2 bg-purple-800 px-2 hover:bg-red-500 transition text-center"
-                  >
-                    Helpdesk
-                  </Link>
-                  <Link
-                    to="/logOut"
-                    className="block py-2 bg-purple-800 px-2 hover:bg-indigo-500 transition text-center"
-                  >
-                    LogOut
-                  </Link>
+                  <StyledLink to="/cart" text="My Cart" color="blue" />
+                  <StyledLink to="/myOrder" text="My Orders" color="green" />
+                  <StyledLink to="/updateDetails" text="Update Details" color="yellow" />
+                  <StyledLink to="/Wishlist" text="Wishlist" color="yellow" />
+                  <StyledLink to="/seller" text="Become A Seller" color="red" />
+                  <StyledLink to="/helpdesk" text="Helpdesk" color="red" />
+                  <StyledLink to="/logOut" text="Log Out" color="indigo" />
                 </>
               )}
             </div>
@@ -138,19 +85,33 @@ const UserDetails = () => {
             <h2 className="text-lg font-bold">You are not logged in</h2>
             <Link
               to="/userLogin"
-              className="block py-2 mt-4 bg-purple-600 px-4 hover:bg-indigo-500 transition text-center text-white rounded"
+              className="inline-block mt-4 px-6 py-2 bg-purple-600 hover:bg-indigo-500 transition text-white rounded-lg shadow-lg"
             >
               Log In
             </Link>
           </div>
         )}
       </div>
-      <div className="md:w-1/2 flex items-center justify-center p-6 md:p-0">
-        <div className="text-white text-xl">
-          Placeholder for future content or components.
+
+      {/* Right-Side Placeholder */}
+      <div className="md:w-1/2 flex items-center justify-center p-8">
+        <div className="text-white text-xl text-center bg-gray-900 p-6 rounded-lg shadow-lg">
+          Exciting new features coming soon! Stay tuned.
         </div>
       </div>
     </div>
+  );
+};
+
+// Reusable Button Component
+const StyledLink = ({ to, text, color }) => {
+  return (
+    <Link
+      to={to}
+      className={`block w-full max-w-xs mx-auto py-2 px-4 text-white text-center font-semibold rounded-lg shadow-lg bg-${color}-700 hover:bg-${color}-500 transition-transform transform hover:scale-105`}
+    >
+      {text}
+    </Link>
   );
 };
 

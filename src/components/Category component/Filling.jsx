@@ -31,19 +31,20 @@ const Filling = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section (Balanced Yellow-Orange Gradient) */}
-      <section className="relative w-full h-[40vh] flex flex-col items-center justify-center text-center bg-gradient-to-r from-yellow-600 to-orange-500 shadow-lg rounded-b-lg px-6">
+      
+      <section className="relative w-full h-[34vh] flex flex-col items-center justify-center text-center bg-black shadow-xl px-6">
+
+      <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 to-blue-500/20 blur-xl opacity-40"></div>
+
         <h1 className="text-4xl sm:text-5xl font-extrabold text-white drop-shadow-lg">
           📂 Organize & Secure Your Documents
         </h1>
         <p className="mt-3 text-lg sm:text-xl max-w-2xl text-gray-200">
           Explore high-quality filing & storage solutions for office & home.
         </p>
-        <Link
-          to="/shop"
-          className="mt-5 bg-white text-yellow-600 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-gray-200 transition-transform transform hover:scale-105"
-        >
-          Shop Now
-        </Link>
+        <Link to="/shop" className="mt-6 px-6 py-3 bg-yellow-500 hover:bg-cyan-600 text-black font-semibold rounded-full shadow-lg transition-transform hover:scale-105">
+                Explore Now
+              </Link>
 
         {/* Floating Glow Effects */}
         <div className="absolute top-6 left-12 w-14 h-14 bg-yellow-400 opacity-20 blur-2xl rounded-full animate-pulse"></div>
@@ -60,8 +61,8 @@ const Filling = () => {
         </div>
       ) : (
         /* Product Grid */
-        <div className="container mx-auto px-6 py-12 bg-gray-900">
-          <h2 className="text-3xl font-bold text-center mb-8 text-yellow-400">
+        <div className="container mx-auto px-6 py-12 ">
+          <h2 className="text-3xl font-bold text-center mb-8 text-yellow-500">
             📁 Browse Filing & Storage Essentials
           </h2>
 

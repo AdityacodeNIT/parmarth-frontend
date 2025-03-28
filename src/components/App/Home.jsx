@@ -51,7 +51,7 @@ const Home = () => {
             {/* Hero Section */}
             <div className="relative w-full h-[70vh] bg-cover bg-center flex items-center justify-center text-white text-center px-6" 
                 style={{ backgroundImage: "url('https://plus.unsplash.com/premium_photo-1663956066898-282c7609afc9?w=1600&auto=format&fit=crop&q=80')" }}>
-                <div className="bg-black bg-opacity-50 p-8 rounded-lg backdrop-blur-md">
+                <div className="bg-black bg-opacity-30 p-8 rounded-lg backdrop-blur-md">
                     <h1 className="text-5xl md:text-7xl font-extrabold drop-shadow-lg">Your One-Stop Stationery Store</h1>
                     <p className="mt-4 text-xl md:text-2xl font-light">
                         Premium writing instruments, paper products, and office supplies at your fingertips.
@@ -77,7 +77,7 @@ const Home = () => {
                     ].map((category, index) => (
                         <Link to={`/${category.name.replace(/\s+/g, '')}`} key={index}>
                             <div className="bg-white rounded-xl shadow-md hover:shadow-xl overflow-hidden transform hover:scale-105 transition-all">
-                                <img src={category.img} alt={category.name} className="w-full h-40 object-cover" />
+                                <img src={category.img} alt={category.name} loading="lazy" className="w-full h-40 object-cover" />
                                 <div className="p-4 text-center">
                                     <h3 className="text-lg font-semibold text-gray-800">{category.name}</h3>
                                 </div>

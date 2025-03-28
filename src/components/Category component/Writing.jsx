@@ -31,24 +31,28 @@ const Writing = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section (Cyan & Blue Glow) */}
-      <section className="relative w-full h-[40vh] flex flex-col items-center justify-center text-center bg-gradient-to-r from-cyan-600 to-blue-500 shadow-xl rounded-b-lg px-6">
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white drop-shadow-md">
-          ✍️ Elevate Your Writing Experience
-        </h1>
-        <p className="mt-3 text-lg sm:text-xl max-w-2xl text-gray-200">
-          Explore premium writing tools crafted for precision & creativity.
-        </p>
-        <Link
-          to="/products"
-          className="mt-5 bg-white text-cyan-600 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-gray-200 transition-transform transform hover:scale-105"
-        >
-          Browse Collection
-        </Link>
+      <section className="relative w-full h-[34vh] flex flex-col items-center justify-center text-center bg-black shadow-xl px-6">
+  {/* Gradient Overlay for Glowing Effect */}
+  <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 to-blue-500/20 blur-xl opacity-40"></div>
 
-        {/* Floating Glow Effects */}
-        <div className="absolute top-6 left-12 w-16 h-16 bg-blue-400 opacity-20 blur-2xl rounded-full animate-pulse"></div>
-        <div className="absolute bottom-10 right-12 w-24 h-24 bg-cyan-400 opacity-30 blur-2xl rounded-full animate-pulse"></div>
-      </section>
+  {/* Hero Content */}
+  <h1 className="text-4xl sm:text-5xl font-extrabold text-white drop-shadow-lg">
+    ✍️ Elevate Your Writing Experience
+  </h1>
+  <p className="mt-3 text-lg sm:text-xl max-w-2xl text-gray-300">
+    Explore premium writing tools crafted for precision & creativity.
+  </p>
+
+  {/* CTA Button */}
+  <Link to="/shop" className="mt-6 px-6 py-3 bg-cyan-500 hover:bg-cyan-600 text-black font-semibold rounded-full shadow-lg transition-transform hover:scale-105">
+    Explore Now
+  </Link>
+
+  {/* Floating Neon Glow Effects */}
+  <div className="absolute top-6 left-12 w-16 h-16 bg-blue-400 opacity-20 blur-2xl rounded-full animate-pulse"></div>
+  <div className="absolute bottom-10 right-12 w-24 h-24 bg-cyan-400 opacity-30 blur-2xl rounded-full animate-pulse"></div>
+</section>
+
 
       {/* Categories Section */}
       <Categories />

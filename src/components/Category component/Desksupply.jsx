@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import UserContext from "../../context/UserContext";
+import Categories from "../Products/Categories";
 
 const Desksupply = () => {
   const { childToParent } = useContext(UserContext);
@@ -32,25 +33,22 @@ const Desksupply = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section (Cyberpunk Glow) */}
-      <section className="relative w-full h-[40vh] flex flex-col items-center justify-center text-center bg-gradient-to-r from-blue-700 to-cyan-500 shadow-xl rounded-b-lg">
+      <section className="relative w-full h-[34vh] flex flex-col items-center justify-center text-center bg-gradient-to-r from-cyan-600/20 to-blue-500/20 shadow-xl rounded-b-lg">
         <h1 className="text-4xl sm:text-5xl font-extrabold text-white drop-shadow-md">
           Upgrade Your Workspace 🖇️
         </h1>
         <p className="mt-2 text-lg text-gray-200 max-w-xl">
           Discover premium desk supplies designed for efficiency and style.
         </p>
-        <Link
-          to="/shop"
-          className="mt-4 bg-white text-blue-600 py-3 px-8 rounded-full font-bold shadow-lg hover:bg-gray-200 transition-transform transform hover:scale-105"
-        >
-          Browse Now
+       <Link to="/shop" className="mt-6 px-6 py-3 bg-white hover:bg-cyan-600 text-black font-semibold rounded-full shadow-lg transition-transform hover:scale-105">
+          Explore Now
         </Link>
 
         {/* Floating Glow Effects */}
         <div className="absolute top-5 left-10 w-20 h-20 bg-cyan-400 opacity-20 blur-2xl rounded-full animate-pulse"></div>
         <div className="absolute bottom-10 right-10 w-28 h-28 bg-blue-500 opacity-30 blur-2xl rounded-full animate-pulse"></div>
       </section>
-
+      <Categories />
       {/* Loading State */}
       {loading ? (
         <div className="flex justify-center items-center py-20">

@@ -28,19 +28,16 @@ const Reusable = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white">
       {/* Hero Section (Nature-Inspired) */}
-      <section className="relative w-full h-[40vh] flex flex-col items-center justify-center text-center bg-gradient-to-r from-green-600 to-teal-500 shadow-lg rounded-b-md">
+      <section className="relative w-full h-[34vh] flex flex-col items-center justify-center text-center bg-gradient-to-r from-cyan-600/20 to-blue-500/20 shadow-lg rounded-b-md">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-white">
           Sustainable & Reusable Stationery 🌿
         </h1>
         <p className="mt-2 text-md sm:text-lg text-gray-200 max-w-xl">
           Eco-friendly products crafted from recycled materials to help the planet.
         </p>
-        <Link
-          to="/shop"
-          className="mt-4 bg-white text-green-700 py-2 px-6 rounded-full shadow-md hover:bg-gray-200 transition-transform transform hover:scale-105"
-        >
-          Browse Eco Products
-        </Link>
+        <Link to="/shop" className="mt-6 px-6 py-3 bg-green-600 hover:bg-cyan-600 text-black font-semibold rounded-full shadow-lg transition-transform hover:scale-105">
+           Explore Now
+         </Link>
 
         {/* Floating Leaf Animations */}
         <div className="absolute top-5 left-10 w-16 h-16 bg-green-400 opacity-20 blur-2xl rounded-full animate-bounce"></div>
@@ -52,7 +49,7 @@ const Reusable = () => {
 
       {/* Product Grid */}
       <div className="container mx-auto px-6 py-10">
-        <h2 className="text-3xl font-bold text-center mb-8 text-gray-200">
+        <h2 className="text-3xl font-bold text-center mb-8 text-green-600">
           Shop Sustainable Essentials ♻️
         </h2>
         <div className="grid gap-8 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">

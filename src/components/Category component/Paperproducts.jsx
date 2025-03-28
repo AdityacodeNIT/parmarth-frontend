@@ -31,20 +31,16 @@ const Paperproducts = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section (Balanced Dark Teal & Emerald) */}
-      <section className="relative w-full h-[40vh] flex flex-col items-center justify-center text-center bg-gradient-to-r from-teal-600 to-emerald-500 shadow-lg rounded-b-md px-6">
+      <section className="relative w-full h-[34vh] flex flex-col items-center justify-center text-center bg-gradient-to-r from-cyan-600/20 to-blue-500/20 shadow-lg rounded-b-md px-6">
         <h1 className="text-4xl sm:text-5xl font-extrabold text-white drop-shadow-lg">
           📜 Premium Paper Products
         </h1>
         <p className="mt-3 text-lg sm:text-xl max-w-2xl text-gray-200">
           High-quality paper for office, school, and creativity.
         </p>
-        <Link
-          to="/shop"
-          className="mt-5 bg-white text-emerald-600 font-semibold px-6 py-3 rounded-full shadow-md hover:bg-gray-200 transition-transform transform hover:scale-105"
-        >
-          Browse Collection
+       <Link to="/shop" className="mt-6 px-6 py-3 bg-emerald-500 hover:bg-cyan-600 text-black font-semibold rounded-full shadow-lg transition-transform hover:scale-105">
+          Explore Now
         </Link>
-
         {/* Floating Glow Effects */}
         <div className="absolute top-6 left-12 w-14 h-14 bg-teal-400 opacity-20 blur-2xl rounded-full animate-pulse"></div>
         <div className="absolute bottom-10 right-12 w-20 h-20 bg-emerald-400 opacity-30 blur-2xl rounded-full animate-pulse"></div>
