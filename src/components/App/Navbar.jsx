@@ -58,13 +58,13 @@ const Navbar = () => {
           {userDetail && userDetail.data && userDetail.data.user ? (
             <Link to="/user">
               <img
-                className="w-14 h-14 rounded-full border-4 border-[#FACC15] hover:border-[#38BDF8] transition-colors duration-300 mr-2"
+                className="w-14 h-14 rounded-full border-4 border-[#FACC15] hover:border-[#38BDF8] transition-colors duration-300"
                 src={userDetail.data.avatar || userDetail.data.user.avatar}
                 alt="User Avatar"
               />
             </Link>
           ) : (
-            <button className="text-[#FACC15] text-md font-bold px-4 py-2 border border-[#FACC15] rounded-md hover:bg-[#FACC15] hover:text-[#1E293B] mr-2 transition-colors duration-300">
+            <button className="text-[#FACC15] text-md font-bold px-4 py-2 border border-[#FACC15] rounded-md hover:bg-[#FACC15] hover:text-[#1E293B] transition-colors duration-300">
               <Link to="/register">Login/Register</Link>
             </button>
           )}

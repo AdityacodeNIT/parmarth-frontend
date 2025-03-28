@@ -31,7 +31,7 @@ const Writing = () => {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Hero Section (Cyan & Blue Glow) */}
-      <section className="relative w-full h-[34vh] flex flex-col items-center justify-center text-center bg-black shadow-xl px-6">
+     <section className="relative w-full h-[34vh] flex flex-col items-center justify-center text-center bg-black shadow-xl px-6">
   {/* Gradient Overlay for Glowing Effect */}
   <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 to-blue-500/20 blur-xl opacity-40"></div>
 
