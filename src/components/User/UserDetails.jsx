@@ -62,7 +62,7 @@ const UserDetails = () => {
               </p>
             </div>
             <div className="space-y-3">
-              {userDetail.data.user.role == "custiomer" ? (
+              {userDetail.data.user.role != "customer" ? (
                 <>
                   <Link
                     to="/Admin"
@@ -75,6 +75,13 @@ const UserDetails = () => {
                     className="block py-2 bg-purple-800 px-2 hover:bg-red-500 transition text-center"
                   >
                     Helpdesk
+                  </Link>
+
+                  <Link
+                    to="/logOut"
+                    className="block py-2 bg-purple-800 px-2 hover:bg-indigo-500 transition text-center"
+                  >
+                    LogOut
                   </Link>
                 </>
               ) : (

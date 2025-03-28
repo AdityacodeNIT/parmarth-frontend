@@ -27,7 +27,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="flex items-center bg-white rounded-full shadow-lg p-2 w-72 lg:w-96">
+    <div className="flex items-center bg-white rounded-full shadow-lg p-2 w-64 lg:w-80">
       <input
         type="text"
         name="search"
@@ -39,7 +39,7 @@ const SearchBar = () => {
       <Link to="/searchResult">
         <button
           onClick={executeSearch}
-          className="bg-blue-600 text-white rounded-full px-4 py-2 hover:bg-blue-700 transition duration-300"
+          className="bg-[#16A34A] text-white rounded-full px-4 py-2 hover:bg-blue-700 transition duration-300"
         >
           Search
         </button>

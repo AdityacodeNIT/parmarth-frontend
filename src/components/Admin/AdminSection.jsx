@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
+import UserContext from "../../context/UserContext";
 import Orderlist from "./Orderlist";
 import Userlist from "./Userlist";
 import Productlist from "./Productlist";
 import { MdAdminPanelSettings } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const AdminSection = () => {
   const [activeSection, setActiveSection] = useState(null);
+  const {userDetail}=useContext(UserContext);
   const toggleSection = (section) => {
     setActiveSection(activeSection === section ? null : section);
   };
@@ -13,12 +16,13 @@ const AdminSection = () => {
   return (
     <div>
       <div className="flex justify-center items-center text-2xl m-2 p-2">
-        Admin Section
+        {userDetail.data.user.role}
         <MdAdminPanelSettings />
       </div>
 
       <div className="p-6 bg-gray-100 min-h-screen space-y-4">
         {/* User List Accordion Section */}
+        {userDetail.data.user.role!=="seller" && (
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
           <button
             onClick={() => toggleSection("userlist")}
@@ -31,7 +35,8 @@ const AdminSection = () => {
               <Userlist />
             </div>
           )}
-        </div>
+        </div>)
+}
 
         {/* Product List Accordion Section */}
         <div className="bg-white shadow-lg rounded-lg overflow-hidden">
@@ -61,6 +66,19 @@ const AdminSection = () => {
               <Orderlist />
             </div>
           )}
+        </div>
+
+
+        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+          <Link to="/addProduct">
+          <button
+            
+            className="w-full p-4 text-left font-semibold text-red-600 hover:bg-red-50"
+          >
+            Add Product
+          </button>
+       
+   </Link>
         </div>
       </div>
     </div>

@@ -2,6 +2,9 @@ import axios from "axios";
 import React, { useState } from "react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useNavigate } from "react-router-dom";
+// import dotenv from "dotenv";
+
+//dotenv.config();
 
 const allPossibleAttributes = [
   "length", "breadth", "height", "weight",
@@ -17,8 +20,9 @@ const AddProduct = () => {
   const [message, setMessage] = useState("");
   const [selectedAttributes, setSelectedAttributes] = useState([]);
   const [selectedAttribute, setSelectedAttribute] = useState("");
+  console.log(import.meta.env.VITE_API_KEY);
 
-  const genAI = new GoogleGenerativeAI(`${import.meta.env.API_KEY}`);
+  const genAI = new GoogleGenerativeAI(`${import.meta.env.VITE_API_KEY}`);
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
   const navigate = useNavigate();
 
@@ -66,7 +70,7 @@ const AddProduct = () => {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/product/addProduct`,
         formDataToSend,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {withCredentials: true}
       );
 
       setMessage("Product added successfully!");

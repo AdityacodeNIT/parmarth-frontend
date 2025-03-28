@@ -52,8 +52,10 @@ import Home from "./components/App/Home.jsx";
 import Seller from "./components/Seller/Seller.jsx";
 import SellerRegister from "./components/Seller/SellerRegister.jsx";
 import Sellerlogin from "./components/Seller/SellerLogin.jsx";
-import AdminDashboard from "./components/Admin/AdminDashboard.jsx";
+
 import ManageSellers from "./components/Admin/ManageSellers.jsx";
+import UpdateProduct from "./components/Products/UpdateProudctDetails.jsx";
+import ProtectedRoute from "./context/ProtectedRoutes.jsx";
 
 
 function App() {
@@ -83,14 +85,21 @@ function App() {
           <Route path="/wishlist" element={<Wishlisted />} />
           <Route path="/payments" element={<Payment />} />
           <Route path="/helpdesk" element={<Helpdesk />} />
-          <Route path="/AddProduct" element={<AddProduct />} />
+          <Route
+          path="/AddProduct"
+          element={
+            <ProtectedRoute allowedRoles={["superadmin","seller"]}>
+              <AddProduct />
+            </ProtectedRoute>
+          }
+        />
           <Route path="/update" element={<UserUpdateDetails />} />
           <Route path="/searchResult" element={<SearchResult />} />
           <Route path="/changePassword" element={<ChangePassword />} />
           <Route path="/changeDetails" element={<UpdateUserAccountDetails />} />
           <Route path="/updateDetails" element={<UpdateDetails />} />
           <Route path="/updateAvatar" element={<UpdateAvatar />} />
-          <Route path="/admin" element={<AdminSection />} />
+        
           <Route path="/myOrder" element={<AllOrders />} />
           <Route path="/orderitems" element={<OrderDetails />} />
 
@@ -98,7 +107,11 @@ function App() {
           <Route path="/seller" element={<Seller/>} />
           <Route path="/sellerRegister" element={<SellerRegister/>} />
           <Route path="/sellerlogin" element={<Sellerlogin/>} />
-          <Route path="/admina" element={<AdminDashboard />}/>
+          <Route path="/admin" element={ <ProtectedRoute allowedRoles={["superadmin","seller"]}>
+           <AdminSection />
+           </ProtectedRoute>
+          }/>
+          <Route path="/updateProduct/:id" element={<UpdateProduct />} />
           
                     <Route path="/sellers" element={<ManageSellers />} />
         </Routes>

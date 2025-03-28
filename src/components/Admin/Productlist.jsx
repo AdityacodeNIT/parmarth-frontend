@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import {Link} from "react-router-dom";
 
 const Productlist = () => {
   const [userData, setUserData] = useState([]);
@@ -75,8 +76,16 @@ const Productlist = () => {
                   onClick={() => deleteData(user._id)}
                 >
                   Delete
+
                 </button>
+                <Link
+                  to={`/updateProduct/${user._id}`}
+                  className="ml-4 px-4 py-1 text-white bg-blue-500 rounded hover:bg-blue-700"
+                >
+                  Update
+                </Link>
               </td>
+              
             </tr>
           ))}
         </tbody>
