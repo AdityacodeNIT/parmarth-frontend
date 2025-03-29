@@ -19,7 +19,7 @@ const Product = () => {
     getReview,
     gotReview,
   } = useContext(UserContext);
-
+  const [showMore, setShowMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const reviewsPerPage = 5;
 
@@ -111,6 +111,27 @@ const Product = () => {
           </div>
         </div>
       </div>
+      <div className="shadow-lg h-auto bg-gray-800 mx-4 p-6 rounded-lg">
+        <h2 className="text-2xl font-semibold mb-4 text-white">Description:</h2>
+        <p className="text-lg text-[#9CA3AF] leading-relaxed">{product.description}</p>
+
+        {/* Show More / Less */}
+        <button className="text-lg text-blue-400 font-semibold mt-4" onClick={() => setShowMore(!showMore)}>
+          {showMore ? "See Less" : "See More"}
+        </button>
+
+        {showMore && (
+          <div className="text-gray-400 font-medium space-y-2 mt-4">
+            {product.weight && <div>Weight: {product.weight} g</div>}
+            {product.height && <div>Height: {product.height} cm</div>}
+            {product.length && <div>Length: {product.length} cm</div>}
+            {product.width && <div>Width: {product.width} cm</div>}
+          </div>
+        )}
+      </div>
+
+
+
 
       {/* Add Review */}
       <div className="m-4 text-2xl font-semibold text-center text-white">Add a Review</div>
