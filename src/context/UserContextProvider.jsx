@@ -421,7 +421,8 @@ useEffect(() => {
       axios
         .post(
           `${import.meta.env.VITE_API_URL}/api/v2/feedback/review`,
-          productReview
+          productReview,
+          {withCredentials: true}
         )
         .catch((error) => {
           console.error("There was an error posting the review!", error);
@@ -458,11 +459,14 @@ useEffect(() => {
   const[gotReview,setGotReview]=useState([]);
 
 
-  const getReview=async()=>{
-    const response =  await axios.get(`${import.meta.env.VITE_API_URL}/api/v2/feedback/getReview`
+  const getReview=async(productId)=>{
+    console.log("productId",productId);
+    if (!productId) return;
+    const response =  await axios.get(`${import.meta.env.VITE_API_URL}/api/v2/feedback/getReview/${productId}`,
     )
+    console.log("hello ji ",response.data);
     setGotReview(response.data);
-    console.log("hello ji ",response);
+  
   }
 
 
