@@ -1,5 +1,4 @@
 
-# ```markdown
 # Parmarth E-commerce Platform
 
 A comprehensive e-commerce platform for stationery and office supplies, built with React, Tailwind CSS, and Vite.  This application features user authentication, product browsing and purchasing, a shopping cart, wishlist functionality, order management, admin panel, and seller management.
@@ -198,4 +197,4 @@ Parmarth is a fully functional e-commerce application designed to provide a seam
 
 ## Author
 
-*(Author name not specified in the provided code)*
+*Aditya Srivastav*
