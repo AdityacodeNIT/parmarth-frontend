@@ -1,99 +1,97 @@
+# Adyog 🛍️🚀
 
-# Parmarth E-commerce Platform
-
-A comprehensive e-commerce platform for stationery and office supplies, built with React, Tailwind CSS, and Vite.  This application features user authentication, product browsing and purchasing, a shopping cart, wishlist functionality, order management, admin panel, and seller management.
-
-
-## Description
-
-Parmarth is a fully functional e-commerce application designed to provide a seamless online shopping experience for stationery and office supplies.  The application includes features for both customers and administrators, allowing for easy product management, order tracking, and user account management.  The application also supports seller accounts.
-
-
-## Features
-
-* **User Authentication:** Secure user registration and login.
-* **Product Browsing:** Browse products by category and search functionality.
-* **Shopping Cart:** Add, remove, and update items in the shopping cart.
-* **Wishlist:** Save desired products to a wishlist for later purchase.
-* **Order Management:** View order history and details, including tracking information.
-* **Payment Gateway Integration:** Secure payment processing using Razorpay.
-* **Admin Panel:**  Manage users, products, and orders. Includes functionalities to delete, update and add products/users. Seller Approval/Rejection capabilities.
-* **Seller Management:**  Seller registration, login, and product management.
-* **Search Functionality:** Search for products by name.
-* **Responsive Design:**  Adapts to different screen sizes for optimal viewing on various devices.
-* **Server-Side Rendering (potential):** Server-side rendering capabilities based on the `vercel.json` configuration.
-* **API Integration:** Integrates with a backend API (URL not specified in the provided code).
-* **KeepAlive:** Server-side calls to prevent session expiry.
-* **AI-Powered Descriptions:** Generation of product descriptions using Google's Gemini AI API.
+[![License](https://img.shields.io/github/license/yourusername/adyog)](https://github.com/yourusername/adyog/blob/main/LICENSE)
+[![React](https://img.shields.io/badge/react-%2361DAFB.svg?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Vite.js](https://img.shields.io/badge/vite.js-%23646CFF.svg?style=for-the-badge&logo=vitejs&logoColor=white)](https://vitejs.dev/)
+[![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 
 
-## Setup/Installation
+A blazing-fast and modern e-commerce platform built with React, Vite, and Tailwind CSS.
 
-1. **Clone the repository:**
-   ```bash
-   git clone <repository_url>
-   ```
+## Table of Contents
 
-2. **Navigate to the project directory:**
-   ```bash
-   cd Parmarth
-   ```
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Screenshots](#screenshots)
+- [Technologies Used](#technologies-used)
+- [Demo](#demo)
+- [License](#license)
+- [Author](#author)
 
-3. **Install dependencies:**
-   ```bash
-   npm install
-   ```  or  ```bash
-   yarn install
-   ```
+## Features ✨
 
-4. **Set Environment Variables:** Create a `.env` file in the project root and add the necessary API URL and API KEY.
-
-    ```
-    VITE_API_URL=your_api_url_here
-    VITE_API_KEY=your_api_key_here
-    ```
+-  🛍️  Browse and search through a wide variety of stationery items
+-  🛒 Add items to your cart and manage your cart
+-  💳 Secure payment gateway integration (Razorpay)
+-  ❤️ Add products to your wishlist
+-  📦 View your order history and details
+-  👤 User authentication and profile management
+-  🚀  Blazing-fast performance thanks to Vite
+-  📱 Responsive design for seamless cross-device experience
+-  ✨  Beautiful UI using Tailwind CSS
 
 
-## Usage Instructions
+## Installation ⬇️
 
-1. **Start the development server:**
-   ```bash
-   npm run dev
-   ```  or  ```bash
-   yarn dev
-   ```
+1. Clone the repository:
 
-2. **Open your browser and navigate to:** `http://localhost:3000`
+```bash
+git clone https://github.com/yourusername/adyog.git
+cd adyog
+```
 
-3. **Build for production:**
-   ```bash
-   npm run build
-   ```  or  ```bash
-   yarn build
-   ```
+2. Install dependencies:
 
-4. **Serve the production build:**
-   ```bash
-   npm run serve
-   ```  or  ```bash
-   yarn serve
-   ```
+```bash
+npm install
+```
 
-## Technologies Used
+3. Start the development server:
 
-* React
-* React Router DOM
-* Tailwind CSS
-* Vite
-* TypeScript
-* Axios
-* Razorpay
-* @google/generative-ai (Google Gemini AI)
-* @vercel/speed-insights
-* PostCSS
-* Autoprefixer
-* Font Awesome
 
-## Author
+```bash
+npm run dev
+```
 
-*Aditya Srivastav*
+## Usage 💻
+
+1. Navigate to your project directory after cloning and installation.
+2. Run the development server using `npm run dev`.
+3. The application will automatically open in your browser at `http://localhost:3000`.
+4. Start exploring!
+
+
+## Screenshots 📸
+
+[![Screenshot](https://via.placeholder.com/1500x800.png)](https://via.placeholder.com/1500x800.png)
+
+
+## Technologies Used 🛠️
+
+- React
+- Vite
+- Tailwind CSS
+- TypeScript
+- Node.js
+- React Router DOM
+- Razorpay
+- @vercel/speed-insights
+- Font Awesome
+- Three.js (if used)
+
+
+## Demo 🚀
+
+[![Demo](https://img.shields.io/badge/Demo-Live%20Preview-brightgreen)](your_demo_link_here)
+
+
+## License 📄
+
+This project is licensed under the [ISC](https://github.com/yourusername/adyog/blob/main/LICENSE) license.
+
+## Author 👤
+
+[Aditya Srivastav/GitHub username](your_github_profile_url)
