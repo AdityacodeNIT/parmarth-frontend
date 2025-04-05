@@ -1,4 +1,4 @@
-```markdown
+
 # Adyog E-commerce Platform
 
 A comprehensive e-commerce platform for stationery and office supplies, built with React, Tailwind CSS, and Vite.  This application features user authentication, product browsing and purchasing, a shopping cart, wishlist functionality, order management, admin panel, and seller management.
@@ -97,6 +97,4 @@ Adyog is a fully functional e-commerce application designed to provide a seamles
 
 ## Author
 
-*Aditya Srivastav*
-
-```
+*(Author name not specified in the provided code)*
