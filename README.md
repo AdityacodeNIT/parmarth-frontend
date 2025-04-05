@@ -1,70 +1,70 @@
-# Getting Started with Create React App
+Parmarth E-commerce Platform
+A comprehensive e-commerce platform for stationery and office supplies, built with React, Tailwind CSS, and Vite. This application features user authentication, product browsing and purchasing, a shopping cart, wishlist functionality, order management, admin panel, and seller management.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Description
+Adyog is a fully functional e-commerce application designed to provide a seamless online shopping experience for stationery and office supplies. The application includes features for both customers and administrators, allowing for easy product management, order tracking, and user account management. The application also supports seller accounts.
 
-## Available Scripts
+Features
+User Authentication: Secure user registration and login.
+Product Browsing: Browse products by category and search functionality.
+Shopping Cart: Add, remove, and update items in the shopping cart.
+Wishlist: Save desired products to a wishlist for later purchase.
+Order Management: View order history and details, including tracking information.
+Payment Gateway Integration: Secure payment processing using Razorpay.
+Admin Panel: Manage users, products, and orders. Includes functionalities to delete, update and add products/users. Seller Approval/Rejection capabilities.
+Seller Management: Seller registration, login, and product management.
+Search Functionality: Search for products by name.
+Responsive Design: Adapts to different screen sizes for optimal viewing on various devices.
+Server-Side Rendering (potential): Server-side rendering capabilities based on the vercel.json configuration.
+API Integration: Integrates with a backend API (URL not specified in the provided code).
+KeepAlive: Server-side calls to prevent session expiry.
+AI-Powered Descriptions: Generation of product descriptions using Google's Gemini AI API.
+Setup/Installation
+Clone the repository:
 
-In the project directory, you can run:
+git clone <repository_url>
+Navigate to the project directory:
 
-### `npm start`
+cd adyog
+Install dependencies:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+npm install
+```  or  ```bash
+yarn install
+Set Environment Variables: Create a .env file in the project root and add the necessary API URL and API KEY.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+VITE_API_URL=your_api_url_here
+VITE_API_KEY=your_api_key_here
+Usage Instructions
+Start the development server:
 
-### `npm test`
+npm run dev
+```  or  ```bash
+yarn dev
+Open your browser and navigate to: http://localhost:3000
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Build for production:
 
-### `npm run build`
+npm run build
+```  or  ```bash
+yarn build
+Serve the production build:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+npm run serve
+```  or  ```bash
+yarn serve
+Technologies Used
+React
+React Router DOM
+Tailwind CSS
+Vite
+TypeScript
+Axios
+Razorpay
+@google/generative-ai (Google Gemini AI)
+@vercel/speed-insights
+PostCSS
+Autoprefixer
+Font Awesome
+Author
+Aditya Srivastav
