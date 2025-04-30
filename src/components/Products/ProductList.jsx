@@ -21,6 +21,7 @@ const ProductList = () => {
       console.error("Failed to fetch products", error);
     }
   };
+  
 
   useEffect(() => {
     getProductDetail();
@@ -32,20 +33,18 @@ const ProductList = () => {
       <Reminder />
 
       {/* Hero Banner */}
-      <section className="relative bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 py-20">
-        <div className="container mx-auto text-center">
-          <h1 className="text-4xl font-extrabold text-white mb-3">
-            Discover Amazing Products
-          </h1>
-          <p className="text-lg text-gray-100 max-w-2xl mx-auto">
-            Explore our exclusive collection of top-notch products curated just
-            for you.
-          </p>
-          <button className="mt-8 bg-white text-indigo-600 py-3 px-8 rounded-full shadow-lg hover:bg-gray-200 transition">
-            Browse All
-          </button>
-        </div>
-      </section>
+      <section className="relative bg-gradient-to-r from-purple-800 via-indigo-700 to-blue-700 py-12">
+  <div className="container mx-auto text-center px-4">
+    <h1 className="text-3xl font-bold text-white mb-2">
+      Discover Amazing Products
+    </h1>
+    <p className="text-base text-gray-100 max-w-xl mx-auto">
+      Explore our exclusive collection of top-notch products curated just for you.
+    </p>
+  </div>
+</section>
+
+
 
       <div
         className="bg-cover bg-center w-full h-auto"

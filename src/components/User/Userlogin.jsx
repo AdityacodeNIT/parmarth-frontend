@@ -33,6 +33,7 @@ const Userlogin = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
+        console.log(response.data);
         getUserDetail(response.data);
         navigate("/user");
       }

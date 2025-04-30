@@ -23,7 +23,8 @@ export default defineConfig({
     },
   },
   server: {
-    hmr: true, // Enable hot module replacement
+    hmr: true,
+     // Enable hot module replacement
   },
   css: {
     postcss: "./postcss.config.js",

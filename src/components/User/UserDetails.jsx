@@ -12,11 +12,13 @@ const UserDetails = () => {
       try {
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/api/v1/users/refresh-token`,
-          {},
+        {},
           { withCredentials: true }
         );
+        console.log(response.data);
   
         const { accessToken } = response.data;
+        
         if (accessToken) {
           // Update global auth state instead of axios defaults
           setUserDetail((prev) => ({ ...prev, accessToken }));
@@ -24,6 +26,7 @@ const UserDetails = () => {
       } catch (error) {
         setUserDetail(null);
         console.error("Error validating refresh token:", error);
+        navigate("/userLogin");
       }
     };
   

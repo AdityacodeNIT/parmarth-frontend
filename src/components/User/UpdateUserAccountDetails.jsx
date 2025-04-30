@@ -10,6 +10,7 @@ const UpdateUserAccountDetails = () => {
   const [updateData, setUpdatedata] = useState({
     fullName: "",
     email: "",
+    password: "",
   });
 
   const navigate = useNavigate();
@@ -30,7 +31,6 @@ const UpdateUserAccountDetails = () => {
 
         {
           withCredentials: true,
-          credentials: "include",
         }
       );
 
@@ -38,7 +38,9 @@ const UpdateUserAccountDetails = () => {
         console.error("check the data it is unable to update");
       }
       if (response.status >= 200 && response.status < 300) {
-        // document.cookie = `accessToken=${response.data.data.accessToken}; path=/`;
+
+        console.log("value",response.data);
+     
         getUserDetail(response.data);
 
         navigate("/user");
@@ -75,11 +77,20 @@ const UpdateUserAccountDetails = () => {
               required
               className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 focus:outline-none bg-gray-600 focus:border-rose-600"
             />
+            <input
+              type="text"
+              name="password"
+              placeholder="Enter your password"
+              value={updateData.password}
+              onChange={handleInputChange}
+              required
+              className="mb-4 p-2 w-full border-2 border-rose-400 rounded-md transition duration-200 focus:outline-none bg-gray-600 focus:border-rose-600"
+              />
             <button
               type="submit"
               className="w-full p-3 bg-blue-800 text-white font-bold rounded-md transition duration-200 hover:bg-rose-600"
             >
-              Login
+              Update Details
             </button>
           </form>
         </div>

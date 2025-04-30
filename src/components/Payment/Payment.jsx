@@ -96,6 +96,7 @@ const Payment = () => {
               
             } else {
               setPaymentStatus("Payment Verification Failed! Please try again.");
+             
             }
           } catch (error) {
             console.error("Payment Verification Error:", error);

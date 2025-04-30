@@ -167,7 +167,7 @@ const UserContextProvider = ({ children }) => {
   // Remove all items from checkout and cart.
   const removeItemfromCheckout = () => {
     setBuyProduct([]);
-    setCartItems([]);
+   
   };
 
   // Calculate the total price of all bought items.
@@ -388,10 +388,6 @@ useEffect(() => {
   };
 
   
-
-  
-
-  // Fetch wishlist items whenever wishlist changes.
   useEffect(() => {
     if (userDetail?.data?.user?._id) {
       fetchFavourites();
@@ -420,7 +416,7 @@ useEffect(() => {
     if (productReview.rating && productReview.message) {
       axios
         .post(
-          `${import.meta.env.VITE_API_URL}/api/v2/feedback/review`,
+          `${import.meta.env.VITE_API_URL}/api/v2/feedback/addReview`,
           productReview,
           {withCredentials: true}
         )
@@ -464,7 +460,6 @@ useEffect(() => {
     if (!productId) return;
     const response =  await axios.get(`${import.meta.env.VITE_API_URL}/api/v2/feedback/getReview/${productId}`,
     )
-    console.log("hello ji ",response.data);
     setGotReview(response.data);
   
   }
@@ -552,7 +547,8 @@ useEffect(() => {
         sellerDetail,
         getSellerDetail,
         gotReview,
-        getReview
+        getReview,
+        setBuyProduct
       }}
     >
       {children}

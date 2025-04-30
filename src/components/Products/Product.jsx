@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { FaStar, FaHeart, FaShoppingCart } from "react-icons/fa";
 import UserContext from "../../context/UserContext";
@@ -8,7 +8,6 @@ const Product = () => {
     buyingProduct,
     addToFavourite,
     handleAddToCart,
-    notification,
     data,
     review,
     setReview,
@@ -18,7 +17,12 @@ const Product = () => {
     totalRatings = 0,
     getReview,
     gotReview,
+    removeItemfromCheckout,
+    setBuyProduct
+
   } = useContext(UserContext);
+
+  const navigate = useNavigate();
   const [showMore, setShowMore] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const reviewsPerPage = 5;
@@ -36,6 +40,19 @@ const Product = () => {
     e.preventDefault();
     handleFormClick();
   };
+
+  const handleBuyNow = (product) => {
+
+    setBuyProduct([]);
+  
+    // Optionally, navigate after the state has been updated
+    setTimeout(() => {
+      buyingProduct(product, product._id?.toString());
+      navigate("/BuyProduct");
+    }, 100);
+  };
+  
+  
 
   const handleStarClick = (rating) => {
     setReview({ ...review, rating });
@@ -100,14 +117,15 @@ const Product = () => {
               Add to Cart
             </button>
 
-            <Link to="/BuyProduct">
-              <button
-                className="flex items-center justify-center gap-2 text-lg text-white bg-violet-600 hover:bg-violet-700 px-8 py-3 rounded-md shadow-md transition-transform transform hover:scale-105"
-                onClick={() => buyingProduct(product, product._id?.toString())}
-              >
-                Buy Now
-              </button>
-            </Link>
+            
+            <button
+  className="flex items-center justify-center gap-2 text-lg text-white bg-violet-600 hover:bg-violet-700 px-8 py-3 rounded-md shadow-md transition-transform transform hover:scale-105"
+  onClick={()=>handleBuyNow(product)}
+>
+  Buy Now
+</button>
+
+          
           </div>
         </div>
       </div>

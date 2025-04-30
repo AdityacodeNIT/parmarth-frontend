@@ -56,6 +56,7 @@ import Sellerlogin from "./components/Seller/SellerLogin.jsx";
 import ManageSellers from "./components/Admin/ManageSellers.jsx";
 import UpdateProduct from "./components/Products/UpdateProudctDetails.jsx";
 import ProtectedRoute from "./context/ProtectedRoutes.jsx";
+import Addresses from "./components/User/Addresses.jsx";
 
 
 function App() {
@@ -99,6 +100,8 @@ function App() {
           <Route path="/changeDetails" element={<UpdateUserAccountDetails />} />
           <Route path="/updateDetails" element={<UpdateDetails />} />
           <Route path="/updateAvatar" element={<UpdateAvatar />} />
+          <Route path="/allAddresses" element={<Addresses/>}/>
+
         
           <Route path="/myOrder" element={<AllOrders />} />
           <Route path="/orderitems" element={<OrderDetails />} />

@@ -1,5 +1,14 @@
 import React, { useContext, useState } from "react";
-import { FiTruck, FiCheckCircle, FiInfo, FiXCircle } from "react-icons/fi";
+import {
+  FiTruck,
+  FiInfo,
+  FiXCircle,
+  FiHome,
+  FiUser,
+  FiPhone,
+  FiCreditCard,
+  FiBox,
+} from "react-icons/fi";
 import axios from "axios";
 import UserContext from "../../context/UserContext";
 
@@ -14,137 +23,122 @@ const OrderDetails = () => {
         {},
         { withCredentials: true }
       );
-
       if (response.status === 200) {
-        setCancellationStatus("Your order has been successfully canceled.");
-        getUserDetail(); // Refresh user details after cancellation
+        setCancellationStatus("✅ Your order has been successfully canceled.");
+        getUserDetail();
       } else {
-        setCancellationStatus("Failed to cancel the order. Please try again.");
+        setCancellationStatus("❌ Failed to cancel the order. Please try again.");
       }
     } catch (error) {
       console.error("Error cancelling order:", error);
-      setCancellationStatus("An error occurred. Please try again.");
+      setCancellationStatus("⚠️ An error occurred. Please try again.");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white p-8">
-      {/* Header */}
-      <header className="text-center mb-10">
-        <h1 className="text-4xl font-bold text-yellow-400 shadow-md py-3 rounded-lg bg-gray-800">
-          📦 Order Details
-        </h1>
-      </header>
+    <div className="bg-[#0f1117] text-gray-200 min-h-screen p-8">
+      <h1 className="text-3xl font-bold mb-8 text-center text-yellow-400">
+        🧾 Order Summary
+      </h1>
 
-      <div className="space-y-6 max-w-5xl mx-auto">
-        {/* Order Status */}
-        <section className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
-          <div className="flex items-center">
-            <FiInfo className="text-blue-400 text-3xl mr-4" />
-            <div>
-              <h2 className="text-xl font-semibold text-white">Order Status</h2>
-              <p className="text-gray-300">{orderItems.status || "Processing"}</p>
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="bg-[#1c1f26] p-5 rounded-xl shadow-md border-t-4 border-blue-500">
+          <div className="flex items-center gap-2 mb-2">
+            <FiInfo className="text-blue-400 text-xl" />
+            <h2 className="font-semibold text-lg">Order Info</h2>
           </div>
-          <p className="text-sm text-gray-400 mt-4">
-            Order Created On: {orderItems.order_date} at {orderItems.channel_created_at}
-          </p>
-        </section>
+          <p>Order ID: {orderItems.channel_order_id}</p>
+          <p>Status: {orderItems.status || "Processing"}</p>
+          <p>Created: {orderItems.created_at}</p>
+        </div>
 
-        {/* Delivery Status */}
-        <section className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
-          <div className="flex items-center">
-            <FiTruck className="text-green-400 text-3xl mr-4" />
-            <div>
-              <h2 className="text-xl font-semibold text-white">Delivery Status</h2>
-              <p className="text-gray-300">{orderItems.delivery_status || "Not Shipped Yet"}</p>
-            </div>
+        <div className="bg-[#1c1f26] p-5 rounded-xl shadow-md border-t-4 border-green-500">
+          <div className="flex items-center gap-2 mb-2">
+            <FiTruck className="text-green-400 text-xl" />
+            <h2 className="font-semibold text-lg">Delivery</h2>
           </div>
-          <p className="text-sm text-gray-400 mt-4">
-            {orderItems.out_for_delivery_date ? `🚚 Out for Delivery: ${orderItems.out_for_delivery_date}` : ""}
-            {orderItems.delivered_date ? ` 🎉 Delivered On: ${orderItems.delivered_date}` : ""}
-          </p>
-        </section>
-
-        {/* Shipping Details */}
-        <section className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
-          <h2 className="text-lg font-semibold text-yellow-400 border-b pb-2 mb-4">
-            🚚 Shipping Information
-          </h2>
-          <p><strong>Courier:</strong> {orderItems.last_mile_courier_name || "Not Assigned"}</p>
-          <p><strong>Tracking Number:</strong> {orderItems.last_mile_awb || "Pending"}</p>
+          <p>Status: {orderItems.delivery_status || "Pending"}</p>
+          <p>Courier: {orderItems.last_mile_courier_name || "N/A"}</p>
           <p>
-            <strong>Tracking Link:</strong>{" "}
-            {orderItems.last_mile_awb_track_url ? (
-              <a
-                href={orderItems.last_mile_awb_track_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-400 hover:underline"
-              >
-                Track Order
-              </a>
-            ) : (
-              "Not Available"
-            )}
-          </p>
-          <p><strong>Pickup Location:</strong> {orderItems.pickup_location}</p>
-        </section>
-
-        {/* Payment Details */}
-        <section className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
-          <h2 className="text-lg font-semibold text-yellow-400 border-b pb-2 mb-4">
-            💳 Payment Details
-          </h2>
-          <p><strong>Payment Method:</strong> {orderItems.payment_method}</p>
-          <p><strong>Payment Status:</strong> {orderItems.payment_status || "Not Available"}</p>
-          <p><strong>Total Amount:</strong> ₹{orderItems.total} {orderItems.currency}</p>
-          <p>
-            <strong>Transaction ID:</strong> {orderItems.transaction_detail?.transaction_id || "N/A"}
-          </p>
-          <p><strong>Invoice Number:</strong> {orderItems.invoice_no || "N/A"}</p>
-        </section>
-
-        {/* Return & Exchange */}
-        <section className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
-          <h2 className="text-lg font-semibold text-yellow-400 border-b pb-2 mb-4">
-            🔄 Return & Exchange
-          </h2>
-          <p><strong>Return Allowed:</strong> {orderItems.allow_return ? "✅ Yes" : "❌ No"}</p>
-          <p><strong>Return Pickup Data:</strong> {orderItems.return_pickup_data || "Not Requested"}</p>
-          <p><strong>Exchange Status:</strong> {orderItems.exchange_status || "No Exchange Requested"}</p>
-        </section>
-
-        {/* Cancel Order Section */}
-        { orderItems.status !== "Delivered" && (
-          <section className="bg-red-800 p-6 rounded-lg shadow-lg border border-red-700">
-            <h2 className="text-lg font-semibold text-white border-b pb-2 mb-4">
-              ❌ Cancel Order
-            </h2>
-            <p className="text-sm text-gray-300 mb-4">
-              If your order is not yet delivered, you can cancel it.
-            </p>
-            <button
-              onClick={handleCancelOrder}
-              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg shadow-md transition-transform transform hover:scale-105 flex items-center gap-2"
+            AWB:{" "}
+            <a
+              href={orderItems.last_mile_awb_track_url}
+              target="_blank"
+              rel="noreferrer"
+              className="text-blue-400 underline"
             >
-              <FiXCircle /> Cancel Order
-            </button>
-            {cancellationStatus && (
-              <p className="text-sm mt-4 text-gray-300">{cancellationStatus}</p>
-            )}
-          </section>
-        )}
+              {orderItems.last_mile_awb || "Not Available"}
+            </a>
+          </p>
+        </div>
 
-        {/* Action Buttons */}
-        <footer className="mt-8 flex justify-end space-x-4">
-          <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md transition-transform transform hover:scale-105">
-            Print Details
+        <div className="bg-[#1c1f26] p-5 rounded-xl shadow-md border-t-4 border-yellow-500">
+          <div className="flex items-center gap-2 mb-2">
+            <FiCreditCard className="text-yellow-400 text-xl" />
+            <h2 className="font-semibold text-lg">Payment</h2>
+          </div>
+          <p>Method: {orderItems.payment_method}</p>
+          <p>Status: {orderItems.payment_status || "Pending"}</p>
+          <p>Total: ₹{orderItems.total}</p>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="bg-[#1c1f26] p-6 rounded-xl shadow-md border-l-4 border-purple-500">
+          <div className="flex items-center gap-2 mb-3">
+            <FiHome className="text-purple-400 text-xl" />
+            <h2 className="font-semibold text-lg">Shipping Address</h2>
+          </div>
+          <p>
+            {orderItems.customer_address}, {orderItems.customer_city}, {orderItems.customer_state} -{" "}
+            {orderItems.customer_pincode}, {orderItems.customer_country}
+          </p>
+        </div>
+
+        <div className="bg-[#1c1f26] p-6 rounded-xl shadow-md border-l-4 border-pink-500">
+          <div className="flex items-center gap-2 mb-3">
+            <FiUser className="text-pink-400 text-xl" />
+            <h2 className="font-semibold text-lg">Customer Info</h2>
+          </div>
+          <p>Name: {orderItems.customer_name}</p>
+          <p>Phone: {orderItems.customer_phone}</p>
+          <p>Email: {orderItems.customer_email}</p>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="bg-[#1c1f26] p-6 rounded-xl shadow-md border-l-4 border-orange-500">
+          <div className="flex items-center gap-2 mb-3">
+            <FiBox className="text-orange-400 text-xl" />
+            <h2 className="font-semibold text-lg">Returns & Exchange</h2>
+          </div>
+          <p>Return Allowed: {orderItems.allow_return ? "✅ Yes" : "❌ No"}</p>
+          <p>Exchange: {orderItems.exchange_status || "N/A"}</p>
+        </div>
+
+        <div className="bg-red-600 text-white p-6 rounded-xl shadow-md">
+          <div className="flex items-center gap-2 mb-3">
+            <FiXCircle className="text-white text-xl" />
+            <h2 className="font-semibold text-lg">Cancel Order</h2>
+          </div>
+          <p className="mb-3 text-sm">Click below to cancel if not yet delivered.</p>
+          <button
+            onClick={handleCancelOrder}
+            className="bg-white text-red-600 px-4 py-2 rounded hover:bg-gray-200 transition"
+          >
+            Cancel Order
           </button>
-          <button className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg shadow-md transition-transform transform hover:scale-105">
-            Back
-          </button>
-        </footer>
+          {cancellationStatus && <p className="mt-3 text-sm">{cancellationStatus}</p>}
+        </div>
+      </div>
+
+      <div className="flex justify-center gap-4 mt-10">
+        <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+          Print
+        </button>
+        <button className="bg-gray-700 text-white px-6 py-2 rounded hover:bg-gray-600 transition">
+          Go Back
+        </button>
       </div>
     </div>
   );
