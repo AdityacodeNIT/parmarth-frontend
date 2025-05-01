@@ -227,8 +227,6 @@ const UserContextProvider = ({ children }) => {
     localStorage.setItem("details", JSON.stringify(userDetail));
   }, [userDetail]);
 
-
-
  // State to manage user details.
  const [sellerDetail, setSellerDetail] = useState(
   JSON.parse(localStorage.getItem("sellerdetails")) || null
@@ -245,16 +243,6 @@ const getSellerDetail = async (selldetails) => {
 useEffect(() => {
   localStorage.setItem("sellerdetails", JSON.stringify(sellerDetail));
 }, [sellerDetail]);
-
-
-
-
-
-
-
-
-
-
 
 
   // Notification management for adding items to the cart.

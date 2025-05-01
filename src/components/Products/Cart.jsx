@@ -63,7 +63,7 @@ const Cart = () => {
                     <div className="flex items-center">
                       <button
                         className="mx-2 border-2 p-2 border-slate-900 rounded-lg font-bold text-xl text-[#E5E7EB]"
-                        onClick={() => removingElements(item.id)}
+                        onClick={() => removingElements(item._id)}
                       >
                         -
                       </button>

@@ -210,7 +210,7 @@ const Product = () => {
         <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)} className="px-4 py-2 bg-gray-700 rounded-md hover:bg-gray-600">
           Previous
         </button>
-        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)} className="px-4 py-2 bg-gray-700 rounded-md hover:bg-gray-600">
+        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)} className="px-4 py-2 ml-2 bg-gray-700 rounded-md hover:bg-gray-600">
           Next
         </button>
       </div>

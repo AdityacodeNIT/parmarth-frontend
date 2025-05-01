@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +9,9 @@ import SearchBar from "./SearchBar";
 const Navbar = () => {
   const { userDetail } = useContext(UserContext);
   const [menuOpen, setMenuOpen] = useState(false);
+
+
+
 
   return (
     <nav className="navbar w-full text-white bg-[#1E293B] h-24 px-6 shadow-md">
