@@ -31,7 +31,7 @@ const SubscribeSection = () => {
 
   return (
     <div className="relative py-14 px-6 bg-purple-900 text-white text-center  shadow-lg">
-      <h2 className="text-3xl font-extrabold">📩 Stay Updated</h2>
+      <h2 className="lg:text-3xl text-2xl font-extrabold">📩 Stay Updated</h2>
       <p className="mt-2 md:mt-4 md:text-lg text-md">Subscribe for the latest deals and updates.</p>
 
       <div className="mt-6 flex justify-center">
@@ -40,11 +40,11 @@ const SubscribeSection = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
-          className="p-3 rounded-l-lg w-72 text-black focus:outline-none shadow-md"
+          className="p-3 lg-text-xl text-md rounded-l-lg md:w-72 w-44 text-black focus:outline-none shadow-md"
         />
         <button
           onClick={handleSubscribe}
-          className="bg-yellow-500 hover:bg-yellow-600 px-6 py-3 rounded-r-lg font-semibold transition-transform transform hover:scale-105 shadow-md"
+          className="bg-yellow-500 hover:bg-yellow-600 md:px-6 px-4 md:py-3 py-2 rounded-r-lg font-semibold transition-transform transform hover:scale-105 shadow-md"
         >
           Subscribe
         </button>

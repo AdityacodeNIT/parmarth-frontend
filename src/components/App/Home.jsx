@@ -129,23 +129,23 @@ const Home = () => {
     return (
         <div className="w-full">
             {/* Hero Section */}
-            <div className="relative w-full h-[70vh] bg-cover bg-center flex items-center justify-center text-white text-center px-6" 
+            <div className="relative w-full h-[67vh] bg-cover bg-center flex items-center justify-center text-white text-center px-6" 
                 style={{ backgroundImage: "url('https://plus.unsplash.com/premium_photo-1663956066898-282c7609afc9?w=1600&auto=format&fit=crop&q=80')" }}>
                 <div className="bg-black bg-opacity-30 p-4 md:p-8 rounded-lg backdrop-blur-md">
-                    <h1 className="text-3xl md:text-7xl font-extrabold drop-shadow-lg">Your One-Stop Stationery Store</h1>
+                    <h1 className="text-2xl md:text-6xl font-extrabold drop-shadow-lg">Your One-Stop Stationery Store</h1>
                     <p className="mt-4 text-xl md:text-2xl font-light">
                         Premium writing instruments, paper products, and office supplies at your fingertips.
                     </p>
                     <Link to="/shop">
-                        <button className="mt-6 bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 px-8 py-4 rounded-full text-lg font-semibold flex items-center gap-3 shadow-lg transform hover:scale-105 transition-all">
+                        <button className="lg:mt-6 mt-4 bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 lg:px-8 px-4 lg:py-4 py-2 rounded-full text-lg font-semibold flex items-center gap-3 shadow-lg transform hover:scale-105 transition-all">
                             Shop Now <FontAwesomeIcon icon={faArrowRight} />
                         </button>
                     </Link>
                 </div>
             </div>
 
-       <div className="py-16 px-4 sm:px-8 bg-gray-100">
-      <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-800">
+       <div className="md:py-14 py-3 px-4 sm:px-8 bg-gray-100">
+      <h2 className="text-3xl sm:text-4xl font-bold text-center lg:mb-8 mb-6 text-gray-800">
         Shop by Category
       </h2>
 
@@ -160,7 +160,7 @@ const Home = () => {
             key={index}
             className="min-w-[220px] flex-shrink-0"
           >
-            <div className="bg-white rounded-xl shadow-md hover:shadow-xl overflow-hidden transform hover:scale-105 transition-all">
+            <div className="bg-white rounded-xl shadow-md hover:shadow-xl overflow-hidden transform hover:scale-103 transition-all">
               <img
                 src={category.img}
                 alt={category.name}
@@ -204,8 +204,8 @@ const Home = () => {
     </div>
 
             {/* Trending Now Section */}
-           <div className="py-16 bg-gray-100 px-4 sm:px-8">
-      <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-800">
+           <div className="md:py-16 py-4 bg-gray-100 px-4 sm:px-8">
+      <h2 className="text-2xl sm:text-4xl font-bold text-center md:mb-8 mb-4 text-gray-800">
         Trending Now
       </h2>
 
@@ -270,8 +270,8 @@ const Home = () => {
             {/* Products Section */}
 
               {/* Trending Now Section */}
-           <div className="py-16 bg-gray-100 px-4 sm:px-8">
-      <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-800">
+           <div className="md:py-16 py-4 bg-gray-100 px-4 sm:px-8">
+      <h2 className="text-2xl sm:text-4xl font-bold text-center md:mb-8 mb-4 text-gray-800">
        Products You Might Like
       </h2>
 
