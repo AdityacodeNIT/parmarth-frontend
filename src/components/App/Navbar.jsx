@@ -14,7 +14,7 @@ const Navbar = () => {
 
 
   return (
-    <nav className="navbar w-full text-white bg-[#1E293B] h-24 px-6 shadow-md">
+    <nav className="navbar w-full text-white bg-[#1E293B] md:h-24 h-16 px-6 shadow-md">
       <div className="flex w-full items-center justify-between h-full">
         {/* Logo */}
         <div className="text-[#FACC15] text-xl md:text-3xl font-bold">
@@ -52,7 +52,7 @@ const Navbar = () => {
 
         {/* Cart and User Section */}
         <div className="flex items-center space-x-4">
-          <button className="text-white bg-[#E11D48] hover:bg-[#16A34A] text-lg p-2 rounded-lg transition-colors duration-300">
+          <button className="text-white bg-[#E11D48] hover:bg-[#16A34A] text-lg lg:p-2 p-1 rounded-lg transition-colors duration-300">
             <Link to="/cart">
               <FontAwesomeIcon icon={faShoppingCart} />
             </Link>
@@ -61,7 +61,7 @@ const Navbar = () => {
           {userDetail && userDetail.data && userDetail.data.user ? (
             <Link to="/user">
               <img
-                className="w-14 h-14 rounded-full border-4 border-[#FACC15] hover:border-[#38BDF8] transition-colors duration-300"
+                className="md:w-14 md:h-14 w-11 h-11 rounded-full border-4 border-[#FACC15] hover:border-[#38BDF8] transition-colors duration-300"
                 src={userDetail.data.avatar || userDetail.data.user.avatar}
                 alt="User Avatar"
               />
