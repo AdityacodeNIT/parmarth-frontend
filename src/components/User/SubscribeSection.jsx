@@ -32,7 +32,7 @@ const SubscribeSection = () => {
   return (
     <div className="relative py-14 px-6 bg-purple-900 text-white text-center  shadow-lg">
       <h2 className="text-3xl font-extrabold">📩 Stay Updated</h2>
-      <p className="mt-4 text-lg">Subscribe for the latest deals and updates.</p>
+      <p className="mt-2 md:mt-4 md:text-lg text-md">Subscribe for the latest deals and updates.</p>
 
       <div className="mt-6 flex justify-center">
         <input
