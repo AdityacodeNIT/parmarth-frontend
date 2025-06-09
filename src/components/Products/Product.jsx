@@ -64,18 +64,18 @@ const Product = () => {
   const totalPages = Math.ceil(gotReview.length / reviewsPerPage);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 to-gray-800 text-gray-200 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 to-gray-800 text-gray-200 md:p-8 p-3">
       {/* Product Name */}
 
 
       {/* Product Section */}
-      <div className="lg:p-6 lg:mt-6 mt-2 py-4 flex flex-row items-center justify-between md:gap-10 gap-4">
+      <div className="lg:p-6 lg:mt-6 mt-2 py-6 flex flex-row items-center justify-between md:gap-10 gap-4">
         {/* Image Section */}
         <div className="w-full md:w-1/2 flex justify-center">
           <img
             src={product.imgLink || product.ProductImage || "/placeholder.png"}
             alt={product.name}
-            className="shadow-lg bg-gray-700 md:w-96 md:h-96 w-56 h-56 rounded-lg transition-transform transform hover:scale-105"
+            className="shadow-lg bg-gray-700 md:w-96 md:h-96 w-72 h-72 rounded-lg transition-transform transform hover:scale-105"
           />
         </div>
 
@@ -109,7 +109,7 @@ const Product = () => {
           {/* Add to Cart & Buy Now Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <button
-              className="flex items-center justify-center gap-2 text-md text-white bg-[#6366F1] hover:bg-[#4F46E5] lg:px-8 px-4 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105"
+              className="flex items-center justify-center gap-2 text-md text-white bg-[#6366F1] hover:bg-[#4F46E5] lg:px-8 px-2 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105"
               onClick={() => handleAddToCart(product._id)}
             >
               <FaShoppingCart />
@@ -118,7 +118,7 @@ const Product = () => {
 
             
             <button
-  className="flex items-center justify-center gap-2 text-lg text-white bg-violet-600 hover:bg-violet-700 lg:px-8 px-4 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105"
+  className="flex items-center justify-center gap-2 lg:text-lg text-md text-white bg-violet-600 hover:bg-violet-700 lg:px-8 px-2 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105"
   onClick={()=>handleBuyNow(product)}
 >
   Buy Now
@@ -128,7 +128,7 @@ const Product = () => {
           </div>
         </div>
       </div>
-      <div className="shadow-lg h-auto bg-gray-800 mx-4 p-6 rounded-lg">
+      <div className="shadow-lg h-auto bg-gray-800 lg:mx-4  mx-2 lg:p-6 p-3 rounded-lg">
         <h2 className="md:text-2xl text-xl font-semibold mb-4 text-white">Description:</h2>
         <p className="d:text-lg text-md text-[#9CA3AF] leading-relaxed">{product.description}</p>
 
