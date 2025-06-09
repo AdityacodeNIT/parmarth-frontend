@@ -129,7 +129,7 @@ const Home = () => {
     return (
         <div className="w-full">
             {/* Hero Section */}
-            <div className="relative w-full h-[67vh] bg-cover bg-center flex items-center justify-center text-white text-center px-6" 
+            <div className="relative w-full h-[67vh] bg-cover bg-center flex items-center justify-center text-white text-center lg:px-6 px-3" 
                 style={{ backgroundImage: "url('https://plus.unsplash.com/premium_photo-1663956066898-282c7609afc9?w=1600&auto=format&fit=crop&q=80')" }}>
                 <div className="bg-black bg-opacity-30 p-4 md:p-8 rounded-lg backdrop-blur-md">
                     <h1 className="text-2xl md:text-6xl font-extrabold drop-shadow-lg">Your One-Stop Stationery Store</h1>
@@ -137,14 +137,14 @@ const Home = () => {
                         Premium writing instruments, paper products, and office supplies at your fingertips.
                     </p>
                     <Link to="/shop">
-                        <button className="lg:mt-6 mt-4 bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 lg:px-8 px-4 lg:py-4 py-2 rounded-full text-lg font-semibold flex items-center gap-3 shadow-lg transform hover:scale-105 transition-all">
+                        <button className="lg:mt-6 mt-4 bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 lg:px-8 px-3 lg:py-4 py-2 rounded-full text-lg font-semibold flex items-center gap-3 shadow-lg transform hover:scale-105 transition-all">
                             Shop Now <FontAwesomeIcon icon={faArrowRight} />
                         </button>
                     </Link>
                 </div>
             </div>
 
-       <div className="md:py-14 py-3 px-4 sm:px-8 bg-gray-100">
+       <div className="md:py-14 py-3 px-2 sm:px-8 bg-gray-100">
       <h2 className="text-3xl sm:text-4xl font-bold text-center lg:mb-8 mb-6 text-gray-800">
         Shop by Category
       </h2>
@@ -204,7 +204,7 @@ const Home = () => {
     </div>
 
             {/* Trending Now Section */}
-           <div className="md:py-16 py-4 bg-gray-100 px-4 sm:px-8">
+           <div className="md:py-16 py-4 bg-gray-100 px-2 sm:px-8">
       <h2 className="text-2xl sm:text-4xl font-bold text-center md:mb-8 mb-4 text-gray-800">
         Trending Now
       </h2>
