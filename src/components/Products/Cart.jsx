@@ -15,109 +15,103 @@ const Cart = () => {
   } = useContext(UserContext);
 
   return (
-    <div className="bg-[#121212] min-h-screen">
-      <h2 className="w-full text-teal-500 lg:text-2xl text-md  font-extrabold bg-slate-700 p-4 text-center">
+    <div className="bg-gray-900 min-h-screen p-4 md:p-8">
+      <h2 className="text-center text-2xl md:text-4xl font-extrabold text-teal-400 mb-6">
         Shopping Cart
       </h2>
+
       {cartItems.length === 0 ? (
-        <p className="flex items-center mt-2 justify-center h-full lg:text-3xl text-xl font-bold font-serif text-gray-700">
-          Your cart is empty
-        </p>
+        <div className="flex items-center justify-center h-64">
+          <p className="text-xl md:text-3xl text-gray-400">
+            Your cart is empty
+          </p>
+        </div>
       ) : (
-        <div className="Cart mx-auto p-6">
-          <h4 className="font-bold w-[250px] rounded-xl  p-4 mt-2 mb-4 border-slate-600 text-teal-500 text-center">
-            No of Items in the Cart: {cartItems.length}
-          </h4>
-          <div className="flex flex-wrap">
-            <div className="Cartlist flex-1">
-              <ul>
-                {cartItems.map((item) => (
-                  <div
-                    className="flex items-center justify-between p-5 bg-[#1F2937] border-b-2 border-gray-300 shadow-sm rounded-lg mb-4"
-                    key={item.id}
-                    onClick={() => {
-                      childToParent(item);
-                    }}
-                  >
-                    <Link to="/About">
-                      <div className="flex items-center">
-                        <li>
-                          <img
-                            src={item.imgLink || item.ProductImage}
-                            alt={item.name}
-                            className="w-24 h-24 object-cover rounded-lg text-[#E5E7EB]"
-                          />
-                        </li>
-
-                        <div className="ml-4 text-center">
-                          <div className="font-semibold text-[#E5E7EB] text-2xl">
-                            {item.name}
-                          </div>
-                          <div className="text-xl text-[#E5E7EB] mt-2 ">
-                            Price: ₹{item.price}
-                          </div>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <div className="flex items-center">
-                      <button
-                        className="mx-2 border-2 p-2 border-slate-900 rounded-lg font-bold text-xl text-[#E5E7EB]"
-                        onClick={() => removingElements(item._id)}
-                      >
-                        -
-                      </button>
-                      <span className="text-xl font-semibold mx-2 text-[#E5E7EB]">
-                        {item.quantity}
-                      </span>
-                      <button
-                        className="mx-2 border-2 p-2 border-slate-900 text-xl text-[#E5E7EB] rounded-lg font-bold"
-                        onClick={() => addToCart(data, item._id.toString())}
-                      >
-                        +
-                      </button>
-                      <button
-                        className="ml-4 text-red-400 hover:text-red-500 "
-                        onClick={() => removeFromCart(item._id.toString())}
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </ul>
+        <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-8">
+          {/* Cart Items List */}
+          <div className="flex-1 space-y-4">
+            <div className="bg-gray-800 rounded-xl p-4 shadow-md">
+              <h4 className="text-lg md:text-2xl font-semibold text-teal-400">
+                Items ({cartItems.length})
+              </h4>
             </div>
+            {cartItems.map((item) => (
+              <div
+                key={item.id}
+                onClick={() => childToParent(item)}
+                className="bg-gray-800 rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-4 shadow-lg hover:shadow-xl transition"
+              >
+                <Link to="/About" className="flex-shrink-0">
+                  <img
+                    src={item.imgLink || item.ProductImage}
+                    alt={item.name}
+                    className="w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-lg"
+                  />
+                </Link>
+                <div className="flex-1 flex flex-col sm:flex-row sm:justify-between items-start sm:items-center gap-2">
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-100">
+                      {item.name}
+                    </h3>
+                    <p className="text-gray-400 mt-1">
+                      Price: <span className="text-teal-400">₹{item.price}</span>
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => removingElements(item._id)}
+                      className="w-8 h-8 flex items-center justify-center bg-gray-700 rounded-lg hover:bg-gray-600 transition"
+                    >
+                      -
+                    </button>
+                    <span className="text-lg text-gray-100">
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() => addToCart(data, item._id.toString())}
+                      className="w-8 h-8 flex items-center justify-center bg-gray-700 rounded-lg hover:bg-gray-600 transition"
+                    >
+                      +
+                    </button>
+                    <button
+                      onClick={() => removeFromCart(item._id.toString())}
+                      className="ml-4 text-red-400 hover:text-red-500 transition"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
 
-            <div className="ml-6 w-full md:w-1/3 bg-[#1F2937] p-6 rounded-lg shadow-lg">
-              <div className="text-2xl text-center text-teal-500 bg-slate-600 p-3 mb-4 rounded-lg font-semibold">
-                Your Bill Summary
-              </div>
-              <div className="text-lg font-medium mb-4">
+          {/* Summary */}
+          <div className="w-full lg:w-1/3 bg-gray-800 rounded-2xl p-6 shadow-lg flex flex-col">
+            <h4 className="text-xl md:text-2xl font-semibold text-center text-teal-400 mb-4">
+              Order Summary
+            </h4>
+            <div className="flex-1 space-y-3">
+              <p className="text-gray-300">
                 {cartDesccription()}
-              </div>
-              <div className="text-2xl font-semibold flex justify-between mb-4 text-[#E5E7EB]">
+              </p>
+              <div className="flex justify-between text-gray-100">
                 <span>Subtotal</span>
                 <span>₹{totalCartPrice()}</span>
               </div>
-              <div className="text-2xl font-semibold flex justify-between mb-4 border-t pt-4 border-gray-300 text-[#E5E7EB]">
+              <div className="flex justify-between text-gray-100">
                 <span>Tax (18%)</span>
                 <span>₹{Math.ceil(totalCartPrice() * 0.18)}</span>
               </div>
-              <div className="text-2xl font-semibold flex justify-between border-t pt-4 border-gray-400 text-[#E5E7EB]">
+              <div className="border-t border-gray-700 pt-3 flex justify-between text-lg font-semibold text-gray-100">
                 <span>Total</span>
-                <span>
-                  ₹{Math.ceil(totalCartPrice() * 0.18 + totalCartPrice())}
-                </span>
+                <span>₹{Math.ceil(totalCartPrice() * 0.18 + totalCartPrice())}</span>
               </div>
-              <Link to="/payments">
-                <button
-                  className="w-full bg-teal-500 shadow-lg text-white px-4 py-3 mt-6 rounded-lg text-xl font-bold hover:bg-indigo-700"
-                  type="button"
-                >
-                  Pay Now
-                </button>
-              </Link>
             </div>
+            <Link to="/payments" className="mt-6">
+              <button className="w-full py-3 bg-teal-500 hover:bg-teal-600 rounded-xl text-lg font-semibold transition">
+                Pay Now
+              </button>
+            </Link>
           </div>
         </div>
       )}
