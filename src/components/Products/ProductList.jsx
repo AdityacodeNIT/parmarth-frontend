@@ -21,60 +21,55 @@ const ProductList = () => {
       console.error("Failed to fetch products", error);
     }
   };
-  
 
   useEffect(() => {
     getProductDetail();
   }, []);
 
   return (
-
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-300">
       <Reminder />
 
       {/* Hero Banner */}
       <section className="relative bg-gradient-to-r from-purple-800 via-indigo-700 to-blue-700 py-12">
-  <div className="container mx-auto text-center px-4">
-    <h1 className="text-3xl font-bold text-white mb-2">
-      Discover Amazing Products
-    </h1>
-    <p className="text-base text-gray-100 max-w-xl mx-auto">
-      Explore our exclusive collection of top-notch products curated just for you.
-    </p>
-  </div>
-</section>
+        <div className="container mx-auto text-center px-4">
+          <h1 className="text-3xl font-bold text-white mb-2">
+            Discover Amazing Products
+          </h1>
+          <p className="text-base text-gray-100 max-w-xl mx-auto">
+            Explore our exclusive collection of top-notch products curated just for you.
+          </p>
+        </div>
+      </section>
 
-
-
+      {/* Product Background */}
       <div
         className="bg-cover bg-center w-full h-auto"
         style={{ backgroundImage: 'url("/src/assets/design/d.jpg")' }}
       >
         {/* Product Grid */}
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div className="container mx-auto px-4 py-8">
+          <div className="grid gap-2 md:gap-8 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {productsData.map((product) => (
               <div
                 key={product._id}
-                className="relative bg-gradient-to-br from-pink-200 via-gray-100 to-gray-200 rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1"
+                className="bg-white rounded-xl shadow-md overflow-hidden border hover:shadow-xl transition-transform duration-200 transform hover:-translate-y-1"
                 onClick={() => childToParent(product)}
               >
-                <Link to="/About" style={{ textDecoration: "none" }}>
-                  <div className="relative overflow-hidden h-80 bg-gray-100 rounded-t-lg object-contain">
+                <Link to="/About">
+                  {/* Image container */}
+                  <div className="aspect-[3/4] bg-gray-100 flex items-center justify-center overflow-hidden">
                     <img
                       src={product.ProductImage}
                       alt={product.name}
-                      className="w-full h-full object-contain transition-transform duration-300 ease-in-out transform hover:scale-110"
+                      className="object-contain w-full h-full transition-transform duration-300 ease-in-out hover:scale-105"
                     />
-                    <div className="absolute top-0 left-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent w-full h-full opacity-60"></div>
-                    <div className="absolute bottom-0 left-0 p-4 text-white font-bold text-lg">
-                      {product.name}
-                    </div>
                   </div>
-                  <div className="p-4 text-center">
-                    <p className="text-teal-600 font-bold text-lg mt-2">
-                      ₹{product.price}
-                    </p>
+
+                  {/* Product details */}
+                  <div className="p-2 text-center">
+                    <h2 className="text-sm font-medium text-gray-900 truncate">{product.name}</h2>
+                    <p className="text-lg font-semibold text-teal-600 mt-1">₹{product.price}</p>
                   </div>
                 </Link>
               </div>

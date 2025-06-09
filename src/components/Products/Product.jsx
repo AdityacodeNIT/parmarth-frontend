@@ -66,36 +66,35 @@ const Product = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 to-gray-800 text-gray-200 p-8">
       {/* Product Name */}
-      <div className="w-full text-[#E5E7EB] text-3xl md:text-4xl font-extrabold bg-gray-800 p-4 rounded-lg text-center shadow-md">
-        {product.name}
-      </div>
+
 
       {/* Product Section */}
-      <div className="p-6 mt-6 flex flex-col lg:flex-row items-center justify-between gap-10">
+      <div className="lg:p-6 lg:mt-6 mt-2 py-4 flex flex-row items-center justify-between md:gap-10 gap-4">
         {/* Image Section */}
         <div className="w-full md:w-1/2 flex justify-center">
           <img
             src={product.imgLink || product.ProductImage || "/placeholder.png"}
             alt={product.name}
-            className="shadow-lg bg-gray-700 w-96 h-96 rounded-lg transition-transform transform hover:scale-105"
+            className="shadow-lg bg-gray-700 md:w-96 md:h-96 w-56 h-56 rounded-lg transition-transform transform hover:scale-105"
           />
         </div>
 
         {/* Product Details */}
         <div className="w-full md:w-1/2 space-y-6 text-center lg:text-left">
-          <div className="text-3xl font-extrabold">{product.name}</div>
+          <div className="text-xl lg:text-3xl font-extrabold">{product.name}</div>
 
           {/* Wishlist Button */}
           <button
-            className="text-lg flex items-center justify-center lg:justify-start gap-2 text-red-500 font-semibold hover:text-red-600 transition"
+            className="lg:text-lg text-md flex items-center justify-center lg:justify-start gap-2 text-red-500 font-semibold hover:text-red-600 transition"
             onClick={() => addToFavourite(product._id)}
           >
-            <FaHeart className="text-2xl text-[#EF4444]" />
+            <FaHeart className="md:text-2xl text-xl text-[#EF4444]" />
             <span>Add to Wishlist</span>
           </button>
 
+
           {/* Ratings */}
-          <div className="text-2xl flex justify-center lg:justify-start gap-1">
+          <div className="tlg:ext-2xl text-lg flex justify-center lg:justify-start gap-1">
             {[...Array(5)].map((_, i) => (
               <FaStar key={i} className={i + 1 <= averageRatings ? "text-yellow-400" : "text-gray-500"} />
             ))}
@@ -103,14 +102,14 @@ const Product = () => {
           </div>
 
           {/* Price */}
-          <div className="text-xl font-semibold">
+          <div className="text-lg md:text-xl font-semibold">
             Price: <span className="text-[#22C55E]">₹{product.price}</span>
           </div>
 
           {/* Add to Cart & Buy Now Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <button
-              className="flex items-center justify-center gap-2 text-lg text-white bg-[#6366F1] hover:bg-[#4F46E5] px-8 py-3 rounded-md shadow-md transition-transform transform hover:scale-105"
+              className="flex items-center justify-center gap-2 text-md text-white bg-[#6366F1] hover:bg-[#4F46E5] lg:px-8 px-4 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105"
               onClick={() => handleAddToCart(product._id)}
             >
               <FaShoppingCart />
@@ -119,7 +118,7 @@ const Product = () => {
 
             
             <button
-  className="flex items-center justify-center gap-2 text-lg text-white bg-violet-600 hover:bg-violet-700 px-8 py-3 rounded-md shadow-md transition-transform transform hover:scale-105"
+  className="flex items-center justify-center gap-2 text-lg text-white bg-violet-600 hover:bg-violet-700 lg:px-8 px-4 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105"
   onClick={()=>handleBuyNow(product)}
 >
   Buy Now
@@ -130,8 +129,8 @@ const Product = () => {
         </div>
       </div>
       <div className="shadow-lg h-auto bg-gray-800 mx-4 p-6 rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-white">Description:</h2>
-        <p className="text-lg text-[#9CA3AF] leading-relaxed">{product.description}</p>
+        <h2 className="md:text-2xl text-xl font-semibold mb-4 text-white">Description:</h2>
+        <p className="d:text-lg text-md text-[#9CA3AF] leading-relaxed">{product.description}</p>
 
         {/* Show More / Less */}
         <button className="text-lg text-blue-400 font-semibold mt-4" onClick={() => setShowMore(!showMore)}>
@@ -139,7 +138,7 @@ const Product = () => {
         </button>
 
         {showMore && (
-          <div className="text-gray-400 font-medium space-y-2 mt-4">
+          <div className="text-gray-400 font-medium space-y-2 lg:mt-4 mt-3">
             {product.weight && <div>Weight: {product.weight} g</div>}
             {product.height && <div>Height: {product.height} cm</div>}
             {product.length && <div>Length: {product.length} cm</div>}
@@ -156,7 +155,7 @@ const Product = () => {
       <div className="flex justify-center">
         <form onSubmit={handleSubmit} className="space-y-4 w-full md:w-1/2 p-4">
           {/* Star Rating Input */}
-          <div className="flex justify-center gap-2 text-xl">
+          <div className="flex justify-center gap-2 md:text-xl text-lg">
             {[...Array(5)].map((_, i) => (
               <FaStar
                 key={i}
@@ -168,13 +167,13 @@ const Product = () => {
 
           {/* Review Message Input */}
           <textarea
-            className="w-full p-3 border-2 rounded-md resize-none bg-gray-700 text-white"
+            className="w-full lg:p-3 p-2 border-2 rounded-md resize-none bg-gray-700 text-white"
             placeholder="Write your review..."
             value={review.message}
             onChange={(e) => setReview({ ...review, message: e.target.value })}
           ></textarea>
 
-          <button className="w-full p-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200">
+          <button className="w-full lg:p-3 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200">
             Submit Review
           </button>
         </form>
