@@ -80,7 +80,7 @@ const Product = () => {
         </div>
 
         {/* Product Details */}
-        <div className="w-full md:w-1/2 space-y-6 text-center lg:text-left">
+        <div className="w-full md:w-1/2 md:space-y-6 space-y-3 text-center lg:text-left">
           <div className="text-xl lg:text-3xl font-extrabold">{product.name}</div>
 
           {/* Wishlist Button */}
@@ -107,7 +107,7 @@ const Product = () => {
           </div>
 
           {/* Add to Cart & Buy Now Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 pt-2">
             <button
               className="flex items-center justify-center gap-2 text-md text-white bg-[#6366F1] hover:bg-[#4F46E5] lg:px-8 px-2 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105"
               onClick={() => handleAddToCart(product._id)}
