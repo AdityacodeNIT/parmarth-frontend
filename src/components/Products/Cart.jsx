@@ -91,7 +91,7 @@ const Cart = () => {
               Order Summary
             </h4>
             <div className="flex-1 space-y-3">
-              <p className="text-gray-300">
+              <p className="text-gray-900 bg-white">
                 {cartDesccription()}
               </p>
               <div className="flex justify-between text-gray-100">
