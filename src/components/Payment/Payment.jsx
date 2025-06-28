@@ -47,7 +47,8 @@ const Payment = () => {
 
       const paymentResponse = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v2/payments/paid`,
-        { amount: finalAmount }
+        { amount: finalAmount },
+        {withCredentials:true}
       );
 
       if (!paymentResponse || !paymentResponse.data) {
@@ -85,7 +86,9 @@ const Payment = () => {
                 razorpay_order_id,
                 razorpay_payment_id,
                 razorpay_signature,
-              }
+              },
+              {withCredentials:true}
+
             );
 
             if (verifyResponse.data.success) {
