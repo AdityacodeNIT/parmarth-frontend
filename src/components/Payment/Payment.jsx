@@ -1,36 +1,49 @@
-import React, { useContext, useState } from "react";
-import axios from "axios";
-import UserContext from "../../context/UserContext";
-import { useNavigate } from "react-router-dom";
+
+
+
+import React, { useState,useContext } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectBaseAmount } from '../../utils/selectors.jsx';
+import { clearCurrentOrder,placeShiprocketOrder } from '../../features/product/orderSlice';
+import { clearCart } from '../../features/cart/cartSlice';
+import UserContext from '../../context/UserContext.jsx';
+ 
 
 const Payment = () => {
-  const navigate = useNavigate();
-  const {
-    totalProductPrice,
-    removeItemfromCheckout,
-    totalCartPrice,
-    orderSuccessful,
-    userDetail,
-  } = useContext(UserContext);
 
-  const baseAmount = totalProductPrice() || totalCartPrice();
+  const navigate = useNavigate();
+ 
+  const {
+    userDetail,} = useContext(UserContext);
+
+  
+
+
+  const dispatch  = useDispatch();
+
+  /* ------------ Get amounts from Redux ------------ */
+  const baseAmount = useSelector(selectBaseAmount);
+
   const totalAmount = Math.ceil(baseAmount * 1.18);
 
+  /* ------------ User data (adjust slice name) ----- */
+  const user = useSelector((s) => s.user?.data?.user);
+
+  /* ------------ Local UI state -------------------- */
   const [paymentData, setPaymentData] = useState({ amount: totalAmount });
-  const [loading, setLoading] = useState(false);
-  const [coupon, setCoupon] = useState("");
-  const [discount, setDiscount] = useState(0);
+  const [loading, setLoading]         = useState(false);
+  const [coupon, setCoupon]           = useState('');
+  const [discount, setDiscount]       = useState(0);
   const [paymentStatus, setPaymentStatus] = useState(null);
 
-  const handleInputChange = (e) => {
-    setPaymentData({ ...paymentData, [e.target.name]: e.target.value });
-  };
-
+  /* ------------ Handlers -------------------------- */
   const applyCoupon = () => {
-    if (coupon === "DISCOUNT10") {
+    if (coupon === 'DISCOUNT10') {
       setDiscount(totalAmount * 0.1);
     } else {
-      setPaymentStatus("Invalid Coupon Code");
+      setPaymentStatus('Invalid Coupon Code');
     }
   };
 
@@ -40,24 +53,58 @@ const Payment = () => {
     setPaymentStatus(null);
 
     try {
-      const keyResponse = await axios.get(`${import.meta.env.VITE_API_URL}/api/getkey`);
-      const { key } = keyResponse.data;
-
-      const finalAmount = totalAmount - discount;
-
-      const paymentResponse = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v2/payments/paid`,
-        { amount: finalAmount },
-        {withCredentials:true}
+      // 1) get Razorpay key
+      const { data: { key } } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/getkey`
       );
 
-      if (!paymentResponse || !paymentResponse.data) {
-        throw new Error("Payment initiation failed");
-      }
-      
-      const { order } = paymentResponse.data;
+      // 2) create order on backend
+      const finalAmount = totalAmount - discount;
+      const { data: { order } } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/v2/payments/paid`,
+        { amount: finalAmount },
+        { withCredentials: true }
+      );
 
-      const options = {
+      const finishPaymentAndOrder = async () => {
+  try {
+    setPaymentStatus('Payment verified – creating order…');
+
+    /* 1️⃣ Place order with Shiprocket and wait */
+    const action = await dispatch(placeShiprocketOrder());
+
+    if (placeShiprocketOrder.fulfilled.match(action)) {
+      /* 2️⃣ Success: clean local state */
+      dispatch(clearCart());
+      dispatch(clearCurrentOrder());
+
+      /* Shiprocket response payload */
+      const orderRes = action.payload;           // e.g. { order_id: 'SR123' }
+      const successId = orderRes.order_id || orderRes.id || 'latest';
+
+      setPaymentStatus('Order placed! Redirecting…');
+     setTimeout(() => {
+  navigate(`/order-success/${successId}`);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}, 1500);
+
+    } else {
+      /* 3️⃣ Thunk rejected */
+      setPaymentStatus(`Order failed: ${action.payload || 'unknown error'}`);
+    }
+  } catch (err) {
+    /* network or unexpected errors */
+    console.error(err);
+    setPaymentStatus('Unexpected error while placing order.');
+  }
+};
+
+
+
+
+
+      /* Razorpay options */
+       const options = {
         key,
         amount: order.amount,
         currency: "INR",
@@ -91,16 +138,12 @@ const Payment = () => {
 
             );
 
-            if (verifyResponse.data.success) {
-              setPaymentStatus("Payment Successful! Redirecting...");
-              orderSuccessful();
-              removeItemfromCheckout();
-              setTimeout(() => navigate(`/order-success/${order.id}`), 2000);
-              
-            } else {
-              setPaymentStatus("Payment Verification Failed! Please try again.");
-             
-            }
+               if (verifyResponse.data.success) {
+      await finishPaymentAndOrder();   // ⬅️ call the function here
+    } else {
+      setPaymentStatus('Payment verification failed.');
+    }
+
           } catch (error) {
             console.error("Payment Verification Error:", error);
             setPaymentStatus("Payment Failed! Please try again.");
@@ -113,42 +156,44 @@ const Payment = () => {
           },
         },
       };
+ 
 
-      const razor = new window.Razorpay(options);
-      razor.open();
-    } catch (error) {
-      console.error("Payment Error:", error);
-      setPaymentStatus("Payment Failed! Please try again.");
+      new window.Razorpay(options).open();
+
+    } catch (err) {
+      console.error(err);
+      setPaymentStatus('Payment Error. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
+  /* ------------ Render ---------------------------- */
   return (
-    <div className="bg-slate-300 flex justify-center items-center h-screen p-4">
-      <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+    <div className="bg-slate-300 flex justify-center items-center min-h-screen p-4">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold text-center mb-4">Payment</h2>
 
-        <div className="mb-4">
-          <p className="text-lg font-medium">Base Amount: ₹{baseAmount}</p>
-          <p className="text-lg font-medium">Tax (18%): ₹{Math.ceil(baseAmount * 0.18)}</p>
+        <div className="mb-4 space-y-1">
+          <p className="text-lg font-medium">Base: ₹{baseAmount}</p>
+          <p className="text-lg font-medium">Tax (18%): ₹{Math.ceil(baseAmount * 0.18)}</p>
           <p className="text-lg font-bold">
-            Final Amount: ₹{totalAmount - discount}{" "}
-            {discount > 0 && <span className="text-green-600">(-₹{discount} applied)</span>}
+            Payable: ₹{totalAmount - discount}{' '}
+            {discount > 0 && <span className="text-green-600">(-₹{discount})</span>}
           </p>
         </div>
 
         <div className="mb-4">
           <input
             type="text"
-            placeholder="Enter Coupon Code"
+            placeholder="Coupon code"
             value={coupon}
             onChange={(e) => setCoupon(e.target.value)}
-            className="w-full border p-2 rounded-md focus:ring-indigo-300 focus:ring-2"
+            className="w-full border p-2 rounded-md"
           />
           <button
             onClick={applyCoupon}
-            className="mt-2 w-full p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+            className="mt-2 w-full p-2 bg-blue-500 text-white rounded-lg"
           >
             Apply Coupon
           </button>
@@ -158,27 +203,28 @@ const Payment = () => {
           <input
             type="number"
             name="amount"
-            id="amount"
             value={paymentData.amount}
-            onChange={handleInputChange}
-            required
-            className="w-full border rounded-md p-2 text-center focus:ring-indigo-300 focus:ring-2"
             disabled
+            className="w-full border p-2 text-center rounded-md"
           />
 
           <button
             type="submit"
-            className={`w-full mt-4 p-2 rounded-lg font-semibold ${
-              loading ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"
-            } text-white`}
             disabled={loading}
+            className={`w-full mt-4 p-2 rounded-lg font-semibold ${
+              loading ? 'bg-gray-400' : 'bg-green-500 hover:bg-green-600'
+            } text-white`}
           >
-            {loading ? "Processing..." : "Confirm Payment"}
+            {loading ? 'Processing…' : 'Confirm Payment'}
           </button>
         </form>
 
         {paymentStatus && (
-          <p className={`text-center mt-4 ${paymentStatus.includes("Failed") ? "text-red-600" : "text-green-600"}`}>
+          <p
+            className={`text-center mt-4 ${
+              paymentStatus.includes('Failed') ? 'text-red-600' : 'text-green-600'
+            }`}
+          >
             {paymentStatus}
           </p>
         )}

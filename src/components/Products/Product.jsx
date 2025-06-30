@@ -1,13 +1,17 @@
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { FaStar, FaHeart, FaShoppingCart } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+
 import UserContext from "../../context/UserContext";
+import { addToCart } from "../../features/cart/cartSlice";
+import { setOrderFromBuyNow } from "../../features/product/orderSlice";
 
 const Product = () => {
+  /* ──────────────────────────── context & redux ──────────────────────────── */
   const {
     buyingProduct,
     addToFavourite,
-    handleAddToCart,
     data,
     review,
     setReview,
@@ -17,60 +21,71 @@ const Product = () => {
     totalRatings = 0,
     getReview,
     gotReview,
-    removeItemfromCheckout,
-    setBuyProduct
-
+    setBuyProduct,
   } = useContext(UserContext);
 
-  const navigate = useNavigate();
-  const [showMore, setShowMore] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const reviewsPerPage = 5;
+  const dispatch = useDispatch();
+  const navigate  = useNavigate();
 
+  const { list: addressList, selectedId: addressId } = useSelector(
+    (s) => s.address
+  );
+
+  /* ───────────────────────────── component state ──────────────────────────── */
+  const [showMore,   setShowMore]   = useState(false);
+  const [currentPage,setCurrentPage]= useState(1);
+  const [quantity,   setQuantity]   = useState(1);     // NEW
+
+  const reviewsPerPage = 5;
+  const product        = data?.productId || data || {};
+
+  /* ───────────────────────────── side‑effects ─────────────────────────────── */
   useEffect(() => {
     if (data?._id) {
       setProductId(data._id);
       getReview(data._id);
     }
-  }, [data, setProductId]);
+  }, [data]);
 
-  const product = data?.productId || data || {};
+  /* ────────────────────────────── handlers ────────────────────────────────── */
+  const handleCheckout = () => {
+    // guard: need an address first
+    const finalAddressId = addressId || addressList[0]?._id;
+    if (!finalAddressId) {
+      alert("Please add/select an address before checkout.");
+      return;
+    }
 
-  const handleSubmit = (e) => {
+    // 1️⃣ store order in Redux
+    dispatch(setOrderFromBuyNow({ product, addressId: finalAddressId, quantity }));
+
+    // 2️⃣ navigate
+    navigate("/BuyProduct");
+  };
+
+  const handleSubmit= (e) => {
     e.preventDefault();
     handleFormClick();
   };
-
-  const handleBuyNow = (product) => {
-
-    setBuyProduct([]);
-  
-    // Optionally, navigate after the state has been updated
-    setTimeout(() => {
-      buyingProduct(product, product._id?.toString());
-      navigate("/BuyProduct");
-    }, 100);
-  };
-  
-  
 
   const handleStarClick = (rating) => {
     setReview({ ...review, rating });
   };
 
-  const indexOfLastReview = currentPage * reviewsPerPage;
-  const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-  const currentReviews = gotReview.slice(indexOfFirstReview, indexOfLastReview);
-  const totalPages = Math.ceil(gotReview.length / reviewsPerPage);
+  /* ──────────────────────────── pagination math ───────────────────────────── */
+  const indexOfLast   = currentPage * reviewsPerPage;
+  const indexOfFirst  = indexOfLast - reviewsPerPage;
+  const currentReviews= gotReview.slice(indexOfFirst, indexOfLast);
+  const totalPages    = Math.ceil(gotReview.length / reviewsPerPage);
 
+  /* ──────────────────────────── render ────────────────────────────────────── */
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 to-gray-800 text-gray-200 md:p-8 p-3">
-      {/* Product Name */}
 
-
-      {/* Product Section */}
+      {/* PRODUCT DISPLAY */}
       <div className="lg:p-6 lg:mt-6 mt-2 py-6 flex flex-row items-center justify-between md:gap-10 gap-4">
-        {/* Image Section */}
+
+        {/* IMAGE */}
         <div className="w-full md:w-1/2 flex justify-center">
           <img
             src={product.imgLink || product.ProductImage || "/placeholder.png"}
@@ -79,11 +94,11 @@ const Product = () => {
           />
         </div>
 
-        {/* Product Details */}
+        {/* DETAILS */}
         <div className="w-full md:w-1/2 md:space-y-6 space-y-3 text-center lg:text-left">
           <div className="text-xl lg:text-3xl font-extrabold">{product.name}</div>
 
-          {/* Wishlist Button */}
+          {/* WISHLIST */}
           <button
             className="lg:text-lg text-md flex items-center justify-center lg:justify-start gap-2 text-red-500 font-semibold hover:text-red-600 transition"
             onClick={() => addToFavourite(product._id)}
@@ -92,42 +107,63 @@ const Product = () => {
             <span>Add to Wishlist</span>
           </button>
 
-
-          {/* Ratings */}
-          <div className="tlg:ext-2xl text-lg flex justify-center lg:justify-start gap-1">
+          {/* RATINGS */}
+          <div className="text-lg flex justify-center lg:justify-start gap-1">
             {[...Array(5)].map((_, i) => (
               <FaStar key={i} className={i + 1 <= averageRatings ? "text-yellow-400" : "text-gray-500"} />
             ))}
-            <span className="text-sm ml-2 text-gray-300">({Math.round(averageRatings * 100) / 100})</span>
+            <span className="text-sm ml-2 text-gray-300">
+              ({Math.round(averageRatings * 100) / 100})
+            </span>
           </div>
 
-          {/* Price */}
+          {/* PRICE */}
           <div className="text-lg md:text-xl font-semibold">
             Price: <span className="text-[#22C55E]">₹{product.price}</span>
           </div>
 
-          {/* Add to Cart & Buy Now Buttons */}
+          {/* QUANTITY PICKER */}
+          <div className="flex items-center gap-3 justify-center lg:justify-start">
+            <button
+              className="px-3 py-1 bg-gray-700 rounded-md"
+              disabled={quantity <= 1}
+              onClick={() => setQuantity(quantity - 1)}
+            >
+              −
+            </button>
+            <span>{quantity}</span>
+            <button
+              className="px-3 py-1 bg-gray-700 rounded-md"
+              onClick={() => setQuantity(quantity + 1)}
+            >
+              +
+            </button>
+          </div>
+
+          {/* ACTION BUTTONS */}
           <div className="flex flex-col sm:flex-row gap-4 pt-2">
             <button
               className="flex items-center justify-center gap-2 text-md text-white bg-[#6366F1] hover:bg-[#4F46E5] lg:px-8 px-2 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105"
-              onClick={() => handleAddToCart(product._id)}
+              onClick={() => dispatch(addToCart({ ...product, quantity }))}
             >
               <FaShoppingCart />
               Add to Cart
             </button>
 
-            
             <button
-  className="flex items-center justify-center gap-2 lg:text-lg text-md text-white bg-violet-600 hover:bg-violet-700 lg:px-8 px-2 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105"
-  onClick={()=>handleBuyNow(product)}
->
-  Buy Now
-</button>
-
-          
+              className="flex items-center justify-center gap-2 lg:text-lg text-md text-white bg-violet-600 hover:bg-violet-700 lg:px-8 px-2 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105"
+              onClick={handleCheckout}
+            >
+              Buy Now
+            </button>
           </div>
         </div>
       </div>
+
+   
+
+
+
       <div className="shadow-lg h-auto bg-gray-800 lg:mx-4  mx-2 lg:p-6 p-3 rounded-lg">
         <h2 className="md:text-2xl text-xl font-semibold mb-4 text-white">Description:</h2>
         <p className="d:text-lg text-md text-[#9CA3AF] leading-relaxed">{product.description}</p>

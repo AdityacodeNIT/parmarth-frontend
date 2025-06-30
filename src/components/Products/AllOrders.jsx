@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import UserContext from "../../context/UserContext";
 import { Link } from "react-router-dom";
@@ -20,6 +20,7 @@ const AllOrders = () => {
       );
 
       if (response && response.data.data.data) {
+        console.log(response.data.data.data);
         setOrders(response.data.data.data);
       }
     } catch (err) {
@@ -87,21 +88,30 @@ const AllOrders = () => {
                     {order.status}
                   </span>
                 </p>
+
                 <div className="mt-4">
                   <strong className="text-gray-400">Items:</strong>
                   {order.products?.length ? (
                     order.products.map((item, idx) => (
                       <span key={idx} className="block text-gray-300 text-sm">
-                        {item.name} (x{item.quantity || 1}) - ₹{item.selling_price}
+                        {item.name} (x{item.quantity || 1}) - ₹
+                        {((item.selling_price + item.tax_percentage) * (item.quantity || 1)).toFixed(2)}
                       </span>
                     ))
                   ) : (
                     <span className="text-gray-400">No items available</span>
                   )}
+
+                  {/* Final Total */}
+                  <p className="text-lg font-bold text-yellow-400 mt-3">
+                    Total: ₹
+                    {order.products?.reduce((acc, item) => {
+                      const quantity = item.quantity || 1;
+                      const priceWithTax = item.selling_price + item.tax_percentage;
+                      return Math.ceil(acc + priceWithTax * quantity);
+                    }, 0).toFixed(2)}
+                  </p>
                 </div>
-                <p className="text-lg font-bold text-yellow-400 mt-3">
-                  Total: ₹{order.total}
-                </p>
               </div>
             </Link>
           ))}
