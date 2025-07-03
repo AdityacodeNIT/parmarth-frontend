@@ -31,15 +31,13 @@ const UpdateAvatar = () => {
         formDataToSend,
         {
           withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data", // Important for file uploads
-          },
+         
         }
       );
 
       if (response.status >= 200 && response.status < 300) {
         console.log("Avatar updated successfully:", response.data);
-        getUserDetail(); // Refresh user data
+        getUserDetail(response.data); // Refresh user data
         navigate("/user");
       } else {
         console.error("Failed to update avatar:", response.data.message);
