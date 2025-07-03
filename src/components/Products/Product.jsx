@@ -53,6 +53,7 @@ const Product = () => {
     const finalAddressId = addressId || addressList[0]?._id;
     if (!finalAddressId) {
       alert("Please add/select an address before checkout.");
+      navigate('/addressUpdate');
       return;
     }
 

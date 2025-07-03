@@ -8,9 +8,7 @@ import Product from "./Product";
 
 const BuyProduct = () => {
   const dispatch=useDispatch();
-  const { totalProductPrice, productDesccription } = useContext(UserContext);
 
-  const [addressDetails, setAddressDetails] = useState(null);
 
   const { list: addressList, selectedId: addressId } = useSelector(
     (s) => s.address
@@ -20,14 +18,11 @@ const BuyProduct = () => {
 
 
 
-
    const handleCheckout = () => {
       dispatch(setOrderFromBuyNow({ product, addressId }));
       navigate('/payments');
     };
   
-
-
 
 
   const [loading, setLoading] = useState(true);

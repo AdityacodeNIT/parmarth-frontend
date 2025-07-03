@@ -57,6 +57,7 @@ import ManageSellers from "./components/Admin/ManageSellers.jsx";
 import UpdateProduct from "./components/Products/UpdateProudctDetails.jsx";
 import ProtectedRoute from "./context/ProtectedRoutes.jsx";
 import Addresses from "./components/User/Addresses.jsx";
+import VerifyOtp from "./components/User/verifyOtp.jsx";
 
 
 function App() {
@@ -86,6 +87,7 @@ function App() {
           <Route path="/wishlist" element={<Wishlisted />} />
           <Route path="/payments" element={<Payment />} />
           <Route path="/helpdesk" element={<Helpdesk />} />
+          <Route path="/verifyOtp" element={<VerifyOtp />} />
           <Route
           path="/AddProduct"
           element={
