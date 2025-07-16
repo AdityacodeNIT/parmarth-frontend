@@ -150,7 +150,7 @@ const BuyProduct = () => {
 
             <Link to="/addressUpdate">
               <button className="w-full bg-blue-900 text-white px-4 py-2 mt-4 rounded-lg font-bold shadow-lg hover:bg-blue-700 transition duration-300">
-                {addressDetails ? "Change Address" : "Add Address"}
+                {addressList ? "Change Address" : "Add Address"}
               </button>
             </Link>
           </div>
