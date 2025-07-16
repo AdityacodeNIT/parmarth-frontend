@@ -3,29 +3,16 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../../context/UserContext";
 import Categories from "../Products/Categories";
+import { fetchProductsByCategory } from "../../features/product/productSlice";
+import { useDispatch,useSelector } from "react-redux";
 
 const Paperproducts = () => {
   const { childToParent } = useContext(UserContext);
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const getProductDetail = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v1/product/PaperProduct`
-      );
-      if (response) {
-        setProducts(response.data);
-      }
-    } catch (error) {
-      console.error("Failed to fetch products", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const dispatch = useDispatch();
+  const { products: productsData, loading, error } = useSelector(state => state.product);
 
   useEffect(() => {
-    getProductDetail();
+    dispatch(fetchProductsByCategory("PaperProduct"));
   }, []);
 
   return (
@@ -62,7 +49,7 @@ const Paperproducts = () => {
           </h2>
 
           <div className="grid gap-8 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {products.map((product) => (
+            {productsData.map((product) => (
               <div
                 key={product._id}
                 className="relative bg-gray-900 rounded-xl shadow-lg border border-gray-700 transition-transform duration-300 transform hover:-translate-y-2 hover:scale-105 hover:shadow-2xl"
@@ -99,24 +86,7 @@ const Paperproducts = () => {
       )}
 
       {/* Newsletter Section */}
-      <div className="relative py-14 px-6 bg-gradient-to-r from-gray-900 via-black to-gray-800 text-white text-center rounded-t-3xl shadow-lg">
-        <h2 className="text-3xl font-extrabold text-teal-400">📩 Stay Updated</h2>
-        <p className="mt-4 text-lg">Subscribe to get the latest paper product deals & news.</p>
-        <div className="mt-6 flex justify-center">
-          <input
-            type="email"
-            placeholder="Enter your email"
-            className="p-3 rounded-l-lg w-72 text-black focus:outline-none shadow-md"
-          />
-          <button className="bg-emerald-500 hover:bg-emerald-600 px-6 py-3 rounded-r-lg font-semibold transition-transform transform hover:scale-105 shadow-md">
-            Subscribe
-          </button>
-        </div>
-
-        {/* Floating Glow Effects */}
-        <div className="absolute top-5 left-10 w-14 h-14 bg-teal-500 opacity-20 blur-2xl rounded-full animate-pulse"></div>
-        <div className="absolute bottom-10 right-10 w-20 h-20 bg-emerald-500 opacity-30 blur-2xl rounded-full animate-pulse"></div>
-      </div>
+     
     </div>
   );
 };

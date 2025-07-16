@@ -129,7 +129,7 @@ const Home = () => {
     return (
         <div className="w-full">
             {/* Hero Section */}
-            <div className="relative w-full h-[67vh] bg-cover bg-center flex items-center justify-center text-white text-center lg:px-6 px-3" 
+            <div className="relative w-full h-[49vh] bg-cover bg-center flex items-center justify-center text-white text-center lg:px-6 px-3" 
                 style={{ backgroundImage: "url('https://plus.unsplash.com/premium_photo-1663956066898-282c7609afc9?w=1600&auto=format&fit=crop&q=80')" }}>
                 <div className="bg-black bg-opacity-30 p-4 md:p-8 rounded-lg backdrop-blur-md">
                     <h1 className="text-2xl md:text-6xl font-extrabold drop-shadow-lg">Your One-Stop Stationery Store</h1>
@@ -145,7 +145,7 @@ const Home = () => {
             </div>
 
        <div className="md:py-14 py-3 px-2 sm:px-8 bg-gray-100">
-      <h2 className="text-3xl sm:text-4xl font-bold text-center lg:mb-8 mb-6 text-gray-800">
+      <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4 text-gray-800">
         Shop by Category
       </h2>
 
@@ -205,8 +205,8 @@ const Home = () => {
 
             {/* Trending Now Section */}
            <div className="md:py-16 py-4 bg-gray-100 px-2 sm:px-8">
-      <h2 className="text-2xl sm:text-4xl font-bold text-center md:mb-8 mb-4 text-gray-800">
-        Trending Now
+      <h2 className="text-2xl sm:text-3xl font-bold text-center  mb-4 text-gray-800 font-sans">
+        Trending Products 
       </h2>
 
       {/* Mobile Carousel */}
@@ -271,7 +271,7 @@ const Home = () => {
 
               {/* Trending Now Section */}
            <div className="md:py-16 py-4 bg-gray-100 px-4 sm:px-8">
-      <h2 className="text-2xl sm:text-4xl font-bold text-center md:mb-8 mb-4 text-gray-800">
+      <h2 className="text-2xl sm:text-3xl font-bold text-center  mb-4 text-gray-800 font-sans">
        Products You Might Like
       </h2>
 
@@ -336,7 +336,7 @@ const Home = () => {
             
 
             {/* Newsletter Signup */}
-            <SubscribeSection />
+         <SubscribeSection /> 
         </div>
     );
 };

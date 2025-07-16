@@ -14,7 +14,7 @@ const Navbar = () => {
 
 
   return (
-    <nav className="navbar w-full text-white bg-[#1E293B] md:h-24 h-16 px-6 shadow-md">
+    <nav className="navbar w-full text-white bg-[#0c1524] md:h-20 h-16 px-6 shadow-md">
       <div className="flex w-full items-center justify-between h-full">
         {/* Logo */}
         <div className="text-[#FACC15] text-xl md:text-3xl font-bold">
@@ -52,7 +52,7 @@ const Navbar = () => {
 
         {/* Cart and User Section */}
         <div className="flex items-center space-x-4">
-          <button className="text-white bg-[#E11D48] hover:bg-[#16A34A] text-lg lg:p-2 p-1 rounded-lg transition-colors duration-300">
+          <button className="text-black bg-[#facc15] hover:bg-[#16A34A] text-lg lg:p-4 p-2 rounded-lg transition-colors duration-300">
             <Link to="/cart">
               <FontAwesomeIcon icon={faShoppingCart} />
             </Link>

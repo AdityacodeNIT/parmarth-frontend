@@ -8,6 +8,18 @@ export const fetchProducts = createAsyncThunk(
     const res = await axios.get(
       `${import.meta.env.VITE_API_URL}/api/v1/product/getProduct`
     );
+    return res.data;   
+// becomes action.payload in 'fulfilled'
+  }
+);
+
+
+export const fetchProductsByCategory = createAsyncThunk(
+  'product/fetchProductsByCategory',
+  async (category) => {
+    const res = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/v1/product/${category}`
+    );
         console.log(res.data)    
     return res.data;   
 // becomes action.payload in 'fulfilled'
@@ -37,20 +49,35 @@ const productSlice = createSlice({
     
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchProducts.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.loading = false;
-        state.products = action.payload;
-      })
-      .addCase(fetchProducts.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
-      });
-  },
+  builder
+    .addCase(fetchProducts.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(fetchProducts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.products = action.payload;
+    })
+    .addCase(fetchProducts.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    })
+
+    // ✅ Handle fetchProductsByCategory as well
+    .addCase(fetchProductsByCategory.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    })
+    .addCase(fetchProductsByCategory.fulfilled, (state, action) => {
+      state.loading = false;
+      state.products = action.payload;
+    })
+    .addCase(fetchProductsByCategory.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+},
+
 });
 
 export default productSlice.reducer;

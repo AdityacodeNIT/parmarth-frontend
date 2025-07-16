@@ -8,11 +8,11 @@ const UserContextProvider = ({ children }) => {
     JSON.parse(localStorage.getItem("product")) || null
   );
 
-  // State to manage detailed information of a product.
-  const [productDetails, setProductDetails] = useState();
-  const getProductDetail = (detail) => {
-    setProductDetails(detail);
-  };
+  // // State to manage detailed information of a product.
+  // const [productDetails, setProductDetails] = useState();
+  // const getProductDetail = (detail) => {
+  //   setProductDetails(detail);
+  // };
 
   const recordActivity = async (action, productId) => {
     try {
@@ -215,16 +215,14 @@ useEffect(() => {
   const[gotReview,setGotReview]=useState([]);
 
 
-  const getReview=async(productId)=>{
-    console.log("productId",productId);
-    if (!productId) return;
-    const response =  await axios.get(`${import.meta.env.VITE_API_URL}/api/v2/feedback/getReview/${productId}`,
+  const getReview=async(product_id)=>{
+
+    if (!product_id) return;
+    const response =  await axios.get(`${import.meta.env.VITE_API_URL}/api/v2/feedback/getReview/${product_id}`,
     )
     setGotReview(response.data);
   
   }
-
-
 
 
   // State to manage search results.

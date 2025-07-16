@@ -30,7 +30,7 @@ const SubscribeSection = () => {
   };
 
   return (
-    <div className="relative py-14 px-6 bg-purple-900 text-white text-center  shadow-lg">
+    <div className="relative py-10 px-6 bg-[#0c1524] text-[#facc15] text-center  shadow-lg">
       <h2 className="lg:text-3xl text-2xl font-extrabold">📩 Stay Updated</h2>
       <p className="mt-2 md:mt-4 md:text-lg text-md">Subscribe for the latest deals and updates.</p>
 
@@ -44,7 +44,7 @@ const SubscribeSection = () => {
         />
         <button
           onClick={handleSubscribe}
-          className="bg-yellow-500 hover:bg-yellow-600 md:px-6 px-4 md:py-3 py-2 rounded-r-lg font-semibold transition-transform transform hover:scale-105 shadow-md"
+          className="bg-[#facc15] hover:bg-yellow-600 md:px-6 px-4 md:py-3 py-2 rounded-r-lg font-semibold transition-transform transform hover:scale-105 shadow-md text-[#0c1524] "
         >
           Subscribe
         </button>

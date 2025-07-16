@@ -15,7 +15,6 @@ const Product = () => {
     data,
     review,
     setReview,
-    setProductId,
     handleFormClick,
     averageRatings = 0,
     totalRatings = 0,
@@ -42,10 +41,11 @@ const Product = () => {
   /* ───────────────────────────── side‑effects ─────────────────────────────── */
   useEffect(() => {
     if (data?._id) {
-      setProductId(data._id);
-      getReview(data._id);
+      console.log(data)
+      getReview(data?._id);
     }
-  }, [data]);
+  }, [data?._id]);
+  
 
   /* ────────────────────────────── handlers ────────────────────────────────── */
   const handleCheckout = () => {
@@ -221,7 +221,7 @@ const Product = () => {
       {currentReviews.map((rev, index) => (
         <div key={index} className="p-4 border-b border-gray-600 bg-gray-800 rounded-lg shadow-md">
           <div className="text-gray-300 font-semibold">
-            {rev.userId.fullName || "Anonymous"} •{" "}
+            {rev.userId?.fullName || "Anonymous"} •{" "}
             <span className="text-sm text-gray-400">
               {new Date(rev.createdAt).toLocaleString("en-IN", {
                 day: "numeric",

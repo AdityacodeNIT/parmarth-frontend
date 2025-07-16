@@ -9,7 +9,7 @@ const About = () => {
   };
 
   return (
-    <div className="p-8 bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen flex flex-col items-center gap-10 text-white">
+    <div className="p-8 bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen flex flex-col items-center gap-10 text-white font-sans">
       
       {/* Company Title */}
       <h1 className="text-4xl font-extrabold text-center text-gray-100 mb-4">About Parmarth E-com</h1>
