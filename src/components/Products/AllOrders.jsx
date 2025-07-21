@@ -2,13 +2,16 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import UserContext from "../../context/UserContext";
 import { Link } from "react-router-dom";
+import { useSelector ,useDispatch} from "react-redux";
+import { setOrderDetails } from "../../features/product/orderSlice";
 
 const AllOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const dispatch=useDispatch();
 
-  const { GetOrderId } = useContext(UserContext);
+ 
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -64,7 +67,7 @@ const AllOrders = () => {
             <Link to="/OrderItems" key={order.id}>
               <div
                 className="bg-gray-800 rounded-lg shadow-lg p-6 transition-transform transform hover:-translate-y-2 hover:shadow-2xl border border-gray-700"
-                onClick={() => GetOrderId(order.id)}
+                onClick={()=>dispatch(setOrderDetails(order))}
               >
                 <h3 className="text-lg font-semibold text-green-400">
                   Order ID: {order.id}

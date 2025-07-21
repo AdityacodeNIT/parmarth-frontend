@@ -48,6 +48,7 @@ const orderSlice = createSlice({
 
     /* history of successful orders */
     orderSuccess: [],
+    orderId:null,
 
     loading: false,
     error: null,
@@ -68,7 +69,7 @@ const orderSlice = createSlice({
 
     /* build from single BUY‑NOW item */
     setOrderFromBuyNow(state, action) {
-      const { product, addressId,quantity } = action.payload;
+      const { product, addressId,quantity,paymentMethod } = action.payload;
         state.current.product   = product; 
          state.current.quantity  = quantity || 1; // default to 1 if not provided
       state.current.source    = 'buyNow';
@@ -76,6 +77,7 @@ const orderSlice = createSlice({
         productId : product._id,
         quantity  : quantity || 1, // default to 1 if not provided
         Address_id: addressId,
+        paymentMethod:paymentMethod
       }];
       state.current.addressId = addressId;
     },
@@ -96,6 +98,11 @@ const orderSlice = createSlice({
     purgeOrderHistory(state) {
       state.orderSuccess = [];
     },
+
+    setOrderDetails(state, action) {
+  state.orderDetails = action.payload;
+}
+
   },
 
   extraReducers: builder => {
@@ -107,6 +114,7 @@ const orderSlice = createSlice({
       .addCase(placeShiprocketOrder.fulfilled, (state, action) => {
         state.loading      = false;
         state.orderDetails = action.payload;
+        state.orderId=action.payload._id
         state.orderSuccess.unshift(action.payload);   // history
         state.current = { source: null, items: [], addressId: null };
       })
@@ -123,6 +131,7 @@ export const {
   updateOrderAddress,
   clearCurrentOrder,
   purgeOrderHistory,
+  setOrderDetails
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

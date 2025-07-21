@@ -12,15 +12,12 @@ const UserDetails = () => {
       try {
         const response = await axios.post(
           `${import.meta.env.VITE_API_URL}/api/v1/users/refresh-token`,
-        {},
+          {},
           { withCredentials: true }
         );
-        console.log(response.data);
-  
+
         const { accessToken } = response.data;
-        
         if (accessToken) {
-          // Update global auth state instead of axios defaults
           setUserDetail((prev) => ({ ...prev, accessToken }));
         }
       } catch (error) {
@@ -29,68 +26,71 @@ const UserDetails = () => {
         navigate("/userLogin");
       }
     };
-  
+
     validateRefreshToken();
-  
-    // Run only once when the component mounts
-  }, []); 
-  
+  }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-black flex flex-col md:flex-row">
-      {/* User Profile Section */}
-      <div className="md:w-1/2 flex flex-col justify-center items-center bg-gray-700 p-8 md:p-12 rounded-xl shadow-2xl">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0f0f] via-gray-900 to-black flex flex-col md:flex-row items-center justify-center p-6 md:p-12 gap-10">
+      {/* Left - Profile Section */}
+      <div className="w-full md:w-1/2 bg-gray-900/90 backdrop-blur-md rounded-2xl shadow-2xl p-8 md:p-10">
         {userDetail ? (
-          <div className="text-yellow-300 w-full max-w-lg text-center">
-            {/* Profile Image */}
-            <div className="flex flex-col items-center mb-6">
+          <div className="text-gray-100 space-y-6">
+            {/* Avatar */}
+            <div className="flex flex-col items-center">
               <img
-                className="w-28 h-28 border-4 border-yellow-300 object-cover rounded-full shadow-xl"
-                src={userDetail.data?.avatar || userDetail.data?.user?.avatar || "/default-avatar.png"}
+                src={
+                  userDetail.data?.avatar ||
+                  userDetail.data?.user?.avatar ||
+                  "/default-avatar.png"
+                }
                 alt="User avatar"
+                className="w-28 h-28 rounded-full border-4 border-yellow-400 shadow-md object-cover"
               />
-              <div className="text-xl font-bold mt-4">
+              <h2 className="mt-4 text-2xl font-bold text-yellow-300">
                 {userDetail.data?.username || userDetail.data?.user?.username}
-              </div>
+              </h2>
             </div>
 
-            {/* User Details */}
-            <div className="text-md mb-6">
+            {/* Details */}
+            <div className="space-y-2 text-center">
               <p>
-                <span className="font-semibold">Name:</span> {userDetail.data?.fullName || userDetail.data?.user?.fullName}
+                <span className="font-semibold text-gray-300">Full Name:</span>{" "}
+                {userDetail.data?.fullName || userDetail.data?.user?.fullName}
               </p>
               <p>
-                <span className="font-semibold">Email:</span> {userDetail.data?.email || userDetail.data?.user?.email}
+                <span className="font-semibold text-gray-300">Email:</span>{" "}
+                {userDetail.data?.email || userDetail.data?.user?.email}
               </p>
             </div>
 
-            {/* Buttons Section */}
-            <div className="space-y-3">
+            {/* Links */}
+            <div className="grid grid-cols-1 gap-3 mt-6">
               {userDetail.data?.user?.role !== "customer" ? (
                 <>
                   <StyledLink to="/Admin" text="Admin Panel" color="purple" />
-                  <StyledLink to="/helpdesk" text="Helpdesk" color="red" />
+                  <StyledLink to="/helpdesk" text="Helpdesk" color="rose" />
                   <StyledLink to="/logOut" text="Log Out" color="indigo" />
                 </>
               ) : (
                 <>
                   <StyledLink to="/cart" text="My Cart" color="blue" />
-                  <StyledLink to="/myOrder" text="My Orders" color="green" />
-                  <StyledLink to="/updateDetails" text="Update Details" color="yellow" />
-                  <StyledLink to="/Wishlist" text="Wishlist" color="yellow" />
+                  <StyledLink to="/myOrder" text="My Orders" color="emerald" />
+                  <StyledLink to="/updateDetails" text="Update Details" color="amber" />
+                  <StyledLink to="/Wishlist" text="Wishlist" color="fuchsia" />
                   <StyledLink to="/seller" text="Become A Seller" color="red" />
-                  <StyledLink to="/helpdesk" text="Helpdesk" color="red" />
+                  <StyledLink to="/helpdesk" text="Helpdesk" color="rose" />
                   <StyledLink to="/logOut" text="Log Out" color="indigo" />
                 </>
               )}
             </div>
           </div>
         ) : (
-          <div className="text-center text-white">
-            <h2 className="text-lg font-bold">You are not logged in</h2>
+          <div className="text-center text-white space-y-4">
+            <h2 className="text-2xl font-bold">You are not logged in</h2>
             <Link
               to="/userLogin"
-              className="inline-block mt-4 px-6 py-2 bg-purple-600 hover:bg-indigo-500 transition text-white rounded-lg shadow-lg"
+              className="inline-block mt-4 px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg shadow-md transition-transform transform hover:scale-105"
             >
               Log In
             </Link>
@@ -98,22 +98,23 @@ const UserDetails = () => {
         )}
       </div>
 
-      {/* Right-Side Placeholder */}
-      <div className="md:w-1/2 flex items-center justify-center p-8">
-        <div className="text-white text-xl text-center bg-gray-900 p-6 rounded-lg shadow-lg">
-          Exciting new features coming soon! Stay tuned.
+      {/* Right - Placeholder */}
+      <div className="w-full md:w-1/2 flex justify-center items-center">
+        <div className="bg-gray-800/80 rounded-2xl shadow-xl p-8 text-center text-white text-lg backdrop-blur-lg">
+          🚀 <span className="font-semibold">Exciting new features</span> are in the works. <br />
+          Stay tuned for more updates!
         </div>
       </div>
     </div>
   );
 };
 
-// Reusable Button Component
+// Reusable styled button
 const StyledLink = ({ to, text, color }) => {
   return (
     <Link
       to={to}
-      className={`block w-full max-w-xs mx-auto py-2 px-4 text-white text-center font-semibold rounded-lg shadow-lg bg-${color}-700 hover:bg-${color}-500 transition-transform transform hover:scale-105`}
+      className={`block w-full py-2 px-4 text-white font-semibold rounded-lg shadow-md bg-${color}-700 hover:bg-${color}-600 transition-all transform hover:scale-105 text-center`}
     >
       {text}
     </Link>

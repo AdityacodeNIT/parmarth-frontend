@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  setAddresses,
-  setSelectedAddressId,
-} from "../../features/address/addressSlice";
+import { setAddresses, setSelectedAddressId } from "../../features/address/addressSlice";
 
 const Addresses = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const { list: addresses, selectedId } = useSelector((state) => state.address);
+  const addressList = useSelector((state) => state.address.list);
 
   useEffect(() => {
     const fetchAddressDetails = async () => {
@@ -22,7 +20,6 @@ const Addresses = () => {
           `${import.meta.env.VITE_API_URL}/api/v1/address/getAllAddresses`,
           { withCredentials: true }
         );
-
         const data = response.data?.data || [];
         dispatch(setAddresses(data));
       } catch (err) {
@@ -38,52 +35,51 @@ const Addresses = () => {
 
   const handleSelect = (id) => {
     dispatch(setSelectedAddressId(id));
+    navigate("/buyproduct");
   };
 
-  if (loading) return <div className="text-center p-4">Loading addresses...</div>;
-  if (error) return <div className="text-center p-4 text-red-500">{error}</div>;
+  const handleAddAddress = () => {
+    navigate("/addressUpdate");
+  };
+
+  if (loading) return <div className="text-yellow-300 text-center p-4">Loading addresses...</div>;
+  if (error) return <div className="text-red-500 text-center p-4">{error}</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Your Addresses</h2>
+    <div className="min-h-screen bg-gray-950 text-yellow-300 py-8 px-4">
+      <div className="max-w-5xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6 text-center text-yellow-400">Manage Your Addresses</h2>
 
-      {addresses.length === 0 ? (
-        <div className="text-center text-gray-600">No addresses found.</div>
-      ) : (
-        <div className="grid grid-cols-1 gap-4">
-          {addresses.map((address) => (
-            <div
-              key={address._id}
-              className={`border p-4 rounded shadow ${
-                selectedId === address._id ? "border-teal-500 bg-teal-50" : ""
-              }`}
-              onClick={() => handleSelect(address._id)}
-            >
-              <h3 className="text-lg font-semibold">
-                {address.firstName} {address.lastName}
-              </h3>
-              <p>{address.streetAddress} {address.city}</p>
-              <p>{address.state} - {address.postalCode}</p>
-              <p>{address.country}</p>
-
-              <div className="mt-2 flex gap-2">
-                <button
-                  onClick={() => navigate(`/edit-address/${address._id}`)}
-                  className="px-3 py-1 bg-blue-500 text-white rounded"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => navigate(`/delete-address/${address._id}`)}
-                  className="px-3 py-1 bg-red-500 text-white rounded"
-                >
-                  Delete
-                </button>
+        {addressList.length === 0 ? (
+          <div className="text-center text-yellow-400">No addresses found.</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {addressList.map((address) => (
+              <div
+                key={address._id}
+                className="bg-slate-800 text-white p-6 rounded-2xl shadow-lg hover:bg-slate-700 transition cursor-pointer"
+                onClick={() => handleSelect(address._id)}
+              >
+                <h3 className="text-xl font-semibold mb-2 text-blue-300">
+                  {address.firstName} {address.lastName}
+                </h3>
+                <p className="text-slate-300">{address.streetAddress}, {address.city}</p>
+                <p className="text-slate-400">{address.state} - {address.postalCode}</p>
+                <p className="text-slate-500">{address.country}</p>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        )}
+
+        <div className="mt-8">
+          <button
+            onClick={handleAddAddress}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-xl transition"
+          >
+            Add New Address
+          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 };

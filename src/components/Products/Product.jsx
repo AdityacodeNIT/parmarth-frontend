@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import UserContext from "../../context/UserContext";
 import { addToCart } from "../../features/cart/cartSlice";
 import { setOrderFromBuyNow } from "../../features/product/orderSlice";
+import{Button} from "../components/ui/button"
 
 const Product = () => {
   /* ──────────────────────────── context & redux ──────────────────────────── */
@@ -143,20 +144,20 @@ const Product = () => {
 
           {/* ACTION BUTTONS */}
           <div className="flex flex-col sm:flex-row gap-4 pt-2">
-            <button
+            <Button
               className="flex items-center justify-center gap-2 text-md text-white bg-[#6366F1] hover:bg-[#4F46E5] lg:px-8 px-2 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105"
               onClick={() => dispatch(addToCart({ ...product, quantity }))}
             >
               <FaShoppingCart />
               Add to Cart
-            </button>
+            </Button>
 
-            <button
+            <Button
               className="flex items-center justify-center gap-2 lg:text-lg text-md text-white bg-violet-600 hover:bg-violet-700 lg:px-8 px-2 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105"
               onClick={handleCheckout}
             >
               Buy Now
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -165,92 +166,155 @@ const Product = () => {
 
 
 
-      <div className="shadow-lg h-auto bg-gray-800 lg:mx-4  mx-2 lg:p-6 p-3 rounded-lg">
-        <h2 className="md:text-2xl text-xl font-semibold mb-4 text-white">Description:</h2>
-        <p className="d:text-lg text-md text-[#9CA3AF] leading-relaxed">{product.description}</p>
+   <div className="bg-gray-900 text-white rounded-2xl shadow-xl px-4 py-6 sm:px-6 md:px-8 lg:px-10 xl:px-12 mx-2 lg:mx-4 transition-all duration-300">
+  <h2 className="text-2xl md:text-3xl font-bold mb-4">Description</h2>
 
-        {/* Show More / Less */}
-        <button className="text-lg text-blue-400 font-semibold mt-4" onClick={() => setShowMore(!showMore)}>
-          {showMore ? "See Less" : "See More"}
-        </button>
+  <p className="text-base md:text-lg text-gray-300 leading-relaxed">
+    {product.description}
+  </p>
 
-        {showMore && (
-          <div className="text-gray-400 font-medium space-y-2 lg:mt-4 mt-3">
-            {product.weight && <div>Weight: {product.weight} g</div>}
-            {product.height && <div>Height: {product.height} cm</div>}
-            {product.length && <div>Length: {product.length} cm</div>}
-            {product.width && <div>Width: {product.width} cm</div>}
-          </div>
-        )}
+  {/* Toggle button */}
+  <button
+    className="mt-5 text-blue-400 hover:text-blue-300 text-sm md:text-base font-semibold transition-colors duration-200"
+    onClick={() => setShowMore(!showMore)}
+  >
+    {showMore ? "See Less" : "See More"}
+  </button>
+
+  {/* Expanded Details */}
+ {showMore && (
+  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm md:text-base text-gray-300 font-medium border-t border-gray-700 pt-4">
+    {product.weight && (
+      <div className="flex items-center">
+        <span className="w-24 font-semibold text-gray-400">Weight:</span>
+        <span>{product.weight} g</span>
       </div>
+    )}
+    {product.height && (
+      <div className="flex items-center">
+        <span className="w-24 font-semibold text-gray-400">Height:</span>
+        <span>{product.height} cm</span>
+      </div>
+    )}
+    {product.length && (
+      <div className="flex items-center">
+        <span className="w-24 font-semibold text-gray-400">Length:</span>
+        <span>{product.length} cm</span>
+      </div>
+    )}
+    {product.width && (
+      <div className="flex items-center">
+        <span className="w-24 font-semibold text-gray-400">Width:</span>
+        <span>{product.width} cm</span>
+      </div>
+    )}
+  </div>
+)}
+
+</div>
 
 
 
 
       {/* Add Review */}
-      <div className="m-4 text-2xl font-semibold text-center text-white">Add a Review</div>
-      <div className="flex justify-center">
-        <form onSubmit={handleSubmit} className="space-y-4 w-full md:w-1/2 p-4">
-          {/* Star Rating Input */}
-          <div className="flex justify-center gap-2 md:text-xl text-lg">
-            {[...Array(5)].map((_, i) => (
-              <FaStar
-                key={i}
-                className={i + 1 <= review.rating ? "text-yellow-400 cursor-pointer" : "text-gray-500 cursor-pointer"}
-                onClick={() => handleStarClick(i + 1)}
-              />
-            ))}
-          </div>
+      <div className="my-8 px-4">
+  {/* Add Review Heading */}
+  <h2 className="text-3xl font-bold text-center text-white mb-6">Add a Review</h2>
 
-          {/* Review Message Input */}
-          <textarea
-            className="w-full lg:p-3 p-2 border-2 rounded-md resize-none bg-gray-700 text-white"
-            placeholder="Write your review..."
-            value={review.message}
-            onChange={(e) => setReview({ ...review, message: e.target.value })}
-          ></textarea>
-
-          <button className="w-full lg:p-3 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-200">
-            Submit Review
-          </button>
-        </form>
+  {/* Review Form */}
+  <div className="flex justify-center">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-gray-900/80 backdrop-blur-md p-6 rounded-xl w-full md:w-2/3 lg:w-1/2 shadow-2xl transition-all duration-300"
+    >
+      {/* Star Rating */}
+      <div className="flex justify-center gap-2 text-2xl mb-4">
+        {[...Array(5)].map((_, i) => (
+          <FaStar
+            key={i}
+            className={`transition-transform duration-200 hover:scale-125 ${
+              i + 1 <= review.rating ? "text-yellow-400" : "text-gray-500"
+            } cursor-pointer`}
+            onClick={() => handleStarClick(i + 1)}
+          />
+        ))}
       </div>
 
-      {/* Display Reviews */}
-      <div className="m-4 text-2xl font-semibold text-center text-white">Reviews</div>
-      {currentReviews.map((rev, index) => (
-        <div key={index} className="p-4 border-b border-gray-600 bg-gray-800 rounded-lg shadow-md">
-          <div className="text-gray-300 font-semibold">
-            {rev.userId?.fullName || "Anonymous"} •{" "}
-            <span className="text-sm text-gray-400">
-              {new Date(rev.createdAt).toLocaleString("en-IN", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </span>
-          </div>
-          <div className="flex items-center gap-1 mt-1">
-            {[...Array(rev.rating)].map((_, i) => (
-              <FaStar key={i} className="text-yellow-400" />
-            ))}
-          </div>
-          <p className="text-gray-300 mt-2">{rev.message}</p>
+      {/* Message Input */}
+      <textarea
+        className="w-full p-4 rounded-lg bg-gray-800 text-white border border-gray-600 focus:ring-2 focus:ring-blue-500 outline-none resize-none transition-all duration-200"
+        placeholder="Write your review..."
+        rows={4}
+        value={review.message}
+        onChange={(e) => setReview({ ...review, message: e.target.value })}
+      ></textarea>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        className="w-full mt-4 py-3 text-white font-semibold bg-blue-600 hover:bg-blue-700 rounded-lg transition duration-300 shadow-lg"
+      >
+        Submit Review
+      </button>
+    </form>
+  </div>
+
+  {/* Reviews Section */}
+  <h2 className="text-3xl font-bold text-center text-white mt-10 mb-4">Reviews</h2>
+
+  <div className="space-y-4">
+    {currentReviews.map((rev, index) => (
+      <div
+        key={index}
+        className="p-5 bg-gray-800 border border-gray-700 rounded-lg shadow-md hover:scale-[1.01] transition-transform duration-200"
+      >
+        <div className="flex justify-between items-center text-gray-300 font-semibold">
+          <span>{rev.userId?.fullName || "Anonymous"}</span>
+          <span className="text-sm text-gray-400">
+            {new Date(rev.createdAt).toLocaleString("en-IN", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
         </div>
-      ))}
 
-      {/* Pagination Controls */}
-      <div className="flex justify-center mt-4">
-        <button disabled={currentPage === 1} onClick={() => setCurrentPage(currentPage - 1)} className="px-4 py-2 bg-gray-700 rounded-md hover:bg-gray-600">
-          Previous
-        </button>
-        <button disabled={currentPage === totalPages} onClick={() => setCurrentPage(currentPage + 1)} className="px-4 py-2 ml-2 bg-gray-700 rounded-md hover:bg-gray-600">
-          Next
-        </button>
+        {/* Rating */}
+        <div className="flex items-center mt-2 gap-1">
+          {[...Array(rev.rating)].map((_, i) => (
+            <FaStar key={i} className="text-yellow-400" />
+          ))}
+        </div>
+
+        {/* Message */}
+        <p className="text-gray-300 mt-2">{rev.message}</p>
       </div>
-    </div>
+    ))}
+  </div>
+
+  {/* Pagination */}
+  <div className="flex justify-center gap-4 mt-6">
+    <button
+      disabled={currentPage === 1}
+      onClick={() => setCurrentPage(currentPage - 1)}
+      className="px-5 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      Previous
+    </button>
+    <button
+      disabled={currentPage === totalPages}
+      onClick={() => setCurrentPage(currentPage + 1)}
+      className="px-5 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      Next
+    </button>
+  </div>
+</div>
+
+      </div>
+
   );
 };
 

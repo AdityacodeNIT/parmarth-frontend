@@ -11,9 +11,12 @@ import {
 } from "react-icons/fi";
 import axios from "axios";
 import UserContext from "../../context/UserContext";
+import { useSelector } from "react-redux";
 
 const OrderDetails = () => {
-  const { orderItems, getUserDetail } = useContext(UserContext);
+  const { getUserDetail } = useContext(UserContext);
+  const {orderDetails:orderItems}=useSelector((state)=>state.order)
+  console.log
   const [cancellationStatus, setCancellationStatus] = useState(null);
 
   const handleCancelOrder = async () => {

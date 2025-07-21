@@ -224,6 +224,7 @@ const Home = () => {
               <img
                 src={product.ProductImage}
                 alt={product.name}
+                loading="lazy"
                 className="w-full h-40 object-contain"
               />
               <h3 className="text-gray-800 font-semibold text-base mt-2 text-center">

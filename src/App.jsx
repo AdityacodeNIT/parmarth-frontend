@@ -58,6 +58,8 @@ import UpdateProduct from "./components/Products/UpdateProudctDetails.jsx";
 import ProtectedRoute from "./context/ProtectedRoutes.jsx";
 import Addresses from "./components/User/Addresses.jsx";
 import VerifyOtp from "./components/User/verifyOtp.jsx";
+import ManageAddresses from "./components/App/ManageAddresses.jsx";
+import CashOnDelivery from "./components/Payment/Cod.jsx";
 
 
 function App() {
@@ -103,6 +105,9 @@ function App() {
           <Route path="/updateDetails" element={<UpdateDetails />} />
           <Route path="/updateAvatar" element={<UpdateAvatar />} />
           <Route path="/allAddresses" element={<Addresses/>}/>
+          <Route path="/adresses" element={<ManageAddresses/>}/>
+              <Route path="cod" element={<CashOnDelivery/>}/>
+          
 
         
           <Route path="/myOrder" element={<AllOrders />} />
