@@ -26,7 +26,7 @@ const Payment = () => {
   /* ------------ Get amounts from Redux ------------ */
   const baseAmount = useSelector(selectBaseAmount);
 
-  const totalAmount = Math.ceil(baseAmount * 1.18);
+  const totalAmount = Math.ceil((baseAmount * 1.18)+deliverycharge);
 
   /* ------------ User data (adjust slice name) ----- */
   const user = useSelector((s) => s.user?.data?.user);

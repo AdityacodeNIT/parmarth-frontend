@@ -1,10 +1,11 @@
 
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const UserAddress = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [AddressData, setAddressData] = useState({
     firstName: "",
     lastName: "",
@@ -55,7 +56,8 @@ const UserAddress = () => {
       );
 
       if (response.status === 201) {
-        navigate("/BuyProduct");
+        const redirectPath = searchParams.get('redirect') || '/BuyProduct';
+        navigate(redirectPath);
       }
     } catch (error) {
       console.log("Issue in Adding the Addresses:", error);

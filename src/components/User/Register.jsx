@@ -16,8 +16,8 @@ const Register = () => {
     coverImage: null,
   });
 
-  const [loading, setLoading] = useState(false);      // ⬅️ NEW
-  const [error, setError]   = useState("");           // optional
+  const [loading, setLoading] = useState(false);
+  const [error, setError]   = useState("");
 
   /* -------- handle form field changes -------- */
   const handleInputChange = (e) =>
@@ -43,16 +43,18 @@ const Register = () => {
         formDataToSend,
         { withCredentials: true, credentials: "include" }
       );
- if (res.status >= 200 && res.status < 300) {
-    // ✅ Save userId for OTP verification
-    console.log("Registration successful:", res.data);
-    const userId = res.data?.userId; 
-    console.log// or use res.data.userId if you return it directly
-    localStorage.setItem("otpUserId", userId);
 
-    // ✅ Navigate to verify page
-    navigate("/verifyotp");
-  }
+      if (res.status >= 200 && res.status < 300) {
+        console.log("Registration successful:", res.data);
+
+        // ✅ OTP Flow Removed
+        // const userId = res.data?.userId;
+        // localStorage.setItem("otpUserId", userId);
+        // navigate("/verifyotp");
+
+        // Instead → directly go to login
+        navigate("/userLogin");
+      }
     } catch (err) {
       console.error("Registration error:", err);
       setError(
@@ -68,16 +70,26 @@ const Register = () => {
       {/* Left section */}
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-4">
         <div className="w-full md:w-3/4 p-8 bg-gray-900 shadow-xl rounded-lg border border-white-300">
-          <h1 className="text-3xl font-extrabold text-teal-500 text-center mb-6">Register</h1>
+          <h1 className="text-3xl font-extrabold text-teal-500 text-center mb-6">
+            Register
+          </h1>
 
           <form onSubmit={handleFormSubmit} encType="multipart/form-data">
             {/* --- text inputs --- */}
             {["fullName", "email", "username", "password"].map((field) => (
               <input
                 key={field}
-                type={field === "password" ? "password" : field === "email" ? "email" : "text"}
+                type={
+                  field === "password"
+                    ? "password"
+                    : field === "email"
+                    ? "email"
+                    : "text"
+                }
                 name={field}
-                placeholder={`Enter your ${field === "fullName" ? "full name" : field}`}
+                placeholder={`Enter your ${
+                  field === "fullName" ? "full name" : field
+                }`}
                 value={formData[field]}
                 onChange={handleInputChange}
                 required
@@ -88,7 +100,8 @@ const Register = () => {
             {/* avatar upload */}
             <div className="mb-4">
               <label className="text-gray-300 text-sm mb-1 block">
-                Upload Profile Photo <span className="text-gray-400">(Optional)</span>
+                Upload Profile Photo{" "}
+                <span className="text-gray-400">(Optional)</span>
               </label>
               <input
                 type="file"
@@ -107,7 +120,11 @@ const Register = () => {
               disabled={loading}
               className={`w-full p-3 flex items-center justify-center gap-2
                           font-bold rounded-md transition
-                          ${loading ? "bg-teal-400 cursor-not-allowed" : "bg-teal-600 hover:bg-rose-700"}
+                          ${
+                            loading
+                              ? "bg-teal-400 cursor-not-allowed"
+                              : "bg-teal-600 hover:bg-rose-700"
+                          }
                           text-white`}
             >
               {loading && (
@@ -145,7 +162,7 @@ const Register = () => {
         </div>
       </div>
 
-      {/* Right section */}
+      {/* Right section */}route
       <div className="hidden md:block md:w-1/2">
         <img
           src="/assets/design/register.jpeg"

@@ -45,6 +45,7 @@ const orderSlice = createSlice({
 
     /* server response of last order */
     orderDetails: null,
+    deliverycharge:0,
 
     /* history of successful orders */
     orderSuccess: [],
@@ -98,10 +99,15 @@ const orderSlice = createSlice({
     purgeOrderHistory(state) {
       state.orderSuccess = [];
     },
+    
 
     setOrderDetails(state, action) {
   state.orderDetails = action.payload;
+},
+setDeliverycharge(state,action){
+  state.deliverycharge=action.payload
 }
+
 
   },
 

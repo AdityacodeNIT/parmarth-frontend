@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { setAddresses } from "../../features/address/addressSlice";
 
 const ManageAddresses = () => {
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
 
+  const redirect = searchParams.get('redirect');
   const addressList = useSelector((state) => state.address.list);
 
   useEffect(() => {
@@ -56,9 +58,9 @@ const ManageAddresses = () => {
         <div className="text-gray-600">No addresses found.</div>
       )}
 
-         <Link to="/addressUpdate">
+         <Link to={`/addressUpdate${redirect ? `?redirect=${encodeURIComponent(redirect)}` : ''}`}>
     <div>
-        Add Adresses
+        Add Addresses
         </div></Link>
 
 
