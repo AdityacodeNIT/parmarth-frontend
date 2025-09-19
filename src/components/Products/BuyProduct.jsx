@@ -141,8 +141,8 @@ const BuyProduct = () => {
                 <span>Total</span>
                 <span>
                   ₹
-                  {Math.ceil((product.price * 0.18 + product.price) * quantity) +
-                    serviceabilityResult?.deliveryCharge}
+                  {Math.ceil((product.price * 0.18 + product.price) * quantity +
+                    serviceabilityResult?.deliveryCharge)}
                 </span>
               </div>
             </div>
