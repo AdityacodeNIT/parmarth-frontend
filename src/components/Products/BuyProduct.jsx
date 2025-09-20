@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setAddresses, setSelectedAddressId } from "../../features/address/addressSlice";
-import { setOrderFromBuyNow } from "../../features/product/orderSlice";
+import { setOrderFromBuyNow,setDeliverycharge } from "../../features/product/orderSlice";
 import { Button } from "../components/ui/button";
 
 const BuyProduct = () => {
@@ -70,7 +70,13 @@ const BuyProduct = () => {
           { pincode: selectedAddress.postalCode },
           { withCredentials: true }
         );
-        setServiceabilityResult(res.data?.data || null);
+      const data = res.data?.data || null;
+setServiceabilityResult(data);
+
+if (data?.deliveryCharge !== undefined) {
+  dispatch(setDeliverycharge(Math.ceil(data.deliveryCharge)));
+}
+
       } catch (err) {
         console.error("Serviceability check failed:", err);
         setServiceabilityResult(null);

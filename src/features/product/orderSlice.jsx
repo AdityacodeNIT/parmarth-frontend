@@ -137,7 +137,9 @@ export const {
   updateOrderAddress,
   clearCurrentOrder,
   purgeOrderHistory,
-  setOrderDetails
+  setOrderDetails,
+    setDeliverycharge  
+
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

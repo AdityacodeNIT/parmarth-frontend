@@ -5,7 +5,6 @@ import {
   FiXCircle,
   FiHome,
   FiUser,
-  FiPhone,
   FiCreditCard,
   FiBox,
 } from "react-icons/fi";
@@ -15,9 +14,16 @@ import { useSelector } from "react-redux";
 
 const OrderDetails = () => {
   const { getUserDetail } = useContext(UserContext);
-  const {orderDetails:orderItems}=useSelector((state)=>state.order)
-  console.log
+  const { orderDetails: orderItems } = useSelector((state) => state.order);
   const [cancellationStatus, setCancellationStatus] = useState(null);
+
+  if (!orderItems) {
+    return (
+      <div className="bg-[#0f1117] text-gray-200 min-h-screen flex items-center justify-center">
+        <p>No order details available</p>
+      </div>
+    );
+  }
 
   const handleCancelOrder = async () => {
     try {
@@ -44,7 +50,9 @@ const OrderDetails = () => {
         🧾 Order Summary
       </h1>
 
+      {/* Order Info + Payment + Delivery */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Order Info */}
         <div className="bg-[#1c1f26] p-5 rounded-xl shadow-md border-t-4 border-blue-500">
           <div className="flex items-center gap-2 mb-2">
             <FiInfo className="text-blue-400 text-xl" />
@@ -53,39 +61,48 @@ const OrderDetails = () => {
           <p>Order ID: {orderItems.channel_order_id}</p>
           <p>Status: {orderItems.status || "Processing"}</p>
           <p>Created: {orderItems.created_at}</p>
+          <p>Updated: {orderItems.updated_at}</p>
         </div>
 
-        <div className="bg-[#1c1f26] p-5 rounded-xl shadow-md border-t-4 border-green-500">
-          <div className="flex items-center gap-2 mb-2">
-            <FiTruck className="text-green-400 text-xl" />
-            <h2 className="font-semibold text-lg">Delivery</h2>
-          </div>
-          <p>Status: {orderItems.delivery_status || "Pending"}</p>
-          <p>Courier: {orderItems.last_mile_courier_name || "N/A"}</p>
-          <p>
-            AWB:{" "}
-            <a
-              href={orderItems.last_mile_awb_track_url}
-              target="_blank"
-              rel="noreferrer"
-              className="text-blue-400 underline"
-            >
-              {orderItems.last_mile_awb || "Not Available"}
-            </a>
-          </p>
-        </div>
-
+        {/* Payment */}
         <div className="bg-[#1c1f26] p-5 rounded-xl shadow-md border-t-4 border-yellow-500">
           <div className="flex items-center gap-2 mb-2">
             <FiCreditCard className="text-yellow-400 text-xl" />
             <h2 className="font-semibold text-lg">Payment</h2>
           </div>
-          <p>Method: {orderItems.payment_method}</p>
+          <p>Method: {orderItems.payment_method || "N/A"}</p>
           <p>Status: {orderItems.payment_status || "Pending"}</p>
           <p>Total: ₹{orderItems.total}</p>
         </div>
+
+        {/* Delivery */}
+        <div className="bg-[#1c1f26] p-5 rounded-xl shadow-md border-t-4 border-green-500">
+          <div className="flex items-center gap-2 mb-2">
+            <FiTruck className="text-green-400 text-xl" />
+            <h2 className="font-semibold text-lg">Delivery</h2>
+          </div>
+          <p>Status: {orderItems.delivery_status || "NEW"}</p>
+          <p>Courier: {orderItems.last_mile_courier_name || "N/A"}</p>
+          <p>
+            AWB:{" "}
+            {orderItems.last_mile_awb ? (
+              <a
+                href={orderItems.last_mile_awb_track_url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-400 underline"
+              >
+                {orderItems.last_mile_awb}
+              </a>
+            ) : (
+              "Not Available"
+            )}
+          </p>
+          <p>SLA: {orderItems.sla || "N/A"}</p>
+        </div>
       </div>
 
+      {/* Shipping Address + Customer */}
       <div className="grid md:grid-cols-2 gap-6 mb-8">
         <div className="bg-[#1c1f26] p-6 rounded-xl shadow-md border-l-4 border-purple-500">
           <div className="flex items-center gap-2 mb-3">
@@ -93,8 +110,9 @@ const OrderDetails = () => {
             <h2 className="font-semibold text-lg">Shipping Address</h2>
           </div>
           <p>
-            {orderItems.customer_address}, {orderItems.customer_city}, {orderItems.customer_state} -{" "}
-            {orderItems.customer_pincode}, {orderItems.customer_country}
+            {orderItems.customer_address}, {orderItems.customer_city},{" "}
+            {orderItems.customer_state} - {orderItems.customer_pincode},{" "}
+            {orderItems.customer_country}
           </p>
         </div>
 
@@ -109,6 +127,32 @@ const OrderDetails = () => {
         </div>
       </div>
 
+      {/* Items Ordered */}
+      {orderItems.products && orderItems.products.length > 0 && (
+        <div className="bg-[#1c1f26] p-6 rounded-xl shadow-md border-l-4 border-blue-400 mb-8">
+          <h2 className="font-semibold text-lg mb-3">📦 Items Ordered</h2>
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-gray-600">
+                <th className="py-2">Product</th>
+                <th className="py-2">Quantity</th>
+                <th className="py-2">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orderItems.products.map((item, idx) => (
+                <tr key={idx} className="border-b border-gray-700">
+                  <td className="py-2">{item.name}</td>
+                  <td className="py-2">{item.quantity}</td>
+                  <td className="py-2">₹{item.price}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Returns + Cancel */}
       <div className="grid md:grid-cols-2 gap-6 mb-8">
         <div className="bg-[#1c1f26] p-6 rounded-xl shadow-md border-l-4 border-orange-500">
           <div className="flex items-center gap-2 mb-3">
@@ -131,10 +175,13 @@ const OrderDetails = () => {
           >
             Cancel Order
           </button>
-          {cancellationStatus && <p className="mt-3 text-sm">{cancellationStatus}</p>}
+          {cancellationStatus && (
+            <p className="mt-3 text-sm">{cancellationStatus}</p>
+          )}
         </div>
       </div>
 
+      {/* Actions */}
       <div className="flex justify-center gap-4 mt-10">
         <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
           Print

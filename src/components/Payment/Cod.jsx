@@ -10,7 +10,8 @@ const CashOnDelivery = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const baseAmount = useSelector(selectBaseAmount);
-  const totalAmount = Math.ceil(baseAmount * 1.18);
+  const deliverycharge = useSelector((s) => s.order.deliverycharge);
+  const totalAmount = Math.ceil(baseAmount * 1.18+(deliverycharge || 0));
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
   const { userDetail } = useContext(UserContext);
@@ -52,7 +53,9 @@ const CashOnDelivery = () => {
 
         <div className="mb-4 space-y-1">
           <p className="text-lg font-medium">Base: ₹{baseAmount}</p>
+
           <p className="text-lg font-medium">Tax (18%): ₹{Math.ceil(baseAmount * 0.18)}</p>
+          <p className="text-lg font-medium">Delivery Charge: ₹{deliverycharge || 0}</p>
           <p className="text-lg font-bold">Total: ₹{totalAmount}</p>
         </div>
 

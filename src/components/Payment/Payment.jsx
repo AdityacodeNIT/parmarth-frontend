@@ -25,6 +25,10 @@ const Payment = () => {
 
   /* ------------ Get amounts from Redux ------------ */
   const baseAmount = useSelector(selectBaseAmount);
+const deliverycharge = useSelector((s) => s.order.deliverycharge);
+
+console.log("Delivery Charge in Payment:", deliverycharge);
+
 
   const totalAmount = Math.ceil((baseAmount * 1.18)+deliverycharge);
 
@@ -177,6 +181,8 @@ const Payment = () => {
         <div className="mb-4 space-y-1">
           <p className="text-lg font-medium">Base: ₹{baseAmount}</p>
           <p className="text-lg font-medium">Tax (18%): ₹{Math.ceil(baseAmount * 0.18)}</p>
+            <p className="text-lg font-medium">Delivery Charge: ₹{deliverycharge || 0}</p>
+
           <p className="text-lg font-bold">
             Payable: ₹{totalAmount - discount}{' '}
             {discount > 0 && <span className="text-green-600">(-₹{discount})</span>}
