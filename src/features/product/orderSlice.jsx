@@ -10,6 +10,8 @@ export const placeShiprocketOrder = createAsyncThunk(
   'order/placeShiprocketOrder',
   async (_, { getState, rejectWithValue }) => {
     const { current } = getState().order;
+    console.log("🧾 Order data in Redux before Shiprocket call:", current);
+
 
     if (!current.items.length)
       return rejectWithValue('No items selected for order');
@@ -20,7 +22,7 @@ export const placeShiprocketOrder = createAsyncThunk(
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/shiprocket/order`,
-        { items: current.items },
+        { items: current.items, paymentMethod: current.paymentMethod },
         { withCredentials: true }
       );
       return res.data;          // Shiprocket response
@@ -57,30 +59,37 @@ const orderSlice = createSlice({
 
   reducers: {
     /* build from CART items */
-    setOrderFromCart(state, action) {
-      const { cartItems, addressId } = action.payload; // expects both
-      state.current.source    = 'cart';
-      state.current.items     = cartItems.map(i => ({
-        productId : i._id,
-        quantity  : i.quantity,
-        Address_id: addressId,
-      }));
-      state.current.addressId = addressId;
-    },
+    setOrderFromCart: (state, action) => {
+  const { cartItems, addressId,paymentMethod } = action.payload;
+  console.log("Setting order from cart with items:", cartItems, "and addressId:", addressId);
+  state.current = {
+    items: cartItems.map(item => ({
+      productId: item._id || item.productId,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+    })),
+    addressId,
+   paymentMethod,
+    source: "cart",
+  };
+},
+
+
 
     /* build from single BUY‑NOW item */
     setOrderFromBuyNow(state, action) {
-      const { product, addressId,quantity,paymentMethod } = action.payload;
-        state.current.product   = product; 
-         state.current.quantity  = quantity || 1; // default to 1 if not provided
-      state.current.source    = 'buyNow';
-      state.current.items     = [{
-        productId : product._id,
-        quantity  : quantity || 1, // default to 1 if not provided
+      const { product, addressId, quantity, paymentMethod } = action.payload;
+      state.current.product = product;
+      state.current.quantity = quantity || 1; // default to 1 if not provided
+      state.current.source = 'buyNow';
+      state.current.items = [{
+        productId: product._id,
+        quantity: quantity || 1, // default to 1 if not provided
         Address_id: addressId,
-        paymentMethod:paymentMethod
       }];
       state.current.addressId = addressId;
+      state.current.paymentMethod = paymentMethod; // Store paymentMethod at the top level
     },
 
     /* change address after the fact */

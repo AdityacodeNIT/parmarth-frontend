@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setAddresses, setSelectedAddressId } from "../../features/address/addressSlice";
-import { setOrderFromBuyNow,setDeliverycharge } from "../../features/product/orderSlice";
+import { setOrderFromBuyNow,setDeliverycharge, setOrderFromCart } from "../../features/product/orderSlice";
 import { Button } from "../components/ui/button";
 
 const BuyProduct = () => {
@@ -11,7 +11,20 @@ const BuyProduct = () => {
   const navigate = useNavigate();
 
   const { list: addressList, selectedId: addressId } = useSelector((state) => state.address);
-  const { product, quantity } = useSelector((state) => state.order.current);
+const orderState = useSelector((state) => state.order);
+const { current, deliverycharge } = orderState;
+
+// For Buy Now
+const product = current?.product;
+console.log(product)
+const quantity = current?.quantity || 1;
+
+// For Cart Checkout
+const items = current?.items || [];
+console.log(items)
+const isCartCheckout = current?.source === "cart";
+
+
 
   const [loading, setLoading] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -20,10 +33,23 @@ const BuyProduct = () => {
   const [checkingDelivery, setCheckingDelivery] = useState(false);
 
   // Wait for persisted product before redirecting
-  useEffect(() => {
-    if (product === undefined) return; // Redux Persist not rehydrated yet
-    if (!product || !product.name) navigate("/shop");
-  }, [product, navigate]);
+// New, corrected code in BuyProduct.jsx
+
+
+useEffect(() => {
+  if (product === undefined && items.length === 0) return; // Wait for rehydration
+
+  // Only redirect if it's NOT a cart checkout AND there is no product
+  if (!isCartCheckout && (!product || !product.name)) {
+    navigate("/shop");
+  }
+
+  // Also, handle the case where someone lands here from the cart, but the cart is empty
+  if (isCartCheckout && items.length === 0) {
+    navigate("/cart");
+  }
+
+}, [product, items, isCartCheckout, navigate]);
 
   // Fetch addresses
   useEffect(() => {
@@ -34,12 +60,12 @@ const BuyProduct = () => {
           { withCredentials: true }
         );
 
-        if (response.data?.data) {
+         if (response.data?.data) {
           const payload = Array.isArray(response.data.data)
             ? response.data.data
             : [response.data.data];
           dispatch(setAddresses(payload));
-        } else {
+        }  else {
           dispatch(setAddresses([]));
         }
       } catch (err) {
@@ -92,25 +118,43 @@ if (data?.deliveryCharge !== undefined) {
     dispatch(setSelectedAddressId(selectedId));
   };
 
-  const handleCheckout = () => {
-    if (!addressId || !serviceabilityResult?.available || !paymentMethod) {
-      alert("Please select a serviceable address and payment method.");
-      return;
-    }
+const handleCheckout = () => {
+  if (!addressId || !serviceabilityResult?.available || !paymentMethod) {
+    alert("Please select a serviceable address and payment method.");
+    return;
+  }
 
-    dispatch(setOrderFromBuyNow({ product, addressId, paymentMethod }));
+  if (isCartCheckout) {
+ dispatch(setOrderFromCart({ cartItems: items, addressId, paymentMethod }));
+  } else {
+    // For buy now, set the single product order
+    dispatch(setOrderFromBuyNow({ product, addressId, quantity, paymentMethod }));
+  }
 
-    if (paymentMethod === "Prepaid") navigate("/payments");
-    else if (paymentMethod === "cod") navigate("/cod");
-  };
+ 
+setTimeout(() => {
+  if (paymentMethod === "Prepaid") navigate("/payments");
+  else if (paymentMethod === "cod") navigate("/cod");
+}, 100);
+};
+
 
   const handleManageAddresses = () => {
     navigate("/allAddresses?redirect=/BuyProduct");
   };
 
-  if (loading || product === undefined) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-  if (!product || !product.name) return <div>Redirecting...</div>;
+// AFTER THE FIX (The correct code)
+
+if (loading) return <div>Loading...</div>;
+if (error) return <div>{error}</div>;
+
+// This combined check now correctly handles both cart and "buy now" flows
+// It only checks for a product if it's NOT a cart checkout.
+if (!isCartCheckout && (!product || !product.name)) {
+  return <div>Redirecting...</div>;
+}
+
+
 
   return (
     <div className="space-y-4">
@@ -122,36 +166,72 @@ if (data?.deliveryCharge !== undefined) {
         {/* Bill Section */}
         <div className="w-full lg:w-1/2 p-4">
           <div className="border border-gray-300 rounded-2xl shadow-xl bg-white p-6 space-y-6">
-            <div className="text-2xl font-bold text-center text-white bg-yellow-500 p-3 rounded-xl shadow-sm">
-              🧾 Total Bill Summary
-            </div>
+       <div className="text-2xl font-bold text-center text-white bg-yellow-500 p-3 rounded-xl shadow-sm">
+  🧾 Total Bill Summary
+</div>
 
-            <div className="text-lg font-medium text-gray-700">
-              {product.name} <span className="text-gray-500">(x{quantity})</span>
-            </div>
+{isCartCheckout ? (
+  // 🛒 Cart Checkout Summary
+  <div className="space-y-3 text-base text-gray-800">
+    {items.map((item) => (
+      <div key={item.productId} className="flex justify-between p-3 bg-gray-50 rounded-lg border">
+        <span>{item.name} (x{item.quantity})</span>
+        <span>₹{item.price * item.quantity}</span>
+      </div>
+    ))}
+    <div className="flex justify-between p-3 bg-gray-50 rounded-lg border">
+      <span>Tax (18%)</span>
+      <span>₹{Math.ceil(items.reduce((acc, i) => acc + i.price * i.quantity * 0.18, 0))}</span>
+    </div>
+    <div className="flex justify-between p-3 bg-gray-50 rounded-lg border">
+      <span>Delivery Charge</span>
+      <span>₹{Math.ceil(serviceabilityResult?.deliveryCharge)}</span>
+    </div>
+    <div className="flex justify-between font-semibold text-xl p-4 bg-green-50 border border-green-600 rounded-lg">
+      <span>Total</span>
+      <span>
+        ₹
+        {Math.ceil(
+          items.reduce((acc, i) => acc + i.price * i.quantity * 1.18, 0) +
+            (serviceabilityResult?.deliveryCharge || 0)
+        )}
+      </span>
+    </div>
+  </div>
+) : (
+  // ⚡ Buy Now Summary
+  <>
+  
+    <div className="text-lg font-medium text-gray-700">
+      {product.name} <span className="text-gray-500">(x{quantity})</span>
+    </div>
+    <div className="space-y-3 text-base text-gray-800">
+      <div className="flex justify-between p-3 bg-gray-50 rounded-lg border">
+        <span>Subtotal</span>
+        <span>₹{product.price * quantity}</span>
+      </div>
+      <div className="flex justify-between p-3 bg-gray-50 rounded-lg border">
+        <span>Applied Tax (18%)</span>
+        <span>₹{Math.ceil(product.price * 0.18 * quantity)}</span>
+      </div>
+      <div className="flex justify-between p-3 bg-gray-50 rounded-lg border">
+        <span>Delivery Charge</span>
+        <span>₹{Math.ceil(serviceabilityResult?.deliveryCharge)}</span>
+      </div>
+      <div className="flex justify-between font-semibold text-xl p-4 bg-green-50 border border-green-600 rounded-lg">
+        <span>Total</span>
+        <span>
+          ₹
+          {Math.ceil(
+            (product.price * 1.18) * quantity +
+              (serviceabilityResult?.deliveryCharge || 0)
+          )}
+        </span>
+      </div>
+    </div>
+  </>
+)}
 
-            <div className="space-y-3 text-base text-gray-800">
-              <div className="flex justify-between p-3 bg-gray-50 rounded-lg border">
-                <span>Subtotal</span>
-                <span>₹{product.price * quantity}</span>
-              </div>
-              <div className="flex justify-between p-3 bg-gray-50 rounded-lg border">
-                <span>Applied Tax (18%)</span>
-                <span>₹{Math.ceil(product.price * 0.18 * quantity)}</span>
-              </div>
-              <div className="flex justify-between p-3 bg-gray-50 rounded-lg border">
-                <span>Delivery Charge</span>
-                <span>₹{Math.ceil(serviceabilityResult?.deliveryCharge)}</span>
-              </div>
-              <div className="flex justify-between font-semibold text-xl p-4 bg-green-50 border border-green-600 rounded-lg">
-                <span>Total</span>
-                <span>
-                  ₹
-                  {Math.ceil((product.price * 0.18 + product.price) * quantity +
-                    serviceabilityResult?.deliveryCharge)}
-                </span>
-              </div>
-            </div>
 
             {serviceabilityResult?.available && (
               <div className="space-y-3">

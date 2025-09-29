@@ -1,7 +1,7 @@
 // src/pages/Cart.jsx
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import {
@@ -13,7 +13,7 @@ import {
 
 import {
   setOrderFromCart,
-  placeShiprocketOrder,       // optional direct order
+// optional direct order
 } from '../../features/product/orderSlice';
 
 import { setAddresses} from '../../features/address/addressSlice';
@@ -21,6 +21,8 @@ import { setAddresses} from '../../features/address/addressSlice';
 const Cart = () => {
   const dispatch  = useDispatch();
   const navigate  = useNavigate();
+
+  const [addressError, setAddressError] = useState(null);
 
   /* ---------- Cart State ---------- */
   const { cartItems, totalPrice } = useSelector((s) => s.cart);
@@ -48,8 +50,10 @@ const Cart = () => {
       return;
     }
     dispatch(setOrderFromCart({ cartItems, addressId }));
-    navigate('/payments');
+
+        navigate("/BuyProduct");
   };
+
 
 
    useEffect(() => {
@@ -67,39 +71,25 @@ const Cart = () => {
     ? [response.data.data]
     : [];
          
+
            dispatch(setAddresses(payload));
            console.log(payload);
          
           } else {
-           dispatch(setAddresses(null));
+           dispatch(setAddresses([])); // Set to empty array if no data
           }
    
-        } catch (err) {
-         
-     
+        } 
+        
+        catch (err) {
+          console.error("Failed to fetch addresses:", err);
+          setAddressError("Failed to load shipping addresses. Please try again.");
         }
       };
        
 
     fetchAddressDetails();
   }, [dispatch]);
-
-
-
-
-  const handleQuickOrder = async () => {
-    if (!addressId) {
-      alert('Select an address first!');
-      return;
-    }
-    dispatch(setOrderFromCart({ cartItems, addressId }));
-    const res = await dispatch(placeShiprocketOrder()).unwrap();
-    if (res) {
-      alert('Order placed successfully!');
-      dispatch(clearCart());
-      navigate('/orders');
-    }
-  };
 
   /* =================================================== */
 
@@ -236,16 +226,6 @@ const Cart = () => {
           >
             Go to Checkout
           </button>
-
-          {/* Quick‑order demo (optional) */}
-          {/* 
-          <button
-            onClick={handleQuickOrder}
-            className="mt-3 w-full py-3 bg-indigo-500 hover:bg-indigo-600 rounded-xl text-lg font-semibold"
-          >
-            Place Order Now
-          </button>
-          */}
         </div>
       </div>
     </div>
