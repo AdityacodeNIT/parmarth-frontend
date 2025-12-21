@@ -1,14 +1,38 @@
-// features/address/addressSlice.js
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-const addressSlice = createSlice({
-  name: "address",
-  initialState: {
+export const fetchAddress=createAsyncThunk(
+  'address/fetchAddress',
+  async (_, {rejectWithValue})=>{
+    try{
+      const res=await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/address/getAllAddresses`,{
+        withCredentials:true,
+      });
+      ;
+      return res.data.data;
+    }
+    catch(err){
+
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
+
+
+
+const initialState= {
+  
     list: [],
-    selectedId: null, // This is the selected address ID
+    selectedId: null,
     loading: false,
     error: null,
-  },
+  }
+const addressSlice = createSlice({
+  name: "address",
+  initialState,
+
+  // we define reducers here
   reducers: {
     setAddresses: (state, action) => {
       state.list = action.payload;
@@ -25,6 +49,22 @@ const addressSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchAddress.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      }
+      )
+      .addCase(fetchAddress.fulfilled, (state, action) => {
+        state.loading = false;
+        state.list = action.payload;
+      })
+      .addCase(fetchAddress.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

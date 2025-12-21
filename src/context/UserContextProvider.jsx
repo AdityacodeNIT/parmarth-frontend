@@ -7,13 +7,6 @@ const UserContextProvider = ({ children }) => {
   const [data, setData] = useState(
     JSON.parse(localStorage.getItem("product")) || null
   );
-
-  // // State to manage detailed information of a product.
-  // const [productDetails, setProductDetails] = useState();
-  // const getProductDetail = (detail) => {
-  //   setProductDetails(detail);
-  // };
-
   const recordActivity = async (action, productId) => {
     try {
      
@@ -33,24 +26,21 @@ const UserContextProvider = ({ children }) => {
       console.error("Error recording user activity:", error);
     }
   };
-  
   // Product Management: Handling selected product information with localStorage persistence.
   const childToParent = (product) => {
     setData(product);
     recordActivity("show",product._id);
   };
   
-
   // Save selected product to localStorage whenever there's a change in data state.
   useEffect(() => {
-    localStorage.setItem("product", JSON.stringify(data));
-  }, [data]);
-
+    localStorage.setItem("product", JSON.stringify(data)); }, [data]);
 
   // State to manage user details.
   const [userDetail, setUserDetail] = useState(
     JSON.parse(localStorage.getItem("details")) || null
   );
+
   const getUserDetail = async (details) => {
     if (details) {
       setUserDetail(details);
@@ -68,6 +58,7 @@ const UserContextProvider = ({ children }) => {
  const [sellerDetail, setSellerDetail] = useState(
   JSON.parse(localStorage.getItem("sellerdetails")) || null
 );
+
 const getSellerDetail = async (selldetails) => {
   if (selldetails) {
     setSellerDetail(selldetails);
@@ -148,86 +139,18 @@ useEffect(() => {
   };
 
   
-  useEffect(() => {
-    if (userDetail?.data?.user?._id) {
-      fetchFavourites();
-    }
-  }, [wishlist,removeFromWishlist]);
+useEffect(() => {
+  if (!userDetail?.data?.user?._id) return;
 
-
-
+  fetchFavourites();
+}, [userDetail?.data?.user?._id]);
 
 
   // State to manage product reviews.
-  const [review, setReview] = useState({ rating: 0, description: "" });
-  const [productReview, setProductReview] = useState({});
   const [productId, setProductId] = useState(data?._id);
-  const [totalRatings, setTotalRatings] = useState([]);
-  const [averageRatings, setAverageRatings] = useState([]);
-
-  // Handle form click for submitting a review.
-  const handleFormClick = (e) => {
-    setProductReview({ ...review, productId });
-    setReview({ rating: 0, message: "" });
-  };
-
-  // Submit product review whenever productReview changes.
-  useEffect(() => {
-    if (productReview.rating && productReview.message) {
-      axios
-        .post(
-          `${import.meta.env.VITE_API_URL}/api/v2/feedback/addReview`,
-          productReview,
-          {withCredentials: true}
-        )
-        .catch((error) => {
-          console.error("There was an error posting the review!", error);
-        });
-    }
-  }, [productReview]);
-
-
-  
-
-  // Fetch average ratings and total ratings for a product.
-  useEffect(() => {
-    setAverageRatings(0);
-    setTotalRatings(0);
-    if (productId) {
-      axios
-        .post(`${import.meta.env.VITE_API_URL}/api/v2/feedback/average`, {
-          productId,
-        })
-        .then((response) => {
-          setAverageRatings(response.data.averageRating);
-          setTotalRatings(response.data.count);
-        })
-        .catch((error) => {
-          console.error(
-            "There was an error fetching the average ratings!",
-            error
-          );
-        });
-    }
-  }, [productId, productReview]);
-
-
-  const[gotReview,setGotReview]=useState([]);
-
-
-  const getReview=async(product_id)=>{
-
-    if (!product_id) return;
-    const response =  await axios.get(`${import.meta.env.VITE_API_URL}/api/v2/feedback/getReview/${product_id}`,
-    )
-    setGotReview(response.data);
-  
-  }
-
 
   // State to manage search results.
   const [searchResult, setSearchResult] = useState([]);
-
   // Handle search query.
   const handleSearch = (query) => {
     setSearchResult(query.result);
@@ -267,21 +190,11 @@ useEffect(() => {
         myWishlist,
         handleSearch,
         searchResult,
-        review,
-        setReview,
-        productReview,
-        setProductReview,
-        productId,
         setProductId,
-        handleFormClick,
-        totalRatings,
-        averageRatings,
         removeFromWishlist,
         sellerDetail,
         getSellerDetail,
-        gotReview,
-        getReview,
-      
+
       }}
     >
       {children}

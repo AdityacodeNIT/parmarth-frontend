@@ -1,36 +1,47 @@
 // features/product/productSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+
 export const fetchProducts = createAsyncThunk(
-  'product/fetchProducts',
-  async () => {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/v1/product/getProduct`
-    );
-    return res.data;   
-// becomes action.payload in 'fulfilled'
+  "product/fetchProducts",
+  async ({ category } = {}, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/v1/product`,
+        {
+          params: category ? { category } : {},
+        }
+      );
+
+      return res.data; // -> action.payload
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to fetch products");
+    }
   }
 );
 
-
-export const fetchProductsByCategory = createAsyncThunk(
-  'product/fetchProductsByCategory',
-  async (category) => {
-    const res = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/v1/product/${category}`
-    );
-        console.log(res.data)    
-    return res.data;   
-// becomes action.payload in 'fulfilled'
+export const fetchProductById = createAsyncThunk(
+  "product/fetchProductById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/v1/product/${id}`
+      );
+      return res.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data || "Failed to fetch product");
+    }
   }
 );
+
 
 
 const productSlice = createSlice({
   name: 'product',
   initialState: {
     products: [],
+    currentProduct: null,
     loading: false,
     error: null,
   },
@@ -62,20 +73,19 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.error.message;
     })
-
-    // ✅ Handle fetchProductsByCategory as well
-    .addCase(fetchProductsByCategory.pending, (state) => {
+    .addCase(fetchProductById.pending,(state)=>{
       state.loading = true;
       state.error = null;
     })
-    .addCase(fetchProductsByCategory.fulfilled, (state, action) => {
+    .addCase(fetchProductById.fulfilled,(state,action)=>{
       state.loading = false;
-      state.products = action.payload;
+      state.currentProduct = action.payload;
     })
-    .addCase(fetchProductsByCategory.rejected, (state, action) => {
+     .addCase(fetchProductById.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
-    });
+    })
+
 },
 
 });
