@@ -27,7 +27,7 @@ const KeepAlive = () => {
     return () => clearInterval(timerId);
   }, []);
 
-  return null; // This component doesn't render anything
+  return null;
 };
 
 export default KeepAlive;
