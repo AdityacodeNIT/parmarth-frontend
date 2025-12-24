@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
+import { loadWishlist } from "@/features/wishlist/wishlistslice";
 
 const Userlogin = () => {
   const dispatch = useDispatch();
