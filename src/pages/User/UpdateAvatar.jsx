@@ -1,24 +1,26 @@
-import React, { useState, useContext } from "react";
+import React, { useState} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ImagePlus, Loader2, User } from "lucide-react";
+import { setUser } from "@/features/Auth/authSlice";
 
-import UserContext from "../../context/UserContext";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import { Button } from "@/components/ui/button";
+import { useSelector,useDispatch } from "react-redux";
 
 const UpdateAvatar = () => {
   const [avatar, setAvatar] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const dispatch=useDispatch()
   const navigate = useNavigate();
-  const { getUserDetail, userDetail } = useContext(UserContext);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -45,10 +47,12 @@ const UpdateAvatar = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-        getUserDetail(response.data);
+        dispatch(setUser(response.data));
         navigate("/user");
       }
-    } catch (error) {
+
+    } 
+    catch (error) {
       console.error(
         "Avatar update failed:",
         error.response?.data || error.message
@@ -58,10 +62,12 @@ const UpdateAvatar = () => {
     }
   };
 
+  const user=useSelector((state)=>state.auth.user)
+
   const currentAvatar =
     preview ||
-    userDetail?.data?.avatar ||
-    userDetail?.data?.user?.avatar;
+   user?.data?.avatar ||
+    user?.data?.avatar;
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">

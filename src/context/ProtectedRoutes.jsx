@@ -1,18 +1,12 @@
-import { useContext, useEffect } from "react";
-import { Navigate } from "react-router-dom";
-import UserContext from "./UserContext";
+import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
-
-  const { userDetail } = useContext(UserContext);
-
-  const user = userDetail?.data?.user;
-
-
+  const user = useSelector(state => state.auth.user);
 
   // Check if user exists and has the required role
   if (!user || (allowedRoles && !allowedRoles.includes(user.role))) {
-    return <Navigate to="/" replace />; // Redirect unauthorized users to home
+    return <Navigate to='/' replace />; // Redirect unauthorized users to home
   }
 
   return children;

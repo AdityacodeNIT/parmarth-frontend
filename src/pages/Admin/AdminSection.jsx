@@ -1,15 +1,16 @@
-import React, { useState, useContext } from "react";
-import UserContext from "../../context/UserContext";
+import React, { useState } from "react";
 import Orderlist from "./Orderlist";
 import Userlist from "./Userlist";
 import Productlist from "./Productlist";
 import SellerApprovalPanel from "./SellerApprovalPanel"; // ✅ new component
 import { MdAdminPanelSettings } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const AdminSection = () => {
   const [activeSection, setActiveSection] = useState(null);
-  const { userDetail } = useContext(UserContext);
+
+  const user=useSelector((state)=>state.auth.user)
 
   // 🔹 Function to toggle each accordion section
   const toggleSection = (section) => {
@@ -20,14 +21,14 @@ const AdminSection = () => {
     <div>
       {/* ─────────────────────────────── Admin Header ─────────────────────────────── */}
       <div className="flex justify-center items-center text-2xl m-2 p-2 font-semibold text-gray-700">
-        {userDetail.data.user.role} <MdAdminPanelSettings className="ml-2" />
+        {user.data.user.role} <MdAdminPanelSettings className="ml-2" />
       </div>
 
       {/* ─────────────────────────────── Admin Panel Body ─────────────────────────────── */}
       <div className="p-6 bg-gray-100 min-h-screen space-y-4">
 
         {/* USER LIST SECTION (Visible to Admin/Superadmin only) */}
-        {userDetail.data.user.role !== "seller" && (
+        {user.data.user.role !== "seller" && (
           <div className="bg-white shadow-lg rounded-lg overflow-hidden">
             <button
               onClick={() => toggleSection("userlist")}
@@ -74,7 +75,7 @@ const AdminSection = () => {
         </div>
 
         {/* ──────────────── NEW: SELLER MANAGEMENT SECTION ──────────────── */}
-        {userDetail.data.user.role === "superadmin" && (
+        {user.data.user.role === "superadmin" && (
           <div className="bg-white shadow-lg rounded-lg overflow-hidden">
             <button
               onClick={() => toggleSection("sellerlist")}

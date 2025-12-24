@@ -14,7 +14,6 @@ const CashOnDelivery = () => {
   const totalAmount = Math.ceil(baseAmount * 1.18+(deliverycharge || 0));
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
-  const { userDetail } = useContext(UserContext);
 
   const handleCodConfirm = async () => {
     setLoading(true);

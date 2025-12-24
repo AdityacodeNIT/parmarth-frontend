@@ -66,7 +66,7 @@ const Cart = () => {
               : [];
 
           dispatch(setAddresses(payload));
-          console.log(payload);
+      
         } else {
           dispatch(setAddresses([])); // Set to empty array if no data
         }

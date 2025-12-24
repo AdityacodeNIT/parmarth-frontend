@@ -12,15 +12,12 @@ import { useSearchParams } from "react-router-dom";
 const ProductList = () => {
   const dispatch = useDispatch();
   const { products: productsData, loading, error } = useSelector((state) => state.product);
-  console.log(productsData)
   const [searchParams] = useSearchParams();
 const category = searchParams.get("category");
 
   useEffect(() => {
     dispatch(fetchProducts({category}));
   }, [dispatch]);
-
-  console.log("Products Data:", productsData);
 
   return (
     <div className="min-h-screen bg-background text-foreground">

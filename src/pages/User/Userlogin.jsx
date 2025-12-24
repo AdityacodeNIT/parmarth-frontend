@@ -1,9 +1,9 @@
-import React, { useContext, useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Loader2, LogIn } from "lucide-react";
 
-import UserContext from "../../context/UserContext";
+import { loginUser, verifyAuth } from "@/features/Auth/authSlice";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,49 +11,41 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 
 const Userlogin = () => {
-  const { getUserDetail } = useContext(UserContext);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { status, error,user } = useSelector((state) => state.auth);
 
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
   });
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setLoginData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
-    setErrorMessage("");
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/login`,
-        loginData,
-        { withCredentials: true }
-      );
-
-      if (response.status >= 200 && response.status < 300) {
-        getUserDetail(response.data);
-        navigate("/user");
-      }
-    } catch (error) {
-      setErrorMessage(
-        error.response?.data?.message ||
-          "Invalid username or password. Please try again."
-      );
-    } finally {
-      setIsLoading(false);
-    }
+    dispatch(loginUser(loginData));
   };
+
+  // Navigate after successful login
+useEffect(() => {
+  if (status === "authenticated") {
+    dispatch(verifyAuth());
+       dispatch(loadWishlist());
+  }
+}, [status, dispatch]);
+
+useEffect(() => {
+  if (user) {
+    navigate("/user");
+  }
+}, [user, navigate]);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">
@@ -69,39 +61,36 @@ const Userlogin = () => {
         </CardHeader>
 
         <CardContent className="space-y-6">
-          {errorMessage && (
+          {error && (
             <Alert variant="destructive">
-              <AlertDescription>{errorMessage}</AlertDescription>
+              <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
           <form onSubmit={handleFormSubmit} className="space-y-4">
-              <div className="space-y-1">
-                 <Label htmlFor="username">Username</Label>
-            <Input
-              type="text"
-              name="username"
-              placeholder="Username"
-              value={loginData.username}
-              onChange={handleInputChange}
-              required
-            />
-              </div>
-
-     <div className="space-y-1">
-              <Label htmlFor="password">Password</Label>
-            <Input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={loginData.password}
-              onChange={handleInputChange}
-              required
-            />
+            <div className="space-y-1">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                name="username"
+                value={loginData.username}
+                onChange={handleInputChange}
+                required
+              />
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
+            <div className="space-y-1">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                type="password"
+                name="password"
+                value={loginData.password}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
+            <Button type="submit" className="w-full" disabled={status === "loading"}>
+              {status === "loading" ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Logging in…

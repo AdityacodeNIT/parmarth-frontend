@@ -19,7 +19,6 @@ const SellerApprovalPanel = () => {
           `${import.meta.env.VITE_API_URL}/api/v1/users/sellers`,
           { withCredentials: true }
         );
-        console.log("Sellers Data:", response.data.data.user._id);
         setSellers(response.data.data || []);
       } catch (err) {
         setError(err.response?.data?.message || "Failed to fetch sellers");
@@ -65,7 +64,6 @@ const SellerApprovalPanel = () => {
         `${import.meta.env.VITE_API_URL}/api/v1/users/sellers/${id}`,
         { withCredentials: true }
       );
-      console.log("Selected Seller Details:", res.data);
       setSelectedSeller(res.data.data);
     } catch (err) {
       alert(err.response?.data?.message || "Failed to fetch seller details");

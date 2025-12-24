@@ -23,8 +23,6 @@ const useAddresses = () => {
           { withCredentials: true }
         );
 
-        console.log(response);
-
         if (response.data?.data) {
           const payload = Array.isArray(response.data.data)
             ? response.data.data

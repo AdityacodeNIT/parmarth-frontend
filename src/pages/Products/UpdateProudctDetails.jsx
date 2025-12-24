@@ -40,7 +40,6 @@ const UpdateProduct = () => {
         
 
         try {
-            console.log("value",formData);
             const response = await axios.post(
                 `http://localhost:8000/api/v1/product/updateProduct/${id}`,
                 data,

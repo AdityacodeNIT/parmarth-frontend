@@ -1,6 +1,5 @@
 export const selectBaseAmount = (state) => {
   const cur = state.order.current;
-  console.log("Selector - cur.product:", cur?.product);
 
   if (cur?.source === 'buyNow' && cur.product) {
     const quantity = Number(cur.quantity) || 1;

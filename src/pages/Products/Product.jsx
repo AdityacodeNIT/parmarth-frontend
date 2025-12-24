@@ -1,282 +1,254 @@
-import { useNavigate, useParams } from 'react-router-dom';
-import { useContext, useEffect, useState } from 'react';
-import { FaStar, FaHeart, FaShoppingCart } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { FaStar, FaHeart, FaShoppingCart } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 
-import UserContext from '../../context/UserContext';
-import { addToCart } from '../../features/cart/cartSlice';
-import { setOrderFromBuyNow } from '../../features/product/orderSlice';
-import { Button } from '@/components/ui/button';
+import { addToCart } from "../../features/cart/cartSlice";
+import { setOrderFromBuyNow } from "../../features/product/orderSlice";
+
 import {
   fetchAverageForProduct,
   fetchReviewsByProduct,
   selectAverageForProduct,
   selectReviewsByProduct,
   submitReview
-} from '../../features/review/reviewSlice';
-import { fetchProductById, fetchProducts } from '../../features/product/productSlice';
-import ProductReviews from './ProductReviews.jsx';
-import ProductGallery from './ProductGallery';
+} from "../../features/review/reviewSlice";
 
+import {
+  fetchProductById,
+  fetchProducts
+} from "../../features/product/productSlice";
+
+import {
+  addWishlistItem
+} from "@/features/wishlist/wishlistSlice";
+
+import { Button } from "@/components/ui/button";
+import ProductReviews from "./ProductReviews.jsx";
+import ProductGallery from "./ProductGallery";
 
 const Product = () => {
-  /* ──────────────────────────── global redux ──────────────────────────── */
-  const { addToFavourite } = useContext(UserContext);
-
+  /* ───────── Redux / Router ───────── */
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [reviewDraft, setReviewDraft] = useState({
-    rating: 0,
-    message: ''
-  });
-
-  const user = useContext(UserContext)?.userDetail?.data?.user;
-
-  const loading = useSelector(state => state.review.loading);
-
-  const { list: addressList, selectedId: addressId } = useSelector(s => s.address);
-
-  // fetching reviews
-
   const { id: productId } = useParams();
 
-  console.log(productId);
+  /* ───────── Auth ───────── */
+  const user = useSelector((state) => state.auth.user);
+  const userId = user?.data?._id;
 
-  const product = useSelector(state => state.product.currentProduct);
-  console.log(product);
+  /* ───────── Product & Wishlist ───────── */
+  const product = useSelector((state) => state.product.currentProduct);
+  const wishlist = useSelector((state) => state.wishlist.items);
 
-  useEffect(() => {
-    if (!productId) return;
+  const isWishlisted = wishlist.some(
+    (item) => item.productId?._id === productId
+  );
 
-    dispatch(fetchProductById(productId));
-  }, [productId, dispatch]);
+  /* ───────── Reviews ───────── */
+  const reviews = useSelector((state) =>
+    selectReviewsByProduct(state, productId)
+  );
 
-  const reviews = useSelector(state => selectReviewsByProduct(state, productId));
-  console.log(reviews);
+  const { avg, count } = useSelector((state) =>
+    selectAverageForProduct(state, productId)
+  );
+
   const hasReviewed = reviews.some(
-  r => r.userId?._id === user?._id
-);
-console.log(hasReviewed);
-selectAverageForProduct
-const { avg, count } = useSelector(state =>
-  selectAverageForProduct(state, productId)
-);
+    (r) => r.userId?._id === userId
+  );
 
+  /* ───────── Local State ───────── */
+  const [reviewDraft, setReviewDraft] = useState({
+    rating: 0,
+    message: ""
+  });
+  const [quantity, setQuantity] = useState(1);
+  const [showMore, setShowMore] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const reviewsPerPage = 5;
+
+  /* ───────── Fetch Product ───────── */
   useEffect(() => {
     if (productId) {
+      dispatch(fetchProductById(productId));
       dispatch(fetchReviewsByProduct(productId));
       dispatch(fetchAverageForProduct(productId));
     }
   }, [productId, dispatch]);
 
-  /* ───────────────────────────── component state ──────────────────────────── */
-  const [showMore, setShowMore] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [quantity, setQuantity] = useState(1); // NEW
+  /* ───────── Handlers ───────── */
 
-  const reviewsPerPage = 5;
-
-  /* ────────────────────────────── handlers ────────────────────────────────── */
-  const handleCheckout = () => {
-    // guard: need an address first
-    const finalAddressId = addressId || addressList[0]?._id;
-    if (!finalAddressId) {
-      alert('Please add/select an address before checkout.');
-      navigate('/addressUpdate');
+  const handleAddToWishlist = () => {
+    if (!userId) {
+      alert("Please login to add items to wishlist");
       return;
     }
 
-    //  store order in Redux
-    dispatch(setOrderFromBuyNow({ product, addressId: finalAddressId, quantity }));
-
-    // navigate
-    navigate('/BuyProduct');
+    if (!isWishlisted) {
+      dispatch(addWishlistItem(product._id));
+    }
   };
 
-const handleSubmit = async () => {
-  if (!reviewDraft.rating || !reviewDraft.message) {
-    alert('Please add rating and review message');
-    return;
-  }
+  const handleCheckout = () => {
+    dispatch(setOrderFromBuyNow({ product, quantity }));
+    navigate("/BuyProduct");
+  };
 
-  try {
-    await dispatch(
-      submitReview({
-        productId,
-        rating: reviewDraft.rating,
-        message: reviewDraft.message
-      })
-    ).unwrap(); // ⭐ CRITICAL
+  const handleSubmitReview = async () => {
+    if (!reviewDraft.rating || !reviewDraft.message) {
+      alert("Please add rating and review message");
+      return;
+    }
 
-    dispatch(fetchReviewsByProduct(productId));
-    dispatch(fetchAverageForProduct(productId));
-    dispatch(fetchProducts())
+    try {
+      await dispatch(
+        submitReview({
+          productId,
+          rating: reviewDraft.rating,
+          message: reviewDraft.message
+        })
+      ).unwrap();
 
-    setReviewDraft({ rating: 0, message: '' });
-  } catch (err) {
-    alert(err); // shows "You have already reviewed this product"
-  }
-};
+      dispatch(fetchReviewsByProduct(productId));
+      dispatch(fetchAverageForProduct(productId));
+      dispatch(fetchProducts());
 
+      setReviewDraft({ rating: 0, message: "" });
+    } catch (err) {
+      alert(err);
+    }
+  };
 
-  /* ──────────────────────────── pagination math ───────────────────────────── */
+  /* ───────── Pagination ───────── */
   const indexOfLast = currentPage * reviewsPerPage;
   const indexOfFirst = indexOfLast - reviewsPerPage;
   const currentReviews = reviews.slice(indexOfFirst, indexOfLast);
-
   const totalPages = Math.ceil(reviews.length / reviewsPerPage);
 
-  /* ──────────────────────────── render ────────────────────────────────────── */
-
+  /* ───────── Loading Guard ───────── */
   if (!product) {
     return (
-      <div className='min-h-screen flex items-center justify-center text-white'>
+      <div className="min-h-screen flex items-center justify-center">
         Loading product...
       </div>
     );
   }
 
+  /* ───────── Render ───────── */
   return (
-    <div className="min-h-screen bg-background text-foreground md:p-8 p-3">
+    <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
 
+      {/* Product Section */}
+      <div className="flex flex-col lg:flex-row gap-10">
 
-      {/* PRODUCT DISPLAY */}
-      <div className='lg:p-6 lg:mt-6 mt-2 py-6 flex flex-row items-center justify-between md:gap-10 gap-4'>
-        {/* IMAGE */}
-        <ProductGallery image={product.ProductImage || product.imgLink} name={product.name} />
+        <ProductGallery
+          image={product.ProductImage || product.imgLink}
+          name={product.name}
+        />
 
-        {/* DETAILS */}
-        <div className='w-full md:w-1/2 md:space-y-6 space-y-3 text-center lg:text-left'>
-          <div className='text-xl lg:text-3xl font-extrabold'>{product.name}</div>
+        <div className="flex-1 space-y-4">
 
-          {/* WISHLIST */}
+          <h1 className="text-3xl font-bold">{product.name}</h1>
+
+          {/* Wishlist Button */}
           <button
-            className='lg:text-lg text-md flex items-center justify-center lg:justify-start gap-2 text-red-500 font-semibold hover:text-red-600 transition'
-            onClick={() => addToFavourite(product._id)}
+            onClick={handleAddToWishlist}
+            disabled={isWishlisted}
+            className={`flex items-center gap-2 font-semibold transition
+              ${
+                isWishlisted
+                  ? "text-gray-400 cursor-not-allowed"
+                  : "text-red-500 hover:text-red-600"
+              }`}
           >
-            <FaHeart className='md:text-2xl text-xl text-[#EF4444]' />
-            <span>Add to Wishlist</span>
+            <FaHeart />
+            {isWishlisted ? "In Wishlist" : "Add to Wishlist"}
           </button>
 
-          {/* RATINGS */}
-          <div className='text-lg flex justify-center lg:justify-start gap-1'>
+          {/* Ratings */}
+          <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
               <FaStar
                 key={i}
-                className={i + 1 <= Math.round(avg) ? 'text-yellow-400' : 'text-gray-500'}
+                className={
+                  i + 1 <= Math.round(avg)
+                    ? "text-yellow-400"
+                    : "text-gray-400"
+                }
               />
             ))}
-            <span className='text-sm ml-2 '>
-              ({avg.toFixed(1)} · {count} ratings)
+            <span className="text-sm ml-2">
+              ({avg.toFixed(1)} · {count})
             </span>
           </div>
 
-          {/* PRICE */}
-          <div className='text-lg md:text-xl font-semibold'>
-            Price: <span className='text-[#22C55E]'>₹{product.price}</span>
+          {/* Price */}
+          <div className="text-xl font-semibold text-emerald-600">
+            ₹{product.price}
           </div>
 
-          {/* QUANTITY PICKER */}
-          <div className='flex items-center gap-3 justify-center lg:justify-start'>
+          {/* Quantity */}
+          <div className="flex items-center gap-3">
             <Button
-            variant="outline"
-            size='sm'
-            disabled={quantity <= 1}
+              variant="outline"
+              disabled={quantity <= 1}
               onClick={() => setQuantity(quantity - 1)}
             >
               −
             </Button>
-
             <span>{quantity}</span>
-
             <Button
-              variant='outline'
-              size='sm'
+              variant="outline"
               onClick={() => setQuantity(quantity + 1)}
             >
               +
             </Button>
           </div>
 
-          {/* ACTION BUTTONS */}
-          <div className='flex flex-col sm:flex-row gap-4 pt-2'>
+          {/* Actions */}
+          <div className="flex gap-4">
             <Button
-              className='flex items-center justify-center gap-2 text-md text-white bg-[#6366F1] hover:bg-[#4F46E5] lg:px-8 px-2 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105'
               onClick={() => dispatch(addToCart({ ...product, quantity }))}
             >
-              <FaShoppingCart />
+              <FaShoppingCart className="mr-2" />
               Add to Cart
             </Button>
 
-            <Button
-              className='flex items-center justify-center gap-2 lg:text-lg text-md text-white bg-violet-600 hover:bg-violet-700 lg:px-8 px-2 md:py-3 py-2 rounded-md shadow-md transition-transform transform hover:scale-105'
-              onClick={handleCheckout}
-            >
+            <Button variant="secondary" onClick={handleCheckout}>
               Buy Now
             </Button>
           </div>
         </div>
       </div>
 
-      <div className=' rounded-2xl shadow-xl px-4 py-6 sm:px-6 md:px-8 lg:px-10 xl:px-12 mx-2 lg:mx-4 transition-all duration-300'>
-        <h2 className='text-2xl md:text-3xl font-bold mb-4'>Description</h2>
+      {/* Description */}
+      <div className="mt-10">
+        <h2 className="text-2xl font-bold mb-2">Description</h2>
+        <p>{product.description}</p>
 
-        <p className='text-base md:text-lg leading-relaxed'>{product.description}</p>
-
-        {/* Toggle button */}
         <button
-          className='mt-5 text-blue-400 hover:text-blue-300 text-sm md:text-base font-semibold transition-colors duration-200'
           onClick={() => setShowMore(!showMore)}
+          className="mt-3 text-blue-500"
         >
-          {showMore ? 'See Less' : 'See More'}
+          {showMore ? "See Less" : "See More"}
         </button>
-
-        {/* Expanded Details */}
-        {showMore && (
-          <div className='mt-6 grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 text-sm md:text-base font-medium border-t border-gray-700 pt-4'>
-            {product.weight && (
-              <div className='flex items-center'>
-                <span className='w-24 font-semibold'>Weight:</span>
-                <span>{product.weight} g</span>
-              </div>
-            )}
-            {product.height && (
-              <div className='flex items-center'>
-                <span className='w-24 font-semibold '>Height:</span>
-                <span>{product.height} cm</span>
-              </div>
-            )}
-            {product.length && (
-              <div className='flex items-center'>
-                <span className='w-24 font-semibold '>Length:</span>
-                <span>{product.length} cm</span>
-              </div>
-            )}
-            {product.width && (
-              <div className='flex items-center'>
-                <span className='w-24 font-semibold '>Width:</span>
-                <span>{product.width} cm</span>
-              </div>
-            )}
-          </div>
-        )}
       </div>
 
-      {/* Add Review */}
+      {/* Reviews */}
       <ProductReviews
         reviews={currentReviews}
         avg={avg}
         count={count}
         reviewDraft={reviewDraft}
         setReviewDraft={setReviewDraft}
-        loading={loading}
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmitReview}
         currentPage={currentPage}
         totalPages={totalPages}
         hasReviewed={hasReviewed}
-        onPrev={() => setCurrentPage(p => p - 1)}
-        onNext={() => setCurrentPage(p => p + 1)}
+        onPrev={() => setCurrentPage((p) => p - 1)}
+        onNext={() => setCurrentPage((p) => p + 1)}
       />
     </div>
   );

@@ -16,7 +16,6 @@ const Userlist = () => {
           { withCredentials: true }
         );
         setUserData(response.data.data);
-        console.log("explain",response.data);
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -52,10 +51,7 @@ const Userlist = () => {
         {role:newrole},
         { withCredentials: true }
       );
-      console.log(response.data.user.role);
-
       // Remove deleted item from state
-    
       setUserData((prevUsers) =>
         prevUsers.map((user) =>
           user._id === id ? { ...user, role: response.data.user.role } : user

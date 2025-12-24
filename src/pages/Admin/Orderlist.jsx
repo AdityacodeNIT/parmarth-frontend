@@ -13,7 +13,6 @@ const Orderlist = () => {
           `${import.meta.env.VITE_API_URL}/shiprocket/getOrder`,
           { withCredentials: true }
         );
-        console.log(response)
         setOrderData(response.data.data.data);
         setLoading(false);
       } catch (error) {

@@ -28,12 +28,11 @@ const { current, deliverycharge } = orderState;
 
 // For Buy Now
 const product = current?.product;
-console.log(product)
+
 const quantity = current?.quantity || 1;
 
 // For Cart Checkout
 const items = current?.items || [];
-console.log(items)
 const isCartCheckout = current?.source === "cart";
 
       const [paymentMethod, setPaymentMethod] = useState("");

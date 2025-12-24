@@ -33,12 +33,9 @@ sizes.forEach(size => {
   const svgContent = createSVGIcon(size);
   const filename = `icon-${size}x${size}.svg`;
   fs.writeFileSync(path.join(iconsDir, filename), svgContent);
-  console.log(`Created ${filename}`);
+
 });
 
 // Create a simple favicon
 const faviconSVG = createSVGIcon(32);
 fs.writeFileSync(path.join(__dirname, '../public/favicon.svg'), faviconSVG);
-
-console.log('Icon generation complete!');
-console.log('Note: For production, replace these SVG files with proper PNG icons.');

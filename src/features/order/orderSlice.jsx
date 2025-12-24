@@ -10,8 +10,6 @@ export const placeShiprocketOrder = createAsyncThunk(
   'order/placeShiprocketOrder',
   async (_, { getState, rejectWithValue }) => {
     const { current } = getState().order;
-    console.log(" Order data in Redux before Shiprocket call:", current);
-
 
     if (!current.items.length)
       return rejectWithValue('No items selected for order');
@@ -63,7 +61,7 @@ const orderSlice = createSlice({
 
     setOrderFromCart: (state, action) => {
   const { cartItems, addressId,paymentMethod } = action.payload;
-  console.log("Setting order from cart with items:", cartItems, "and addressId:", addressId);
+
   state.current = {
     items: cartItems.map(item => ({
       productId: item._id || item.productId,

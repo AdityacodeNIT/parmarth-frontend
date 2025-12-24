@@ -36,7 +36,6 @@ const SellerLogin = () => {
       if (response.status >= 200 && response.status < 300) {
         // ✅ Update both context and Redux
         getSellerDetail(response.data);
-        console.log("Seller login successful:", response.data);
         dispatch(setSellerInfo(response.data));
         localStorage.setItem("sellerInfo", JSON.stringify(response.data));
 

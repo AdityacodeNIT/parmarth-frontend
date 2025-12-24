@@ -24,7 +24,7 @@ removeEventListener;
 import Helpdesk from "./layout/Helpdesk.jsx";
 import AddProduct from "./pages/Products/AddProduct.jsx";
 import UserUpdateDetails from "./pages/User/UserUpdateDetails.jsx";
-import Wishlisted from "./pages/Products/Wishllisted.jsx";
+import Wishlisted from "./pages/Products/Wishlisted.jsx";
 import SearchResult from "./layout/SearchResult.jsx";
 import ChangePassword from "./pages/User/ChangePassword.jsx";
 import UpdateUserAccountDetails from "./pages/User/UpdateUserAccountDetails.jsx";
@@ -49,11 +49,13 @@ import Addresses from "./pages/User/Addresses.jsx";
 import VerifyOtp from "./pages/User/verifyOtp.jsx";
 import ManageAddresses from "./pages/Address/ManageAddresses.jsx";
 import CashOnDelivery from "./pages/Payment/Cod.jsx";
+import RefreshAuth from "./components/refreshAuth.jsx";
 
 
 function App() {
   return (
     <UserContextProvider>
+          <RefreshAuth>
       <BrowserRouter>
         <Navbar />
         <Routes>
@@ -110,6 +112,7 @@ function App() {
         <KeepAlive />
         <SpeedInsights />
       </BrowserRouter>
+      </RefreshAuth>
     </UserContextProvider>
   );
 }

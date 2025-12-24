@@ -1,42 +1,17 @@
-import React, { useEffect, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import axios from "axios";
+import React from "react";
+import { Link } from "react-router-dom";
 import { User, ChevronRight } from "lucide-react";
-
-import UserContext from "../../context/UserContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useSelector } from "react-redux";
 
 const UserDetails = () => {
-  const { userDetail, setUserDetail } = useContext(UserContext);
-  const navigate = useNavigate();
+  /* --------- AUTH FROM REDUX --------- */
+  const { user, status } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    const validateRefreshToken = async () => {
-      try {
-        const res = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/v1/users/refresh-token`,
-          {},
-          { withCredentials: true }
-        );
-
-        if (res.data?.accessToken) {
-          setUserDetail((prev) => ({
-            ...prev,
-            accessToken: res.data.accessToken,
-          }));
-        }
-      } catch {
-        setUserDetail(null);
-        navigate("/userLogin");
-      }
-    };
-
-    validateRefreshToken();
-  }, []);
-
-  if (!userDetail) {
+  /* --------- NOT LOGGED IN --------- */
+  if (false) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card>
@@ -51,14 +26,15 @@ const UserDetails = () => {
     );
   }
 
-  const data = userDetail.data?.user || userDetail.data;
+  /* --------- USER DATA --------- */
+  const data = user?.data || user?.data.user;
   const role = data?.role || "customer";
 
   const actionsByRole = {
     superadmin: [
-      { to: "/Admin", label: "Admin Panel" },
+      { to: "/admin", label: "Admin Panel" },
       { to: "/helpdesk", label: "Helpdesk" },
-      { to: "/logOut", label: "Log Out" },
+      { to: "/logout", label: "Log Out" },
     ],
     seller: [
       { to: "/sellerDashboard", label: "Seller Dashboard" },
@@ -67,16 +43,16 @@ const UserDetails = () => {
       { to: "/seller/orders", label: "Orders" },
       { to: "/updateDetails", label: "Update Profile" },
       { to: "/helpdesk", label: "Helpdesk" },
-      { to: "/logOut", label: "Log Out" },
+      { to: "/logout", label: "Log Out" },
     ],
     customer: [
       { to: "/cart", label: "My Cart" },
       { to: "/myOrder", label: "My Orders" },
-      { to: "/Wishlist", label: "Wishlist" },
+      { to: "/wishlist", label: "Wishlist" },
       { to: "/seller", label: "Become a Seller" },
       { to: "/updateDetails", label: "Update Details" },
       { to: "/helpdesk", label: "Helpdesk" },
-      { to: "/logOut", label: "Log Out" },
+      { to: "/logout", label: "Log Out" },
     ],
   };
 
@@ -84,7 +60,7 @@ const UserDetails = () => {
     <div className="min-h-screen bg-background text-foreground px-6 py-14">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-        {/* LEFT: PROFILE HERO */}
+        {/* LEFT: PROFILE */}
         <Card className="lg:col-span-1">
           <CardContent className="p-8 flex flex-col items-center text-center space-y-6">
             {data?.avatar ? (
@@ -135,7 +111,7 @@ const UserDetails = () => {
           </CardContent>
         </Card>
 
-        {/* RIGHT: INFO / INSIGHTS */}
+        {/* RIGHT: INFO */}
         <Card className="lg:col-span-1">
           <CardContent className="p-10 flex items-center justify-center text-center">
             <div className="space-y-3">

@@ -7,11 +7,6 @@ const KeepAlive = () => {
       axios
         .get(`${import.meta.env.VITE_API_URL}`)
         .then((response) => {
-          console.log(
-            `Reloaded at ${new Date().toISOString()}: Status Code ${
-              response.status
-            }`
-          );
         })
         .catch((error) => {
           console.error(

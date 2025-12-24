@@ -26,8 +26,6 @@ root.render(
 
 // Web Vitals monitoring
 function sendToAnalytics(metric) {
-  // Send to your analytics service
-  console.log('Web Vital:', metric);
   
   // Example: Send to Google Analytics
   if (window.gtag) {

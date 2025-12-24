@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 const SellerDashboard = () => {
   const dispatch = useDispatch();
   const { sellerInfo, dashboard, loading, error } = useSelector((state) => state.seller);
-  console.log("Seller Info:", sellerInfo);
 
   useEffect(() => {
     if (sellerInfo?.data?.user?.approved) {
@@ -27,8 +26,6 @@ const SellerDashboard = () => {
       </div>
     );
   }
-
-  console.log("Seller Dashboard Data:", sellerInfo);
 
   const seller = sellerInfo.data.user;
 
