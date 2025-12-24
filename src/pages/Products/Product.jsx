@@ -21,7 +21,7 @@ import {
 
 import {
   addWishlistItem
-} from "@/features/wishlist/wishlistSlice";
+} from "@/features/wishlist/wishlistslice.jsx";
 
 import { Button } from "@/components/ui/button";
 import ProductReviews from "./ProductReviews.jsx";
