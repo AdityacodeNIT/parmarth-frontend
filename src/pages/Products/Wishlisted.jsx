@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import {
   loadWishlist,
   removeWishlistItem
-} from "@/features/wishlist/wishlistSlice";
+} from "@/features/wishlist/wishlistslice";
 
 const Wishlisted = () => {
   const dispatch = useDispatch();
