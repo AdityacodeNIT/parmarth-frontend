@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { SetSearchResults } from "@/features/search/searchSlice";
+import { SetSearchResults } from "@/features/search/searchslice.jsx";
 
 const SearchBar = () => {
   const dispatch = useDispatch();
