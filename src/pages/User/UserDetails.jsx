@@ -11,24 +11,30 @@ const UserDetails = () => {
   const { user, status } = useSelector((state) => state.auth);
 
   /* --------- NOT LOGGED IN --------- */
-  if (false) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card>
-          <CardContent className="p-8 text-center space-y-4">
-            <h2 className="text-xl font-semibold">You are not logged in</h2>
-            <Button asChild>
-              <Link to="/userLogin">Log In</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+ if (status === "loading") {
+  return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+}
+
+if (status === "unauthenticated") {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Card>
+        <CardContent className="p-8 text-center space-y-4">
+          <h2 className="text-xl font-semibold">You are not logged in</h2>
+          <Button asChild>
+            <Link to="/userLogin">Log In</Link>
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
 
   /* --------- USER DATA --------- */
-  const data = user?.data || user?.data.user;
+  const data = user?.data
   const role = data?.role || "customer";
+  console.log(role)
 
   const actionsByRole = {
     superadmin: [

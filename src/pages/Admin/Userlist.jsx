@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
 const Userlist = () => {
-
-
   const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,10 +26,11 @@ const Userlist = () => {
           `${import.meta.env.VITE_API_URL}/api/v1/users/userList`,
           { withCredentials: true }
         );
+        console.log(response.data);
         setUserData(response.data.data);
-        setLoading(false);
-      } catch (error) {
-        setError(error.message);
+      } catch (err) {
+        setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
@@ -27,124 +39,110 @@ const Userlist = () => {
   }, []);
 
   const deleteData = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this product?");
-    if (!confirmDelete) return;
+    if (!window.confirm("Are you sure you want to delete this user?")) return;
+
     try {
       await axios.delete(
         `${import.meta.env.VITE_API_URL}/api/v1/users/deleteUser/${id}`,
         { withCredentials: true }
       );
 
-      // Remove deleted item from state
-      setUserData(userData.filter((user) => user._id !== id));
-    } catch (error) {
-      setError(error.message);
+      setUserData((prev) => prev.filter((u) => u._id !== id));
+    } catch (err) {
+      setError(err.message);
     }
   };
 
-  const promoteUser = async (id,newrole) => {
-    const confirmDelete = window.confirm("Are you sure you want to update this user's role?");
-    if (!confirmDelete) return;
+  const promoteUser = async (id, newRole) => {
+    if (!window.confirm("Are you sure you want to update this user's role?")) return;
+
     try {
-     const response= await axios.post(
+      const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/users/updateUserPost/${id}`,
-        {role:newrole},
+        { role: newRole },
         { withCredentials: true }
       );
-      // Remove deleted item from state
-      setUserData((prevUsers) =>
-        prevUsers.map((user) =>
-          user._id === id ? { ...user, role: response.data.user.role } : user
+
+      setUserData((prev) =>
+        prev.map((u) =>
+          u._id === id ? { ...u, role: res.data.role } : u
         )
       );
-    } catch (error) {
-      setError(error.message);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
-
-
-
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  if (loading) return <div className="p-6">Loading users...</div>;
+  if (error) return <div className="p-6 text-red-500">{error}</div>;
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-center mb-8">User List</h1>
-      <table className="w-full text-left table-auto border-collapse">
-        <thead>
-          <tr>
-            <th className="border-b-2 p-2">Username</th>
-            <th className="border-b-2 p-2">Full Name</th>
-            <th className="border-b-2 p-2">Email</th>
-            <th className="border-b-2 p-2">role</th>
-            <th className="border-b-2 p-2">Action</th>
+    <Card>
+      <CardHeader>
+        <CardTitle>User Management</CardTitle>
+      </CardHeader>
 
-          </tr>
-        </thead>
-        <tbody>
-          {userData.map((user) => (
-            <tr key={user._id} className="hover:bg-gray-100">
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Username</TableHead>
+              <TableHead>Full Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead className="text-right">Action</TableHead>
+            </TableRow>
+          </TableHeader>
 
-           
-              <td className="border-b p-2">{user.username}</td>
-              <td className="border-b p-2">{user.fullName}</td>
-              <td className="border-b p-2">{user.email}</td>
-              {/* <td 
-  className={`border-b p-2 ${
-    user.role === "superadmin" ? "text-white font-bold bg-blue-400 rounded-lg" : "text-gray-700"
-  }`}
->
-  {user.role}
-</td> */}
+          <TableBody>
+            {userData.map((user) => (
+              <TableRow key={user._id}>
+                <TableCell>{user.username}</TableCell>
+                <TableCell>{user.fullName}</TableCell>
+                <TableCell>{user.email}</TableCell>
 
-<td className="border-b p-2">
-                {user.role === "superadmin" ? (
-                  <span className="text-white font-bold bg-blue-400 rounded-lg border-b p-2">
-                    {user.role}
-                  </span>
-                ) : (
-                  <select
-                    value={user.role}
-                    onChange={(e) => promoteUser(user._id, e.target.value)}
-                    className="text-gray-700 border-b p-2"
-                  >
-                    <option value="customer">customer</option>
-                    <option value="admin">admin</option>
-                    <option value="seller">seller</option>
-                    <option value="superadmin">superadmin</option>
+                {/* ROLE */}
+                <TableCell>
+                  {user.role === "superadmin" ? (
+                    <Badge variant="secondary">{user.role}</Badge>
+                  ) : (
+                    <Select
+                      value={user.role}
+                      onValueChange={(value) =>
+                        promoteUser(user._id, value)
+                      }
+                    >
+                      <SelectTrigger className="w-[140px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="customer">Customer</SelectItem>
+                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="seller">Seller</SelectItem>
+                        <SelectItem value="superadmin">Superadmin</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                </TableCell>
 
-
-                  </select>
-                )}
-              </td>
-
-
-
-
-              <td className="border-b p-2">
-             {user.role !== "superadmin" && (
-    <button 
-      onClick={() => deleteData(user._id)} 
-      className="bg-red-500 text-white px-3 py-1 ml-2 rounded-xs"
-    >
-      Delete
-    </button>
-  )}
-
-              </td>
-
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+                {/* ACTION */}
+                <TableCell className="text-right">
+                  {user.role !== "superadmin" && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => deleteData(user._id)}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>
   );
 };
 

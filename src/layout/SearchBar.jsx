@@ -1,23 +1,27 @@
-// Tailwind v4-optimized SearchBar.jsx
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import UserContext from "../context/UserContext.jsx";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { SetSearchResults } from "@/features/search/searchSlice";
 
 const SearchBar = () => {
-  const { handleSearch } = useContext(UserContext);
+  const dispatch = useDispatch();
+  const navigate=useNavigate();
   const [query, setQuery] = useState("");
 
   const executeSearch = async () => {
     if (!query.trim()) return;
+
     try {
-      const response = await axios.post(
+      const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/product/searchProduct`,
         { name: query }
       );
-      handleSearch(response.data);
-    } catch (error) {
-      console.error("Error fetching search results:", error);
+
+      dispatch(SetSearchResults(res.data));
+      navigate("/searchResult") // ✅ Redux replaces childToParent
+    } catch (err) {
+      console.error("Search failed:", err);
     }
   };
 
@@ -28,17 +32,16 @@ const SearchBar = () => {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search for products..."
-        className="bg-transparent w-full px-1 md:px-3 py-1 md:py-2 focus:outline-hidden "
+        className="bg-transparent w-full px-1 md:px-3 py-1 md:py-2 focus:outline-hidden"
       />
 
-      <Link to="/searchResult">
         <button
           onClick={executeSearch}
-          className=" rounded-full px-3 md:px-4 py-1 md:py-2 text-sm font-semibold   transition-colors hover:text-primary"
+          className="rounded-full px-3 md:px-4 py-1 md:py-2 text-sm font-semibold transition-colors hover:text-primary"
         >
           Search
         </button>
-      </Link>
+
     </div>
   );
 };

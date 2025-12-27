@@ -1,18 +1,20 @@
-import React, { useState, useContext } from "react";
+import React, { useState,  } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserCog, Loader2 } from "lucide-react";
 
-import UserContext from "../../context/UserContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/features/Auth/authSlice";
 
 const UpdateUserAccountDetails = () => {
-  const { getUserDetail } = useContext(UserContext);
+
   const navigate = useNavigate();
+  const dispatch=useDispatch();
 
   const [updateData, setUpdateData] = useState({
     fullName: "",
@@ -43,7 +45,7 @@ const UpdateUserAccountDetails = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-        getUserDetail(response.data);
+        dispatch(setUser(response.data));
         navigate("/user");
       }
     } catch (err) {

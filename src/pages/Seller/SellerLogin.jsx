@@ -1,12 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setSellerInfo } from "../../features/seller/sellerslice.jsx";
-import UserContext from "../../context/UserContext";
+
 
 const SellerLogin = () => {
-  const { getSellerDetail } = useContext(UserContext);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -35,10 +34,7 @@ const SellerLogin = () => {
 
       if (response.status >= 200 && response.status < 300) {
         // ✅ Update both context and Redux
-        getSellerDetail(response.data);
         dispatch(setSellerInfo(response.data));
-        localStorage.setItem("sellerInfo", JSON.stringify(response.data));
-
         navigate("/seller");
       }
     } catch (error) {

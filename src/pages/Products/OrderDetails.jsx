@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, {useState } from "react";
 import {
   Truck,
   CreditCard,
@@ -11,14 +11,12 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import UserContext from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 const OrderDetails = () => {
-  const { getUserDetail } = useContext(UserContext);
   const { orderDetails } = useSelector((state) => state.order);
   const [cancellationStatus, setCancellationStatus] = useState(null);
   const navigate = useNavigate();
@@ -46,7 +44,7 @@ const OrderDetails = () => {
       );
       if (res.status === 200) {
         setCancellationStatus("Order cancelled successfully.");
-        getUserDetail();
+     
       }
     } catch {
       setCancellationStatus("Unable to cancel order.");

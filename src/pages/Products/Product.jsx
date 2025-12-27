@@ -180,7 +180,7 @@ const Product = () => {
               />
             ))}
             <span className="text-sm ml-2">
-              ({avg.toFixed(1)} · {count})
+              ({avg.toFixed(1)})
             </span>
           </div>
 

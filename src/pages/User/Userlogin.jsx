@@ -37,8 +37,7 @@ const Userlogin = () => {
   // Navigate after successful login
 useEffect(() => {
   if (status === "authenticated") {
-    dispatch(verifyAuth());
-       dispatch(loadWishlist());
+  dispatch(loadWishlist());
   }
 }, [status, dispatch]);
 

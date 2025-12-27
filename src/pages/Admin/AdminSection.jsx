@@ -1,104 +1,122 @@
-import React, { useState } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { MdAdminPanelSettings } from "react-icons/md";
+
 import Orderlist from "./Orderlist";
 import Userlist from "./Userlist";
 import Productlist from "./Productlist";
-import SellerApprovalPanel from "./SellerApprovalPanel"; // ✅ new component
-import { MdAdminPanelSettings } from "react-icons/md";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import SellerApprovalPanel from "./SellerApprovalPanel";
+
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const AdminSection = () => {
-  const [activeSection, setActiveSection] = useState(null);
-
-  const user=useSelector((state)=>state.auth.user)
-
-  // 🔹 Function to toggle each accordion section
-  const toggleSection = (section) => {
-    setActiveSection(activeSection === section ? null : section);
-  };
+  const { user } = useSelector((state) => state.auth);
+  const role = user?.role;
 
   return (
-    <div>
-      {/* ─────────────────────────────── Admin Header ─────────────────────────────── */}
-      <div className="flex justify-center items-center text-2xl m-2 p-2 font-semibold text-gray-700">
-        {user.data.user.role} <MdAdminPanelSettings className="ml-2" />
-      </div>
+    <div className="min-h-screen bg-background text-foreground px-6 py-10">
+      <div className="max-w-7xl mx-auto space-y-8">
 
-      {/* ─────────────────────────────── Admin Panel Body ─────────────────────────────── */}
-      <div className="p-6 bg-gray-100 min-h-screen space-y-4">
-
-        {/* USER LIST SECTION (Visible to Admin/Superadmin only) */}
-        {user.data.user.role !== "seller" && (
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-            <button
-              onClick={() => toggleSection("userlist")}
-              className="w-full p-4 text-left font-semibold text-blue-600 hover:bg-blue-50 transition"
-            >
-              👥 User List
-            </button>
-            {activeSection === "userlist" && (
-              <div className="p-4 border-t">
-                <Userlist />
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* PRODUCT LIST SECTION */}
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <button
-            onClick={() => toggleSection("productlist")}
-            className="w-full p-4 text-left font-semibold text-green-600 hover:bg-green-50 transition"
-          >
-            📦 Product List
-          </button>
-          {activeSection === "productlist" && (
-            <div className="p-4 border-t">
-              <Productlist />
+        {/* ───────────────── Header ───────────────── */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div className="space-y-1">
+              <CardTitle className="text-2xl flex items-center gap-2">
+                Admin Dashboard <MdAdminPanelSettings />
+              </CardTitle>
+              <CardDescription>
+                Manage users, products, orders, and sellers
+              </CardDescription>
             </div>
-          )}
-        </div>
+            <Badge variant="secondary" className="capitalize">
+              {role}
+            </Badge>
+          </CardHeader>
+        </Card>
 
-        {/* ORDER LIST SECTION */}
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <button
-            onClick={() => toggleSection("orderlist")}
-            className="w-full p-4 text-left font-semibold text-red-600 hover:bg-red-50 transition"
-          >
-            🧾 Order List
-          </button>
-          {activeSection === "orderlist" && (
-            <div className="p-4 border-t">
-              <Orderlist />
+        {/* ───────────────── Content ───────────────── */}
+        <Card>
+          <CardContent className="p-0">
+            <Accordion type="single" collapsible className="w-full">
+
+              {/* USERS */}
+              {role !== "seller" && (
+                <AccordionItem value="users">
+                  <AccordionTrigger className="px-6">
+                    User Management
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <Userlist />
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+
+              {/* PRODUCTS */}
+              <AccordionItem value="products">
+                <AccordionTrigger className="px-6">
+                  Product Management
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-6">
+                  <Productlist />
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* ORDERS */}
+              <AccordionItem value="orders">
+                <AccordionTrigger className="px-6">
+                  Order Management
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-6">
+                  <Orderlist />
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* SELLERS (SUPERADMIN ONLY) */}
+              {role === "superadmin" && (
+                <AccordionItem value="sellers">
+                  <AccordionTrigger className="px-6">
+                    Seller Approvals
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <SellerApprovalPanel />
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+            </Accordion>
+          </CardContent>
+        </Card>
+
+        {/* ───────────────── Actions ───────────────── */}
+        <Card>
+          <CardContent className="flex flex-col sm:flex-row items-center justify-between gap-4 p-6">
+            <div>
+              <h3 className="text-lg font-semibold">Quick Action</h3>
+              <p className="text-sm text-muted-foreground">
+                Add new products to the marketplace
+              </p>
             </div>
-          )}
-        </div>
 
-        {/* ──────────────── NEW: SELLER MANAGEMENT SECTION ──────────────── */}
-        {user.data.user.role === "superadmin" && (
-          <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-            <button
-              onClick={() => toggleSection("sellerlist")}
-              className="w-full p-4 text-left font-semibold text-purple-700 hover:bg-purple-50 transition"
-            >
-              🛒 Seller Approvals
-            </button>
-            {activeSection === "sellerlist" && (
-              <div className="p-4 border-t">
-                <SellerApprovalPanel />
-              </div>
-            )}
-          </div>
-        )}
+            <Button asChild size="lg" >
+              <Link to="/add-product" className="text-foreground!">Add New Product</Link>
+            </Button>
+          </CardContent>
+        </Card>
 
-        {/* ADD PRODUCT SHORTCUT BUTTON */}
-        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <Link to="/addProduct">
-            <button className="w-full p-4 text-left font-semibold text-indigo-700 hover:bg-indigo-50 transition">
-              ➕ Add New Product
-            </button>
-          </Link>
-        </div>
       </div>
     </div>
   );

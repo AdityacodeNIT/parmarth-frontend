@@ -1,10 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectBaseAmount } from '../../utils/selectors.jsx';
 import { clearCurrentOrder, placeShiprocketOrder } from '../../features/order/orderSlice';
 import { clearCart } from '../../features/cart/cartSlice';
-import UserContext from '../../context/UserContext.jsx';
 
 const CashOnDelivery = () => {
   const dispatch = useDispatch();

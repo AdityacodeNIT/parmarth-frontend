@@ -1,9 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { UserPlus, Loader2 } from "lucide-react";
-
-import UserContext from "../../context/UserContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,7 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Register = () => {
   const navigate = useNavigate();
-  const { getUserDetail } = useContext(UserContext);
+
 
   const [formData, setFormData] = useState({
     fullName: "",

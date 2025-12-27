@@ -1,6 +1,18 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 const Orderlist = () => {
   const [orderData, setOrderData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,9 +26,9 @@ const Orderlist = () => {
           { withCredentials: true }
         );
         setOrderData(response.data.data.data);
-        setLoading(false);
-      } catch (error) {
-        setError(error.message);
+      } catch (err) {
+        setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
@@ -24,70 +36,84 @@ const Orderlist = () => {
     fetchOrderData();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <div className="p-6">Loading orders...</div>;
+  if (error) return <div className="p-6 text-red-500">{error}</div>;
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case "Delivered":
+        return <Badge className="bg-green-500">Delivered</Badge>;
+      case "Shipped":
+        return <Badge className="bg-blue-500">Shipped</Badge>;
+      default:
+        return <Badge className="bg-yellow-500">Pending</Badge>;
+    }
+  };
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-center mb-8">Order List</h1>
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse border border-gray-800">
-          <thead>
-            <tr className="bg-gray-800 text-white">
-              <th className="border border-gray-600 px-4 py-2">Order ID</th>
-              <th className="border border-gray-600 px-4 py-2">Customer</th>
-              <th className="border border-gray-600 px-4 py-2">Address</th>
-              <th className="border border-gray-600 px-4 py-2">Status</th>
-              <th className="border border-gray-600 px-4 py-2">Items</th>
-              <th className="border border-gray-600 px-4 py-2">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orderData.map((order) => (
-              <tr key={order.id} className="bg-gray-200 hover:bg-gray-300">
-                <td className="border border-gray-600 px-4 py-2">{order.id}</td>
-                <td className="border border-gray-600 px-4 py-2">{order.customer_name}</td>
-                <td className="border border-gray-600 px-4 py-2">
-                  {order.customer_city}, {order.customer_state}
-                </td>
-                <td className="border border-gray-600 px-4 py-2">
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm text-white ${
-                      order.status === "Delivered"
-                        ? "bg-green-500"
-                        : order.status === "Shipped"
-                        ? "bg-blue-500"
-                        : "bg-yellow-500"
-                    }`}
-                  >
-                    {order.status}
-                  </span>
-                </td>
-                <td className="border border-gray-600 px-4 py-2">
-                  {order.products?.length ? (
-                    <ul>
-                      {order.products.map((item, idx) => (
-                        <li key={idx}>
-                          {item.name} (x{item.quantity || 1}) - ₹{item.selling_price}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    "No items available"
-                  )}
-                </td>
-                <td className="border border-gray-600 px-4 py-2 font-bold">₹{order.total}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Order Management</CardTitle>
+      </CardHeader>
+
+      <CardContent>
+        <ScrollArea className="w-full">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Order ID</TableHead>
+                <TableHead>Customer</TableHead>
+                <TableHead>Address</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Items</TableHead>
+                <TableHead className="text-right">Total</TableHead>
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              {orderData.map((order) => (
+                <TableRow key={order.id}>
+                  <TableCell className="font-medium">
+                    {order.id}
+                  </TableCell>
+
+                  <TableCell>{order.customer_name}</TableCell>
+
+                  <TableCell>
+                    {order.customer_city}, {order.customer_state}
+                  </TableCell>
+
+                  <TableCell>
+                    {getStatusBadge(order.status)}
+                  </TableCell>
+
+                  <TableCell>
+                    {order.products?.length ? (
+                      <ul className="list-disc list-inside space-y-1 text-sm">
+                        {order.products.map((item, idx) => (
+                          <li key={idx}>
+                            {item.name} × {item.quantity || 1} — ₹
+                            {item.selling_price}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <span className="text-muted-foreground">
+                        No items
+                      </span>
+                    )}
+                  </TableCell>
+
+                  <TableCell className="text-right font-semibold">
+                    ₹{order.total}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </ScrollArea>
+      </CardContent>
+    </Card>
   );
 };
 

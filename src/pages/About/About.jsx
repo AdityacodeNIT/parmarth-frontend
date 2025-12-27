@@ -7,9 +7,9 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
-  Rocket,
+  Leaf,
   History,
-  PackageCheck,
+  ClipboardCheck,
   Phone,
 } from "lucide-react";
 
@@ -20,79 +20,91 @@ const About = () => {
 
         {/* Header */}
         <header className="text-center space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-            About Parmarth
+          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
+            About Eat Healthy
           </h1>
           <p className="text-muted-foreground max-w-3xl mx-auto text-lg leading-relaxed">
-            Parmarth is a modern e-commerce marketplace focused on delivering
-            reliable stationery, office essentials, and productivity tools for
-            individuals, institutions, and businesses.
+            Eat Healthy is an early-stage marketplace built with a simple idea:
+            choosing packaged food should feel safe, clear, and informed — not confusing or risky.
           </p>
         </header>
 
         <Separator />
 
-        {/* Mission */}
-        <Card className="bg-card">
+        {/* Purpose */}
+        <Card>
           <CardHeader className="flex flex-row items-center gap-4">
-            <Rocket className="h-6 w-6 text-muted-foreground" />
-            <CardTitle>Our Mission</CardTitle>
+            <Leaf className="h-6 w-6 text-muted-foreground" />
+            <CardTitle>Why We Exist</CardTitle>
           </CardHeader>
           <CardContent className="text-muted-foreground leading-relaxed">
-            Our mission is to simplify access to high-quality stationery and
-            workplace essentials by combining thoughtful curation, reliable
-            logistics, and a seamless digital experience. We aim to support
-            productivity across education, startups, and enterprises.
+            Many packaged foods are marketed as “healthy,” but it’s often hard to
+            understand what that really means. Ingredient lists are complex,
+            claims are unclear, and trust is left entirely to the brand.
+            <br /><br />
+            Eat Healthy exists to make food choices easier by focusing on clarity,
+            basic rules, and visible reasoning — especially for people who want to
+            be more mindful about what they eat.
+          </CardContent>
+        </Card>
+
+        {/* Approach */}
+        <Card>
+          <CardHeader className="flex flex-row items-center gap-4">
+            <ClipboardCheck className="h-6 w-6 text-muted-foreground" />
+            <CardTitle>Our Approach</CardTitle>
+          </CardHeader>
+          <CardContent className="text-muted-foreground leading-relaxed space-y-3">
+            <p>
+              We are starting small and carefully.
+            </p>
+            <ul className="list-disc list-inside space-y-2">
+              <li>Products are reviewed against simple ingredient rules</li>
+              <li>Brands are asked to share supporting information where possible</li>
+              <li>Health-related positioning is kept limited and responsible</li>
+              <li>Clear explanations are prioritized over marketing language</li>
+            </ul>
+            <p>
+              We don’t claim perfection. This platform is evolving, and our
+              standards will improve as we learn.
+            </p>
           </CardContent>
         </Card>
 
         {/* Journey */}
-        <Card className="bg-card">
+        <Card>
           <CardHeader className="flex flex-row items-center gap-4">
             <History className="h-6 w-6 text-muted-foreground" />
-            <CardTitle>Our Journey</CardTitle>
+            <CardTitle>Where We Are Right Now</CardTitle>
           </CardHeader>
           <CardContent className="text-muted-foreground leading-relaxed">
-            Parmarth was founded with a clear focus: to modernize how stationery
-            and office supplies are discovered, purchased, and delivered.
-            Starting from essential supplies, we continue to expand into smarter
-            and more efficient tools that meet evolving professional needs.
-          </CardContent>
-        </Card>
-
-        {/* Offerings */}
-        <Card className="bg-card">
-          <CardHeader className="flex flex-row items-center gap-4">
-            <PackageCheck className="h-6 w-6 text-muted-foreground" />
-            <CardTitle>What We Offer</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-muted-foreground">
-            <ul className="list-disc list-inside space-y-2">
-              <li>Curated stationery and office essentials</li>
-              <li>Products suited for students, professionals, and businesses</li>
-              <li>Bulk and institutional purchasing support</li>
-              <li>Reliable logistics and transparent order tracking</li>
-              <li>Customer-focused service and ongoing platform improvements</li>
-            </ul>
+            Eat Healthy is at an early stage. We are beginning with a limited
+            selection of packaged foods and a small set of rules, with the goal
+            of gradually expanding categories, improving verification, and
+            learning from real user feedback.
+            <br /><br />
+            Over time, we hope this grows into a more reliable and transparent
+            way to discover food — but we believe that trust has to be earned,
+            step by step.
           </CardContent>
         </Card>
 
         {/* Contact */}
-        <Card className="bg-card">
+        <Card>
           <CardHeader className="flex flex-row items-center gap-4">
             <Phone className="h-6 w-6 text-muted-foreground" />
             <CardTitle>Get in Touch</CardTitle>
           </CardHeader>
           <CardContent className="text-muted-foreground leading-relaxed">
-            For partnerships, institutional orders, or support inquiries, please
-            reach out through our official contact channels. Our team is committed
-            to timely and transparent communication.
+            If you have feedback, questions, or would like to understand our
+            approach better, you’re welcome to reach out through our contact
+            channels. Thoughtful feedback helps us improve.
           </CardContent>
         </Card>
 
         {/* Footer */}
         <footer className="text-center text-sm text-muted-foreground pt-8">
-          Building dependable commerce experiences for modern workspaces.
+          Built carefully. Improved continuously.
         </footer>
 
       </section>

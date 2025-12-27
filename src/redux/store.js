@@ -12,6 +12,7 @@ import reviewSlice from  '../features/review/reviewSlice.jsx' // Assuming you ha
 import sellerslice from '../features/seller/sellerslice.jsx';
 import authSlice  from '@/features/Auth/authSlice';
 import wishlistSlice from '@/features/wishlist/wishlistslice.jsx'
+import searchSlice from '@/features/search/searchslice.jsx'
 
 // 1️ Combine reducers here
 const rootReducer = combineReducers({
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   review:reviewSlice,
   seller:sellerslice,
   auth:authSlice,
-  wishlist:wishlistSlice // Assuming you have an address slice
+  wishlist:wishlistSlice,
+  search:searchSlice // Assuming you have an address slice
   // add more slices here in future (e.g. user: userReducer)
 });
 

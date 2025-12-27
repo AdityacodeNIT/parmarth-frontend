@@ -23,9 +23,8 @@ const Logout = () => {
       if (response.status === 200) {
         // ✅ Clear Redux auth state
         dispatch(logout());
-
-        // ✅ Redirect
         navigate("/");
+        
       } else {
         alert("Unexpected response from server. Please try again.");
       }
