@@ -5,203 +5,200 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { addToCart } from "../../features/cart/cartSlice";
 import { setOrderFromBuyNow } from "../../features/product/orderSlice";
-
 import {
-  fetchAverageForProduct,
   fetchReviewsByProduct,
-  selectAverageForProduct,
   selectReviewsByProduct,
   submitReview
 } from "../../features/review/reviewSlice";
-
-import {
-  fetchProductById,
-  fetchProducts
-} from "../../features/product/productSlice";
-
-import {
-  addWishlistItem
-} from "@/features/wishlist/wishlistslice.jsx";
+import { fetchProductById } from "../../features/product/productSlice";
+import { addWishlistItem } from "@/features/wishlist/wishlistslice";
 
 import { Button } from "@/components/ui/button";
-import ProductReviews from "./ProductReviews.jsx";
+import ProductReviews from "./ProductReviews";
 import ProductGallery from "./ProductGallery";
 
+/* ───────── AI / Health Components ───────── */
+import HealthScoreCard from "./HealthScoreCard";
+// CHANGED: Imported the new component
+import NutrientCard from "./NutrientBar"; 
+import WhyHealthy from "./WhyHealthy";
+import NutritionCompare from "./NutritionCompare";
+
 const Product = () => {
-  /* ───────── Redux / Router ───────── */
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id: productId } = useParams();
 
-  /* ───────── Auth ───────── */
   const user = useSelector((state) => state.auth.user);
   const userId = user?.data?._id;
 
-  /* ───────── Product & Wishlist ───────── */
   const product = useSelector((state) => state.product.currentProduct);
   const wishlist = useSelector((state) => state.wishlist.items);
 
-  const isWishlisted = wishlist.some(
-    (item) => item.productId?._id === productId
-  );
-
-  /* ───────── Reviews ───────── */
   const reviews = useSelector((state) =>
     selectReviewsByProduct(state, productId)
   );
 
-  const { avg, count } = useSelector((state) =>
-    selectAverageForProduct(state, productId)
+  const isWishlisted = wishlist.some(
+    (item) => item.productId?._id === productId
   );
 
   const hasReviewed = reviews.some(
     (r) => r.userId?._id === userId
   );
 
-  /* ───────── Local State ───────── */
+  const [quantity, setQuantity] = useState(1);
   const [reviewDraft, setReviewDraft] = useState({
     rating: 0,
     message: ""
   });
-  const [quantity, setQuantity] = useState(1);
-  const [showMore, setShowMore] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [page, setPage] = useState(1);
 
   const reviewsPerPage = 5;
+  const currentReviews = reviews.slice(
+    (page - 1) * reviewsPerPage,
+    page * reviewsPerPage
+  );
 
-  /* ───────── Fetch Product ───────── */
   useEffect(() => {
-    if (productId) {
-      dispatch(fetchProductById(productId));
-      dispatch(fetchReviewsByProduct(productId));
-      dispatch(fetchAverageForProduct(productId));
-    }
-  }, [productId, dispatch]);
+    if (!productId) return;
+    dispatch(fetchProductById(productId));
+    dispatch(fetchReviewsByProduct(productId));
+  }, [dispatch, productId]);
 
-  /* ───────── Handlers ───────── */
-
-  const handleAddToWishlist = () => {
-    if (!userId) {
-      alert("Please login to add items to wishlist");
-      return;
-    }
-
-    if (!isWishlisted) {
-      dispatch(addWishlistItem(product._id));
-    }
-  };
-
-  const handleCheckout = () => {
-    dispatch(setOrderFromBuyNow({ product, quantity }));
-    navigate("/BuyProduct");
-  };
-
-  const handleSubmitReview = async () => {
-    if (!reviewDraft.rating || !reviewDraft.message) {
-      alert("Please add rating and review message");
-      return;
-    }
-
-    try {
-      await dispatch(
-        submitReview({
-          productId,
-          rating: reviewDraft.rating,
-          message: reviewDraft.message
-        })
-      ).unwrap();
-
-      dispatch(fetchReviewsByProduct(productId));
-      dispatch(fetchAverageForProduct(productId));
-      dispatch(fetchProducts());
-
-      setReviewDraft({ rating: 0, message: "" });
-    } catch (err) {
-      alert(err);
-    }
-  };
-
-  /* ───────── Pagination ───────── */
-  const indexOfLast = currentPage * reviewsPerPage;
-  const indexOfFirst = indexOfLast - reviewsPerPage;
-  const currentReviews = reviews.slice(indexOfFirst, indexOfLast);
-  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
-
-  /* ───────── Loading Guard ───────── */
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        Loading product...
+        Loading product…
       </div>
     );
   }
 
-  /* ───────── Render ───────── */
+  const images = [
+    product.ProductImage,
+    ...(product.images || []),
+  ].filter(Boolean);
+
+  /* ───────── DATA TRANSFORMATION FOR NUTRIENT CARD ───────── */
+  // We map the raw product data to the format the new design expects
+  const nutrition = product.nutrition || {};
+  
+  const nutrientCardData = {
+    productName: product.name,
+    calories: nutrition.calories || 0,
+    nutriScore: product.nutriScore || "A", // Fallback if not in DB
+    healthGrade: product.healthGrade || "Excellent",
+    
+    macros: [
+      { 
+        label: "Protein", 
+        value: `${nutrition.protein || 0}g`, 
+        // Simple calculation for visual bar length (assuming 50g is 'full' bar)
+        percentage: Math.min(((nutrition.protein || 0) / 50) * 100, 100), 
+        color: "bg-blue-500" 
+      },
+      { 
+        label: "Carbs", 
+        value: `${nutrition.carbohydrates || 0}g`, 
+        percentage: Math.min(((nutrition.carbohydrates || 0) / 300) * 100, 100),
+        color: "bg-orange-400" 
+      },
+      { 
+        label: "Fiber", 
+        value: `${nutrition.fiber || 0}g`, 
+        percentage: Math.min(((nutrition.fiber || 0) / 30) * 100, 100),
+        color: "bg-blue-400" 
+      },
+      { 
+        label: "Fats", 
+        value: `${nutrition.fat || 0}g`, 
+        percentage: Math.min(((nutrition.fat || 0) / 70) * 100, 100),
+        color: "bg-orange-400" 
+      },
+    ],
+    
+    micros: [
+      { label: "Vitamin C", value: `${nutrition.vitaminC || 0}%`, active: (nutrition.vitaminC > 0) },
+      { label: "Iron", value: `${nutrition.iron || 0}%`, active: (nutrition.iron > 0) },
+      { label: "Calcium", value: `${nutrition.calcium || 0}%`, active: (nutrition.calcium > 0) },
+      { label: "Potassium", value: `${nutrition.potassium || 0}%`, active: (nutrition.potassium > 0) },
+    ],
+
+    // Map dietary tags (e.g., "Gluten Free") to benefits
+    benefits: product.dietary?.map(tag => ({ label: tag })) || [
+      { label: "Healthy Choice" }, // Fallback
+      { label: "Nutrient Dense" }
+    ]
+  };
+  /* ───────── END TRANSFORMATION ───────── */
+
+
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 md:p-8">
+    <div className="min-h-screen bg-background text-foreground px-4 md:px-8 py-10 max-w-7xl mx-auto">
 
-      {/* Product Section */}
-      <div className="flex flex-col lg:flex-row gap-10">
+      {/* ───────── HERO SECTION ───────── */}
+      <div className="grid lg:grid-cols-2 gap-8 mb-8">
+        <ProductGallery images={images} name={product.name} />
 
-        <ProductGallery
-          image={product.ProductImage || product.imgLink}
-          name={product.name}
-        />
+        <div className="space-y-3">
+          <div className="text-sm text-muted-foreground">
+            {product.Category}
+            {product.brand && ` · ${product.brand}`}
+          </div>
 
-        <div className="flex-1 space-y-4">
+          <h1 className="text-3xl font-bold tracking-tight">
+            {product.name}
+          </h1>
 
-          <h1 className="text-3xl font-bold">{product.name}</h1>
-
-          {/* Wishlist Button */}
-          <button
-            onClick={handleAddToWishlist}
-            disabled={isWishlisted}
-            className={`flex items-center gap-2 font-semibold transition
-              ${
-                isWishlisted
-                  ? "text-gray-400 cursor-not-allowed"
-                  : "text-red-500 hover:text-red-600"
-              }`}
-          >
-            <FaHeart />
-            {isWishlisted ? "In Wishlist" : "Add to Wishlist"}
-          </button>
-
-          {/* Ratings */}
+          {/* Rating */}
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
               <FaStar
                 key={i}
                 className={
-                  i + 1 <= Math.round(avg)
+                  i + 1 <= Math.round(product.rating)
                     ? "text-yellow-400"
-                    : "text-gray-400"
+                    : "text-muted-foreground"
                 }
               />
             ))}
-            <span className="text-sm ml-2">
-              ({avg.toFixed(1)})
+            <span className="ml-2 text-sm text-muted-foreground">
+              {product.rating.toFixed(1)} · {product.reviewCount} reviews
             </span>
           </div>
 
           {/* Price */}
-          <div className="text-xl font-semibold text-emerald-600">
-            ₹{product.price}
+          <div className="text-3xl font-semibold text-emerald-600">
+            ₹{product.discountedPrice ?? product.price}
           </div>
+
+          {/* Stock */}
+          {product.isLowStock && (
+            <div className="text-sm text-orange-500">
+              Low stock available
+            </div>
+          )}
+
+          {!product.inStock && (
+            <div className="text-sm text-red-500">
+              Out of stock
+            </div>
+          )}
 
           {/* Quantity */}
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
               disabled={quantity <= 1}
-              onClick={() => setQuantity(quantity - 1)}
+              onClick={() => setQuantity(q => q - 1)}
             >
               −
             </Button>
             <span>{quantity}</span>
             <Button
               variant="outline"
-              onClick={() => setQuantity(quantity + 1)}
+              disabled={quantity >= product.stocks}
+              onClick={() => setQuantity(q => q + 1)}
             >
               +
             </Button>
@@ -210,45 +207,138 @@ const Product = () => {
           {/* Actions */}
           <div className="flex gap-4">
             <Button
-              onClick={() => dispatch(addToCart({ ...product, quantity }))}
+              disabled={!product.inStock}
+              onClick={() =>
+                dispatch(addToCart({ ...product, quantity }))
+              }
             >
               <FaShoppingCart className="mr-2" />
               Add to Cart
             </Button>
 
-            <Button variant="secondary" onClick={handleCheckout}>
+            <Button
+              variant="secondary"
+              disabled={!product.inStock}
+              onClick={() => {
+                dispatch(setOrderFromBuyNow({ product, quantity }));
+                navigate("/BuyProduct");
+              }}
+            >
               Buy Now
             </Button>
           </div>
+
+          {/* Wishlist */}
+          <button
+            onClick={() =>
+              userId && dispatch(addWishlistItem(product._id))
+            }
+            className={`flex items-center gap-2 mt-2 ${
+              isWishlisted
+                ? "text-muted-foreground"
+                : "text-red-500"
+            }`}
+          >
+            <FaHeart />
+            {isWishlisted ? "In Wishlist" : "Add to Wishlist"}
+          </button>
         </div>
       </div>
 
-      {/* Description */}
-      <div className="mt-10">
-        <h2 className="text-2xl font-bold mb-2">Description</h2>
-        <p>{product.description}</p>
+      {/* ───────── AI HEALTH INTELLIGENCE ───────── */}
+      <div className="space-y-14 mb-20">
+        <HealthScoreCard nutrition={product.nutrition} />
 
-        <button
-          onClick={() => setShowMore(!showMore)}
-          className="mt-3 text-blue-500"
-        >
-          {showMore ? "See Less" : "See More"}
-        </button>
+        {/* CHANGED: Passing the transformed data to the new card */}
+        <NutrientCard {...nutrientCardData} />
+
+        <WhyHealthy
+          nutrition={product.nutrition}
+          dietary={product.dietary}
+        />
+
+        <NutritionCompare
+          nutrition={product.nutrition}
+          category={product.Category}
+        />
       </div>
 
-      {/* Reviews */}
+      {/* ───────── INGREDIENTS & ALLERGENS ───────── */}
+      {(product.ingredients?.length > 0 ||
+        product.allergens?.length > 0) && (
+        <section className="mb-14">
+          <h2 className="text-xl font-semibold mb-3">
+            Ingredients & Safety
+          </h2>
+
+          {product.ingredients?.length > 0 && (
+            <p className="mb-2 text-muted-foreground">
+              Ingredients: {product.ingredients.join(", ")}
+            </p>
+          )}
+
+          {product.allergens?.length > 0 && (
+            <p className="text-red-500 text-sm">
+              Allergens: {product.allergens.join(", ")}
+            </p>
+          )}
+        </section>
+      )}
+
+      {/* ───────── STORAGE & SERVING ───────── */}
+      {product.foodInfo && (
+        <section className="mb-14">
+          <h2 className="text-xl font-semibold mb-3">
+            Storage & Serving
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-4 text-sm">
+            {product.foodInfo.shelfLife && (
+              <div>Shelf life: {product.foodInfo.shelfLife}</div>
+            )}
+            {product.foodInfo.storageInstructions && (
+              <div>
+                Storage: {product.foodInfo.storageInstructions}
+              </div>
+            )}
+            {product.foodInfo.servingSize && (
+              <div>
+                Serving size: {product.foodInfo.servingSize}
+              </div>
+            )}
+            {product.foodInfo.servingsPerPack && (
+              <div>
+                Servings per pack:{" "}
+                {product.foodInfo.servingsPerPack}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* ───────── REVIEWS ───────── */}
       <ProductReviews
         reviews={currentReviews}
-        avg={avg}
-        count={count}
+        avg={product.rating}
+        count={product.reviewCount}
         reviewDraft={reviewDraft}
         setReviewDraft={setReviewDraft}
-        onSubmit={handleSubmitReview}
-        currentPage={currentPage}
-        totalPages={totalPages}
+        onSubmit={async () => {
+          if (!reviewDraft.rating || !reviewDraft.message)
+            return;
+          await dispatch(
+            submitReview({ productId, ...reviewDraft })
+          ).unwrap();
+          dispatch(fetchReviewsByProduct(productId));
+          setReviewDraft({ rating: 0, message: "" });
+        }}
+        currentPage={page}
+        totalPages={Math.ceil(
+          reviews.length / reviewsPerPage
+        )}
         hasReviewed={hasReviewed}
-        onPrev={() => setCurrentPage((p) => p - 1)}
-        onNext={() => setCurrentPage((p) => p + 1)}
+        onPrev={() => setPage(p => p - 1)}
+        onNext={() => setPage(p => p + 1)}
       />
     </div>
   );
