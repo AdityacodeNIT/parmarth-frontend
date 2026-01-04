@@ -21,10 +21,10 @@ const About = () => {
         {/* Header */}
         <header className="text-center space-y-4">
           <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
-            About Eat Healthy
+            About Paustik
           </h1>
           <p className="text-muted-foreground max-w-3xl mx-auto text-lg leading-relaxed">
-            Eat Healthy is an early-stage marketplace built with a simple idea:
+            Paustik is an early-stage marketplace built with a simple idea:
             choosing packaged food should feel safe, clear, and informed — not confusing or risky.
           </p>
         </header>
@@ -42,7 +42,7 @@ const About = () => {
             understand what that really means. Ingredient lists are complex,
             claims are unclear, and trust is left entirely to the brand.
             <br /><br />
-            Eat Healthy exists to make food choices easier by focusing on clarity,
+            Paustik exists to make food choices easier by focusing on clarity,
             basic rules, and visible reasoning — especially for people who want to
             be more mindful about what they eat.
           </CardContent>
@@ -78,7 +78,7 @@ const About = () => {
             <CardTitle>Where We Are Right Now</CardTitle>
           </CardHeader>
           <CardContent className="text-muted-foreground leading-relaxed">
-            Eat Healthy is at an early stage. We are beginning with a limited
+            Paustik is at an early stage. We are beginning with a limited
             selection of packaged foods and a small set of rules, with the goal
             of gradually expanding categories, improving verification, and
             learning from real user feedback.
