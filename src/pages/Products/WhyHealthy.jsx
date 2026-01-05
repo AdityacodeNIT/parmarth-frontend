@@ -1,124 +1,99 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { Sparkles } from "lucide-react";
 
-export default function WhyHealthy({ nutrition, dietary }) {
+export default function WhyHealthy({ productId, nutrition, dietary }) {
   const [aiText, setAiText] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const flatNutrition = {
+    calories: nutrition?.energy?.calories ?? 0,
+    protein: nutrition?.macros?.protein ?? 0,
+    fibre: nutrition?.macros?.fibre ?? 0,
+    sugar: nutrition?.macros?.sugar ?? 0,
+    sodium: nutrition?.micros?.minerals?.sodium ?? 0,
+  };
+
   useEffect(() => {
-    if (!nutrition) return;
+    if (!productId) return;
 
     const controller = new AbortController();
 
-    async function generateAIExplanation() {
+    async function fetchAIExplanation() {
       setLoading(true);
-
       try {
-        const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${import.meta.env.VITE_GEMINI_API_KEY}`,
-          {
-            method: "POST",
-            signal: controller.signal,
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              contents: [
-                {
-                  role: "user",
-                  parts: [
-                    {
-                      text: `
-You are a nutrition expert.
-Explain health benefits conservatively and factually.
-No marketing language.
-No medical claims.
-No exaggeration.
-
-Nutrition values:
-Protein: ${nutrition.protein} g
-Fibre: ${nutrition.fibre} g
-Sugar: ${nutrition.sugar} g
-Calories: ${nutrition.calories}
-Sodium: ${nutrition.sodium} mg
-
-Dietary flags:
-Vegan: ${dietary?.isVegan}
-Sugar free: ${dietary?.isSugarFree}
-
-Explain in 3–4 short bullet points why this product may be considered a healthy choice for general consumption.
-                      `,
-                    },
-                  ],
-                },
-              ],
-              generationConfig: {
-                temperature: 0.25,
-                maxOutputTokens: 200,
-              },
-            }),
-          }
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/v1/product/ai/whyhealthy/${productId}`,
+          { signal: controller.signal }
         );
 
-        const data = await res.json();
-        const text =
-          data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (text) {
-          setAiText(text.trim());
+        if (res.data?.text) {
+          setAiText(res.data.text);
         }
       } catch (err) {
-        // Silent fallback
+        // silent fallback
       } finally {
         setLoading(false);
       }
     }
 
-    generateAIExplanation();
+    fetchAIExplanation();
     return () => controller.abort();
-  }, [nutrition, dietary]);
+  }, [productId]);
 
-  /* ---------- FALLBACK (original logic preserved) ---------- */
+  /* ───────── FALLBACK (SOFT, GEN-Z SAFE) ───────── */
 
   const fallbackReasons = [];
 
-  if (nutrition?.protein >= 10)
-    fallbackReasons.push("High protein supports satiety and muscle recovery.");
+  if (flatNutrition.protein >= 10)
+    fallbackReasons.push("Contains a noticeable amount of protein.");
 
-  if (nutrition?.fibre >= 8)
-    fallbackReasons.push("High fibre improves digestion and gut health.");
+  if (flatNutrition.fibre >= 8)
+    fallbackReasons.push("Includes fibre commonly found in balanced diets.");
 
-  if (nutrition?.sugar <= 5)
-    fallbackReasons.push("Low sugar helps maintain stable blood glucose levels.");
+  if (flatNutrition.sugar <= 5)
+    fallbackReasons.push("Sugar content is relatively low.");
 
   if (dietary?.isVegan)
-    fallbackReasons.push("Plant-based and suitable for vegan diets.");
+    fallbackReasons.push("Fits plant-based food preferences.");
 
   if (!aiText && fallbackReasons.length === 0) return null;
 
   return (
-    <section className="rounded-2xl border p-6 bg-muted/30">
-      <h2 className="text-xl font-semibold mb-3">
-        Why this is a healthy choice
-      </h2>
+    <section className="rounded-2xl border bg-background p-5 space-y-3">
+      
+      {/* Header */}
+      <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+        <Sparkles size={16} className="text-primary" />
+        <span>Why people consider this</span>
+      </div>
 
+      {/* Loading */}
       {loading && (
         <p className="text-sm text-muted-foreground animate-pulse">
-          Generating health insights…
+          Breaking down the nutrition…
         </p>
       )}
 
+      {/* AI Text */}
       {!loading && aiText && (
-        <div className="text-sm text-muted-foreground whitespace-pre-line">
+        <p className="text-sm leading-relaxed text-foreground/90">
           {aiText}
-        </div>
+        </p>
       )}
 
+      {/* Fallback */}
       {!loading && !aiText && (
-        <ul className="list-disc list-inside text-sm space-y-1">
-          {fallbackReasons.map((r, i) => (
-            <li key={i}>{r}</li>
+        <div className="space-y-1">
+          {fallbackReasons.map((reason, i) => (
+            <p
+              key={i}
+              className="text-sm text-foreground/80 leading-relaxed"
+            >
+              {reason}
+            </p>
           ))}
-        </ul>
+        </div>
       )}
     </section>
   );

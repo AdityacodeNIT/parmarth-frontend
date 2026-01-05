@@ -27,7 +27,7 @@ const AddProduct = () => {
   const [loading, setLoading] = useState(false);
 
   /* -----------------------------
-     STATE (MATCHES BACKEND)
+     STATE (MATCHES BACKEND SCHEMA)
   ----------------------------- */
 
   const [product, setProduct] = useState({
@@ -40,14 +40,38 @@ const AddProduct = () => {
     ProductImage: null,
     images: [],
     ingredients: "",
+
     nutrition: {
-      calories: "",
-      protein: "",
-      carbs: "",
-      sugar: "",
-      fat: "",
-      fibre: "",
+      energy: {
+        calories: "",
+      },
+      macros: {
+        protein: "",
+        carbs: "",
+        sugar: "",
+        fat: "",
+        fibre: "",
+      },
+      micros: {
+        vitamins: {
+          vitaminA: "",
+          vitaminB12: "",
+          vitaminC: "",
+          vitaminD: "",
+          vitaminE: "",
+          vitaminK: "",
+        },
+        minerals: {
+          sodium: "",
+          calcium: "",
+          iron: "",
+          potassium: "",
+          magnesium: "",
+          zinc: "",
+        },
+      },
     },
+
     dietary: {
       isVegan: false,
       isVegetarian: false,
@@ -84,10 +108,65 @@ const AddProduct = () => {
     setProduct((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
 
-  const handleNutritionChange = (e) => {
+  /* Energy */
+  const handleEnergyChange = (e) => {
     setProduct((p) => ({
       ...p,
-      nutrition: { ...p.nutrition, [e.target.name]: e.target.value },
+      nutrition: {
+        ...p.nutrition,
+        energy: {
+          ...p.nutrition.energy,
+          [e.target.name]: e.target.value,
+        },
+      },
+    }));
+  };
+
+  /* Macros */
+  const handleMacroChange = (e) => {
+    setProduct((p) => ({
+      ...p,
+      nutrition: {
+        ...p.nutrition,
+        macros: {
+          ...p.nutrition.macros,
+          [e.target.name]: e.target.value,
+        },
+      },
+    }));
+  };
+
+  /* Vitamins */
+  const handleVitaminChange = (e) => {
+    setProduct((p) => ({
+      ...p,
+      nutrition: {
+        ...p.nutrition,
+        micros: {
+          ...p.nutrition.micros,
+          vitamins: {
+            ...p.nutrition.micros.vitamins,
+            [e.target.name]: e.target.value,
+          },
+        },
+      },
+    }));
+  };
+
+  /* Minerals */
+  const handleMineralChange = (e) => {
+    setProduct((p) => ({
+      ...p,
+      nutrition: {
+        ...p.nutrition,
+        micros: {
+          ...p.nutrition.micros,
+          minerals: {
+            ...p.nutrition.micros.minerals,
+            [e.target.name]: e.target.value,
+          },
+        },
+      },
     }));
   };
 
@@ -106,6 +185,10 @@ const AddProduct = () => {
     setProduct((p) => ({ ...p, images: Array.from(e.target.files) }));
   };
 
+  /* -----------------------------
+     SUBMIT
+  ----------------------------- */
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -123,12 +206,13 @@ const AddProduct = () => {
       formData.append("productImage", product.ProductImage);
       product.images.forEach((img) => formData.append("images", img));
 
-      formData.append("nutrition", JSON.stringify(product.nutrition));
-      formData.append("dietary", JSON.stringify(product.dietary));
       formData.append(
         "ingredients",
         product.ingredients.split(",").map((i) => i.trim())
       );
+
+      formData.append("nutrition", JSON.stringify(product.nutrition));
+      formData.append("dietary", JSON.stringify(product.dietary));
 
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/product/addProduct`,
@@ -138,7 +222,6 @@ const AddProduct = () => {
 
       toast.success("Product added successfully");
       navigate("/seller");
-
     } catch (err) {
       toast.error("Failed to add product");
     } finally {
@@ -151,7 +234,7 @@ const AddProduct = () => {
   ----------------------------- */
 
   return (
-    <Card className="max-w-4xl mx-auto my-8 bg-background text-foreground">
+    <Card className="max-w-4xl mx-auto my-8">
       <CardHeader>
         <CardTitle>Add New Product</CardTitle>
       </CardHeader>
@@ -167,32 +250,77 @@ const AddProduct = () => {
             <Input name="stocks" type="number" placeholder="Stocks" onChange={handleChange} />
             <select name="Category" onChange={handleChange} className="border rounded px-2">
               <option value="">Category</option>
-              {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+              {CATEGORIES.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
             </select>
           </div>
 
           <Textarea
-            placeholder="Ingredients (comma separated)"
             name="ingredients"
+            placeholder="Ingredients (comma separated)"
             onChange={handleChange}
           />
 
+          {/* Energy */}
+          <Input
+            name="calories"
+            type="number"
+            placeholder="Calories"
+            onChange={handleEnergyChange}
+          />
+
+          {/* Macros */}
           <div className="grid grid-cols-3 gap-4">
-            {Object.keys(product.nutrition).map((n) => (
+            {["protein", "carbs", "sugar", "fat", "fibre"].map((m) => (
               <Input
-                key={n}
-                name={n}
+                key={m}
+                name={m}
                 type="number"
-                placeholder={n}
-                onChange={handleNutritionChange}
+                placeholder={m}
+                onChange={handleMacroChange}
               />
             ))}
           </div>
 
-          <div className="flex gap-4">
+          {/* Vitamins */}
+          <h4 className="font-semibold">Vitamins (%)</h4>
+          <div className="grid grid-cols-3 gap-4">
+            {["vitaminA", "vitaminB12", "vitaminC", "vitaminD", "vitaminE", "vitaminK"].map(
+              (v) => (
+                <Input
+                  key={v}
+                  name={v}
+                  type="number"
+                  placeholder={v}
+                  onChange={handleVitaminChange}
+                />
+              )
+            )}
+          </div>
+
+          {/* Minerals */}
+          <h4 className="font-semibold">Minerals</h4>
+          <div className="grid grid-cols-3 gap-4">
+            {["sodium", "calcium", "iron", "potassium", "magnesium", "zinc"].map((m) => (
+              <Input
+                key={m}
+                name={m}
+                type="number"
+                placeholder={m}
+                onChange={handleMineralChange}
+              />
+            ))}
+          </div>
+
+          {/* Dietary */}
+          <div className="flex flex-wrap gap-4">
             {Object.keys(product.dietary).map((d) => (
               <div key={d} className="flex items-center gap-2">
-                <Checkbox checked={product.dietary[d]} onCheckedChange={() => handleDietaryToggle(d)} />
+                <Checkbox
+                  checked={product.dietary[d]}
+                  onCheckedChange={() => handleDietaryToggle(d)}
+                />
                 <span>{d.replace("is", "")}</span>
               </div>
             ))}
@@ -202,10 +330,10 @@ const AddProduct = () => {
           <Input type="file" multiple onChange={handleGalleryImagesChange} />
 
           <Textarea
+            name="description"
             placeholder="Description"
             value={product.description}
             onChange={handleChange}
-            name="description"
           />
 
           <Button type="button" variant="outline" onClick={generateDescription}>
