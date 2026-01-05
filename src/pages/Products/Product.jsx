@@ -125,10 +125,20 @@ const Product = () => {
     ],
 
     // Map dietary tags (e.g., "Gluten Free") to benefits
-    benefits: product.dietary?.map(tag => ({ label: tag })) || [
-      { label: "Healthy Choice" }, // Fallback
+  benefits: product.dietary
+  ? Object.entries(product.dietary)
+      .filter(([_, value]) => value === true)
+      .map(([key]) => ({
+        label: key
+          .replace(/^is/, "")
+          .replace(/([A-Z])/g, " $1")
+          .trim()
+      }))
+  : [
+      { label: "Healthy Choice" },
       { label: "Nutrient Dense" }
     ]
+
   };
   /* ───────── END TRANSFORMATION ───────── */
 
