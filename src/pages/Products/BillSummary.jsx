@@ -20,8 +20,8 @@ const BillSummary = ({
 
   const tax = Math.ceil(
     isCartCheckout
-      ? cartSubtotal * 0.18
-      : product.price * quantity * 0.18
+      ? cartSubtotal * 0.05
+      : product.price * quantity * 0.05
   );
 
   const delivery = Math.ceil(serviceabilityResult?.deliveryCharge || 0);
@@ -68,7 +68,7 @@ const BillSummary = ({
         {/* PRICE BREAKUP */}
         <div className="space-y-2 text-sm">
           <div className="flex justify-between text-muted-foreground">
-            <span>Tax (18%)</span>
+            <span>Tax (5%)</span>
             <span>₹{tax}</span>
           </div>
 

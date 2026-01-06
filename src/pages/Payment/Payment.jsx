@@ -156,7 +156,7 @@ const Payment = () => {
 
         <div className='mb-4 space-y-1'>
           <p className='text-lg font-medium'>Base: ₹{baseAmount}</p>
-          <p className='text-lg font-medium'>Tax (18%): ₹{Math.ceil(baseAmount * 0.18)}</p>
+          <p className='text-lg font-medium'>Tax (5%): ₹{Math.ceil(baseAmount * 0.05)}</p>
           <p className='text-lg font-medium'>Delivery Charge: ₹{deliverycharge || 0}</p>
 
           <p className='text-lg font-bold'>

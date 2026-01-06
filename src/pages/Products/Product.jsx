@@ -18,6 +18,7 @@ import ProductReviews from "./ProductReviews";
 import ProductGallery from "./ProductGallery";
 
 /* ───────── Health Components ───────── */
+import HealthScoreCard from "./HealthScoreCard";
 import NutrientCard from "./NutrientBar";
 import WhyHealthy from "./WhyHealthy";
 
@@ -36,9 +37,6 @@ const Product = () => {
   const reviews = useSelector((state) =>
     selectReviewsByProduct(state, productId)
   );
-  console.log("Reviews:", reviews);
-  console.log("Product ID:", productId);
-  
 
   const isWishlisted = wishlist.some(
     (item) => item.productId?._id === productId
@@ -81,16 +79,10 @@ const Product = () => {
     ...(product.images || []),
   ].filter(Boolean);
 
-  /* ───────── DESCRIPTION (NEW) ───────── */
-  const description =
-    product.description ||
-    product.shortDescription ||
-    product.details ||
-    "";
-
-  /* ───────── NUTRITION NORMALIZATION ───────── */
+  /* ───────── CORRECT NUTRITION NORMALIZATION ───────── */
   const nutrition = {
     energy: product.nutrition?.energy ?? { calories: 0 },
+
     macros: product.nutrition?.macros ?? {
       protein: 0,
       carbs: 0,
@@ -98,6 +90,7 @@ const Product = () => {
       fat: 0,
       fibre: 0,
     },
+
     micros: product.nutrition?.micros ?? {
       vitamins: {},
       minerals: {},
@@ -107,7 +100,9 @@ const Product = () => {
   /* ───────── NUTRIENT CARD DATA ───────── */
   const nutrientCardData = {
     productName: product.name,
+
     calories: nutrition.energy.calories,
+
     nutriScore: "A",
     healthGrade:
       nutrition.macros.sugar <= 7 ? "Good" : "Moderate",
@@ -116,40 +111,75 @@ const Product = () => {
       {
         label: "Protein",
         value: `${nutrition.macros.protein}g`,
-        percentage: Math.min((nutrition.macros.protein / 50) * 100, 100),
+        percentage: Math.min(
+          (nutrition.macros.protein / 50) * 100,
+          100
+        ),
         color: "bg-green-500",
       },
       {
         label: "Carbs",
         value: `${nutrition.macros.carbs}g`,
-        percentage: Math.min((nutrition.macros.carbs / 300) * 100, 100),
+        percentage: Math.min(
+          (nutrition.macros.carbs / 300) * 100,
+          100
+        ),
         color: "bg-orange-400",
       },
       {
         label: "Fibre",
         value: `${nutrition.macros.fibre}g`,
-        percentage: Math.min((nutrition.macros.fibre / 30) * 100, 100),
+        percentage: Math.min(
+          (nutrition.macros.fibre / 30) * 100,
+          100
+        ),
         color: "bg-green-600",
       },
-      {
+       {
         label: "Sugar",
         value: `${nutrition.macros.sugar}g`,
-        percentage: Math.min((nutrition.macros.sugar / 30) * 100, 100),
+        percentage: Math.min(
+          (nutrition.macros.sugar / 30) * 100,
+          100
+        ),
         color: "bg-red-600",
       },
       {
         label: "Fat",
         value: `${nutrition.macros.fat}g`,
-        percentage: Math.min((nutrition.macros.fat / 70) * 100, 100),
+        percentage: Math.min(
+          (nutrition.macros.fat / 70) * 100,
+          100
+        ),
         color: "bg-yellow-400",
       },
     ],
 
+    micros: [
+      ...Object.entries(nutrition.micros.vitamins || {}).map(
+        ([key, value]) => ({
+          label: key.replace(/([A-Z])/g, " $1").trim(),
+          value: `${value}%`,
+          active: value > 0,
+        })
+      ),
+      ...Object.entries(nutrition.micros.minerals || {}).map(
+        ([key, value]) => ({
+          label: key.replace(/([A-Z])/g, " $1").trim(),
+          value: key === "sodium" ? `${value}mg` : `${value}%`,
+          active: value > 0,
+        })
+      ),
+    ],
+
     benefits: product.dietary
       ? Object.entries(product.dietary)
-          .filter(([_, v]) => v === true)
-          .map(([k]) => ({
-            label: k.replace(/^is/, "").replace(/([A-Z])/g, " $1").trim(),
+          .filter(([_, value]) => value === true)
+          .map(([key]) => ({
+            label: key
+              .replace(/^is/, "")
+              .replace(/([A-Z])/g, " $1")
+              .trim(),
           }))
       : [],
   };
@@ -158,10 +188,10 @@ const Product = () => {
     <div className="min-h-screen bg-background text-foreground px-4 md:px-8 py-10 max-w-7xl mx-auto">
 
       {/* ───────── HERO ───────── */}
-      <div className="grid lg:grid-cols-2 gap-8 mb-10">
+      <div className="grid lg:grid-cols-2 gap-8 mb-8">
         <ProductGallery images={images} name={product.name} />
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="text-sm text-muted-foreground">
             {product.Category}
             {product.brand && ` · ${product.brand}`}
@@ -189,9 +219,6 @@ const Product = () => {
             ₹{product.discountedPrice ?? product.price}
           </div>
 
-          {/* 🔹 DESCRIPTION SECTION (NEW) */}
-       
-
           {/* Quantity */}
           <div className="flex items-center gap-3">
             <Button
@@ -212,7 +239,11 @@ const Product = () => {
           </div>
 
           <div className="flex gap-4">
-            <Button onClick={() => dispatch(addToCart({ ...product, quantity }))}>
+            <Button
+              onClick={() =>
+                dispatch(addToCart({ ...product, quantity }))
+              }
+            >
               <FaShoppingCart className="mr-2" />
               Add to Cart
             </Button>
@@ -229,8 +260,10 @@ const Product = () => {
           </div>
 
           <button
-            onClick={() => userId && dispatch(addWishlistItem(product._id))}
-            className={`flex items-center gap-2 ${
+            onClick={() =>
+              userId && dispatch(addWishlistItem(product._id))
+            }
+            className={`flex items-center gap-2 mt-2 ${
               isWishlisted ? "text-muted-foreground" : "text-red-500"
             }`}
           >
@@ -238,26 +271,14 @@ const Product = () => {
             {isWishlisted ? "In Wishlist" : "Add to Wishlist"}
           </button>
         </div>
-        
       </div>
-
-<div>
-        <h2 className="text-2xl font-bold mb-4">Product Description</h2>
-        <p className="text-sm leading-relaxed text-foreground/90 px-4">
-          {description}
-        </p>
-</div>
-
 
       {/* ───────── HEALTH ───────── */}
       <div className="space-y-14 mb-20">
+        <HealthScoreCard nutrition={nutrition} />
         <NutrientCard {...nutrientCardData} />
-        <WhyHealthy
-          productId={product._id}
-          nutrition={nutrition}
-          dietary={product.dietary}
-        />
-      
+        <WhyHealthy   productId={product._id} nutrition={nutrition} dietary={product.dietary} />
+
       </div>
 
       {/* ───────── REVIEWS ───────── */}
