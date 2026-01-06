@@ -62,11 +62,13 @@ export default function WhyHealthy({ productId, nutrition, dietary }) {
   return (
     <section className="rounded-2xl border bg-background p-5 space-y-3">
       
+      
       {/* Header */}
       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
         <Sparkles size={16} className="text-primary" />
         <span>Why people consider this</span>
       </div>
+
 
       {/* Loading */}
       {loading && (
@@ -75,14 +77,13 @@ export default function WhyHealthy({ productId, nutrition, dietary }) {
         </p>
       )}
 
-      {/* AI Text */}
       {!loading && aiText && (
         <p className="text-sm leading-relaxed text-foreground/90">
           {aiText}
         </p>
       )}
 
-      {/* Fallback */}
+
       {!loading && !aiText && (
         <div className="space-y-1">
           {fallbackReasons.map((reason, i) => (
