@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { Button } from "@/components/ui/button";
 
 import { logout } from "@/features/Auth/authSlice";
+import { userAPI } from "@/api/userAPI";
 
 const Logout = () => {
   const dispatch = useDispatch();
@@ -14,11 +15,8 @@ const Logout = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/logout`,
-        {},
-        { withCredentials: true }
-      );
+      const response = await userAPI.logout()
+
 
       if (response.status === 200) {
         // ✅ Clear Redux auth state

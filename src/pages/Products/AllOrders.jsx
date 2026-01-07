@@ -37,7 +37,7 @@ const AllOrders = () => {
     setError("");
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/shiprocket/getOrder`,
+        `${import.meta.env.VITE_API_URL}/api/v1/shiprocket/getOrder`,
         { withCredentials: true }
       );
 

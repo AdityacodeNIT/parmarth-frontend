@@ -55,7 +55,7 @@ const useAddresses = () => {
         setCheckingDelivery(true);
         try {
           const res = await axios.post(
-            `${import.meta.env.VITE_API_URL}/shiprocket/check`,
+            `${import.meta.env.VITE_API_URL}/api/v1/shiprocket/check`,
             { pincode: selectedAddress.postalCode },
             { withCredentials: true }
           );

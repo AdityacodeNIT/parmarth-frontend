@@ -96,7 +96,7 @@ function App() {
           <Route path='/myOrder' element={<AllOrders />} />
           <Route path='/orderitems' element={<OrderDetails />} />
 
-          <Route path='/order-success/:orderId' element={<OrderSuccess />} />
+          <Route path='/order-success' element={<OrderSuccess />} />
           <Route path='/seller' element={<Seller />} />
           <Route path='/sellerRegister' element={<SellerRegister />} />
           <Route path='/sellerlogin' element={<Sellerlogin />} />

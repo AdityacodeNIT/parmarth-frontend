@@ -1,22 +1,20 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { addressAPI } from "@/api/addressAPI";
 
-export const fetchAddress=createAsyncThunk(
-  'address/fetchAddress',
-  async (_, {rejectWithValue})=>{
-    try{
-      const res=await axios.get(`${import.meta.env.VITE_API_URL}/api/v1/address/getAllAddresses`,{
-        withCredentials:true,
-      });
-      ;
+export const fetchAddress = createAsyncThunk(
+  "address/fetchAddress",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await addressAPI.getAll();
       return res.data.data;
-    }
-    catch(err){
-
-      return rejectWithValue(err.message);
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || err.message
+      );
     }
   }
 );
+
 
 
 

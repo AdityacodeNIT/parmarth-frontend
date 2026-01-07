@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { userAPI } from "@/api/userAPI";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -48,14 +49,12 @@ const ChangePassword = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/changePassword`,
+      const response = await userAPI.changePassword(
         {
           currentPassword,
           newPassword,
           confirmPassword,
-        },
-        { withCredentials: true }
+        }
       );
 
       setMessage(response.data?.message || "Password updated successfully");

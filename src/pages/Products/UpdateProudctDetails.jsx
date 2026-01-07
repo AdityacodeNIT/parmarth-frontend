@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import { productAPI } from "@/api/productAPi";
 
 const UpdateProduct = () => {
     const { id } = useParams();
@@ -40,15 +41,7 @@ const UpdateProduct = () => {
         
 
         try {
-            const response = await axios.post(
-                `http://localhost:8000/api/v1/product/updateProduct/${id}`,
-                data,
-                {
-                  withCredentials: true,
-                    },
-                
-            );
-
+            const response = await productAPI.update(data);
             setMessage("Product updated successfully!");
         } catch (error) {
             setMessage(error.response?.data?.message || "Error updating product");

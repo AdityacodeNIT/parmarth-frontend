@@ -271,7 +271,13 @@ const Product = () => {
             {isWishlisted ? "In Wishlist" : "Add to Wishlist"}
           </button>
         </div>
+   
       </div>
+           <div className="mb-10 shadow-offset-x ">
+            <h1>Description</h1>
+            <p1 className="text-muted-foreground p-4">{product && product.description}</p1>
+            
+        </div>
 
       {/* ───────── HEALTH ───────── */}
       <div className="space-y-14 mb-20">
@@ -291,11 +297,14 @@ const Product = () => {
         onSubmit={async () => {
           if (!reviewDraft.rating || !reviewDraft.message) return;
           await dispatch(
-            submitReview({ productId, ...reviewDraft })
+            submitReview({     productId: product._id,
+      rating: reviewDraft.rating,
+      message: reviewDraft.message, })
           ).unwrap();
           dispatch(fetchReviewsByProduct(productId));
           setReviewDraft({ rating: 0, message: "" });
         }}
+
         currentPage={page}
         totalPages={Math.ceil(reviews.length / reviewsPerPage)}
         hasReviewed={hasReviewed}

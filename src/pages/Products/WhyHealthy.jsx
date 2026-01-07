@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Sparkles } from "lucide-react";
+import { productAPI } from "@/api/productAPi";
 
 export default function WhyHealthy({ productId, nutrition, dietary }) {
   const [aiText, setAiText] = useState(null);
@@ -22,10 +23,7 @@ export default function WhyHealthy({ productId, nutrition, dietary }) {
     async function fetchAIExplanation() {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v1/product/ai/whyhealthy/${productId}`,
-          { signal: controller.signal }
-        );
+        const res = await productAPI.getWhyHealthyAI(productId, controller.signal);
 
         if (res.data?.text) {
           setAiText(res.data.text);

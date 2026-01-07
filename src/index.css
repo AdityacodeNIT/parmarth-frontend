@@ -209,7 +209,8 @@ body {
 @layer base {
   a {
     text-decoration: none!important ;
-    color: inherit;
+
+    color: green!important ;
   }
 }
 

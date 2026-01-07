@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { userAPI } from "@/api/userAPI";
 
 const Userlist = () => {
   const [userData, setUserData] = useState([]);
@@ -22,11 +23,7 @@ const Userlist = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v1/users/userList`,
-          { withCredentials: true }
-        );
-        console.log(response.data);
+        const response = await userAPI.getUserList();
         setUserData(response.data.data);
       } catch (err) {
         setError(err.message);
@@ -42,10 +39,8 @@ const Userlist = () => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/deleteUser/${id}`,
-        { withCredentials: true }
-      );
+      await userAPI.deleteUser(id);
+       
 
       setUserData((prev) => prev.filter((u) => u._id !== id));
     } catch (err) {
@@ -57,10 +52,9 @@ const Userlist = () => {
     if (!window.confirm("Are you sure you want to update this user's role?")) return;
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/updateUserPost/${id}`,
-        { role: newRole },
-        { withCredentials: true }
+      const res = await userAPI.updateUserRole(
+        id,
+        { role: newRole }
       );
 
       setUserData((prev) =>

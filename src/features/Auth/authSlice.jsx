@@ -1,14 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { userAPI } from "@/api/userAPI";
 import axios from "axios";
 
 export const verifyAuth = createAsyncThunk(
   "auth/verifyAuth",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/me`,
-        { withCredentials: true }
-      );
+      const res = await userAPI.getCurrentUser();
       return res.data;
     } catch (err) {
       return rejectWithValue(null);
@@ -20,11 +18,7 @@ export const loginUser = createAsyncThunk(
   "auth/login",
   async (loginData, { rejectWithValue }) => {
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/login`,
-        loginData,
-        { withCredentials: true }
-      );
+      const res = await userAPI.login(loginData);
       return res.data;
     } catch (err) {
       return rejectWithValue(

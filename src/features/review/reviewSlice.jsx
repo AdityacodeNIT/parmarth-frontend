@@ -7,7 +7,7 @@ export const fetchReviewsByProduct = createAsyncThunk(
   async (productId, { rejectWithValue }) => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v2/review/getReview/${productId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/review/getReview/${productId}`,
         { withCredentials: true }
       );
       return { productId, reviews: res.data }; // expect an array
@@ -22,10 +22,11 @@ export const submitReview = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v2/review`,
+        `${import.meta.env.VITE_API_URL}/api/v1/review`,
         payload,
         { withCredentials: true }
       );
+   
       return res.data; 
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
@@ -38,7 +39,7 @@ export const fetchAverageForProduct = createAsyncThunk(
   async (productId, { rejectWithValue }) => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v2/review/average`,
+        `${import.meta.env.VITE_API_URL}/api/v1/review/average`,
         { productId },
         { withCredentials: true }
       );

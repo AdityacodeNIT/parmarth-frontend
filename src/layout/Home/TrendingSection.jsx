@@ -3,6 +3,9 @@ import Container from "@/components/ui/Container";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
+import axios from "axios";
+import { userAPI } from "@/api/userAPI";
+import { productAPI } from "@/api/productAPi";
 
 const TrendingSection = () => {
   const [products, setProducts] = useState([]);
@@ -12,15 +15,14 @@ const TrendingSection = () => {
   useEffect(() => {
     const fetchTrending = async () => {
       try {
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/v1/product/getTrendingProduct`
-        );
+        const res = await productAPI.getTrending();
+        console.log(res);
 
-        if (!res.ok) {
+        if (!res.data) {
           throw new Error("API error");
         }
 
-        const data = await res.json();
+        const data = await res.data;
         setProducts(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Failed to load trending products", err);

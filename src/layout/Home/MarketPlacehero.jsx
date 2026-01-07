@@ -29,7 +29,7 @@ const MarketplaceHero = () => {
 
             <div className="flex gap-4 mt-6">
               <Link to="/shop">
-                <Button className="h-12 px-6 inline-flex items-center gap-2">
+                <Button className="h-12 px-6 inline-flex items-center gap-2  bg-green-600">
                   Explore Products <ArrowRight size={18} />
                 </Button>
               </Link>

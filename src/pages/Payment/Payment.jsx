@@ -1,214 +1,213 @@
-import React, { useState} from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-import { selectBaseAmount } from '../../utils/selectors.jsx';
-import { clearCurrentOrder, placeShiprocketOrder } from '../../features/order/orderSlice';
-import { clearCart } from '../../features/cart/cartSlice';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
+import { selectBaseAmount } from "../../utils/selectors.jsx";
+import {
+  clearCurrentOrder,
+  placeShiprocketOrder,
+} from "../../features/order/orderSlice";
+import { clearCart } from "../../features/cart/cartSlice";
+import { paymentAPI } from "@/api/paymentAPI.js";
 
 const Payment = () => {
   const navigate = useNavigate();
-
-  const  user  = useSelector(state => state.auth.user);
-
   const dispatch = useDispatch();
-  /* ------------ Get amounts from Redux ------------ */
+
+  const user = useSelector((state) => state.auth.user);
   const baseAmount = useSelector(selectBaseAmount);
-  const deliverycharge = useSelector(s => s.order.deliverycharge);
-  
+  const deliverycharge = useSelector((s) => s.order.deliverycharge);
+
   const totalAmount = Math.ceil(baseAmount * 1.18 + deliverycharge);
 
-  /* ------------ Local UI state -------------------- */
-  const [paymentData, setPaymentData] = useState({ amount: totalAmount });
   const [loading, setLoading] = useState(false);
-  const [coupon, setCoupon] = useState('');
+  const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
   const [paymentStatus, setPaymentStatus] = useState(null);
 
-  /* ------------ Handlers -------------------------- */
+  /* ---------------- Coupon ---------------- */
   const applyCoupon = () => {
-    if (coupon === 'DISCOUNT10') {
+    if (coupon === "DISCOUNT10") {
       setDiscount(totalAmount * 0.1);
     } else {
-      setPaymentStatus('Invalid Coupon Code');
+      setPaymentStatus("Invalid Coupon Code");
     }
   };
-  
-  const handleFormSubmit = async e => {
+
+  /* ---------------- FINAL ORDER CREATION ---------------- */
+  const finishPaymentAndOrder = async () => {
+    try {
+      setPaymentStatus("Payment confirmed. Creating order…");
+
+      const action = await dispatch(placeShiprocketOrder());
+
+      if (placeShiprocketOrder.fulfilled.match(action)) {
+        dispatch(clearCart());
+        dispatch(clearCurrentOrder());
+
+        const orderRes = action.payload;
+        const successId = orderRes.order_id || orderRes.id || "latest";
+
+        setPaymentStatus("Order placed! Redirecting…");
+        setTimeout(() => {
+          navigate(`/order-success`);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }, 1200);
+      } else {
+        setPaymentStatus("Order creation failed.");
+      }
+    } catch (err) {
+      console.error(err);
+      setPaymentStatus("Unexpected error while creating order.");
+    }
+  };
+
+  /* ---------------- POLL PAYMENT STATUS ---------------- */
+  const pollPaymentStatus = (razorpayOrderId) => {
+    let attempts = 0;
+
+    const interval = setInterval(async () => {
+      try {
+        attempts++;
+
+        const { data } = await paymentAPI.getPaymentStatus(razorpayOrderId);
+
+        if (data.status === "captured") {
+          clearInterval(interval);
+          await finishPaymentAndOrder();
+        }
+
+        if (data.status === "failed") {
+          clearInterval(interval);
+          setPaymentStatus("Payment failed. Amount not deducted.");
+        }
+
+        if (attempts > 10) {
+          clearInterval(interval);
+          setPaymentStatus(
+            "Payment confirmation delayed. Please refresh or check later."
+          );
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }, 2000);
+  };
+
+  /* ---------------- PAYMENT SUBMIT ---------------- */
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setPaymentStatus(null);
 
     try {
-      // 1) get Razorpay key
+      // 1️⃣ Get Razorpay key
       const {
-        data: { key }
+        data: { key },
       } = await axios.get(`${import.meta.env.VITE_API_URL}/api/getkey`);
 
-      // 2) create order on backend
+      // 2️⃣ Create order on backend
       const finalAmount = totalAmount - discount;
       const {
-        data: { order }
-      } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v2/payments/paid`,
-        { amount: finalAmount },
-        { withCredentials: true }
-      );
+        data: { order },
+      } = await paymentAPI.checkout({ amount: finalAmount });
 
-      const finishPaymentAndOrder = async () => {
-        try {
-          setPaymentStatus('Payment verified – creating order…');
-
-          /* 1️⃣ Place order with Shiprocket and wait */
-          const action = await dispatch(placeShiprocketOrder());
-
-          if (placeShiprocketOrder.fulfilled.match(action)) {
-            /* 2️⃣ Success: clean local state */
-            dispatch(clearCart());
-            dispatch(clearCurrentOrder());
-
-            /* Shiprocket response payload */
-            const orderRes = action.payload; // e.g. { order_id: 'SR123' }
-            const successId = orderRes.order_id || orderRes.id || 'latest';
-
-            setPaymentStatus('Order placed! Redirecting…');
-            setTimeout(() => {
-              navigate(`/order-success/${successId}`);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }, 1500);
-          } else {
-            /* 3️⃣ Thunk rejected */
-            setPaymentStatus(`Order failed: ${action.payload || 'unknown error'}`);
-          }
-        } catch (err) {
-          /* network or unexpected errors */
-          console.error(err);
-          setPaymentStatus('Unexpected error while placing order.');
-        }
-      };
-
-      /* Razorpay options */
+      // 3️⃣ Razorpay options
       const options = {
         key,
         amount: order.amount,
-        currency: 'INR',
-        name: 'ई-Cart Logistics',
-        description: 'Secure Payment',
-        image: 'https://example.com/your_logo',
+        currency: "INR",
+        name: "ई-Cart Logistics",
+        description: "Secure Payment",
         order_id: order.id,
-        callback_url: `${import.meta.env.VITE_API_URL}/api/v2/payments/paymentcallback`,
+
         prefill: {
-          name: user?.data?.username || 'User',
-          email: user?.data?.email || 'user@example.com',
-          contact: '9000090000'
+          name: user?.data?.username || "User",
+          email: user?.data?.email || "user@example.com",
+          contact: "9000090000",
         },
-        theme: {
-          color: '#3399cc'
-        },
-        handler: async response => {
+
+        handler: async (response) => {
           try {
-            const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = response;
+            setPaymentStatus("Payment received. Confirming…");
 
-            setPaymentStatus('Verifying Payment...');
+            // Optional frontend verification (UX only)
+            await paymentAPI.paymentCallback(response);
 
-            const verifyResponse = await axios.post(
-              `${import.meta.env.VITE_API_URL}/api/v2/payments/paymentcallback`,
-              {
-                razorpay_order_id,
-                razorpay_payment_id,
-                razorpay_signature
-              },
-              { withCredentials: true }
-            );
-
-            if (verifyResponse.data.success) {
-              await finishPaymentAndOrder(); // ⬅️ call the function here
-            } else {
-              setPaymentStatus('Payment verification failed.');
-            }
-          } catch (error) {
-            console.error('Payment Verification Error:', error);
-            setPaymentStatus('Payment Failed! Please try again.');
+            // ✅ Start polling backend (webhook is final truth)
+            pollPaymentStatus(response.razorpay_order_id);
+          } catch (err) {
+            console.error(err);
+            setPaymentStatus("Payment verification failed.");
           }
         },
+
         modal: {
-          escape: false,
           ondismiss: () => {
-            setPaymentStatus('Payment Cancelled! Please try again.');
-          }
-        }
+            setPaymentStatus("Payment cancelled.");
+          },
+        },
+
+        theme: {
+          color: "#3399cc",
+        },
       };
 
       new window.Razorpay(options).open();
     } catch (err) {
       console.error(err);
-      setPaymentStatus('Payment Error. Please try again.');
+      setPaymentStatus("Payment error. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  /* ------------ Render ---------------------------- */
+  /* ---------------- UI ---------------- */
   return (
-    <div className='bg-slate-300 flex justify-center items-center min-h-screen p-4'>
-      <div className='w-full max-w-md bg-white rounded-lg shadow-md p-6'>
-        <h2 className='text-2xl font-bold text-center mb-4'>Payment</h2>
+    <div className="bg-slate-300 flex justify-center items-center min-h-screen p-4">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+        <h2 className="text-2xl font-bold text-center mb-4">Payment</h2>
 
-        <div className='mb-4 space-y-1'>
-          <p className='text-lg font-medium'>Base: ₹{baseAmount}</p>
-          <p className='text-lg font-medium'>Tax (5%): ₹{Math.ceil(baseAmount * 0.05)}</p>
-          <p className='text-lg font-medium'>Delivery Charge: ₹{deliverycharge || 0}</p>
-
-          <p className='text-lg font-bold'>
-            Payable: ₹{totalAmount - discount}{' '}
-            {discount > 0 && <span className='text-green-600'>(-₹{discount})</span>}
+        <div className="mb-4 space-y-1">
+          <p>Base: ₹{baseAmount}</p>
+          <p>Tax: ₹{Math.ceil(baseAmount * 0.18)}</p>
+          <p>Delivery: ₹{deliverycharge || 0}</p>
+          <p className="font-bold">
+            Payable: ₹{totalAmount - discount}
           </p>
         </div>
 
-        <div className='mb-4'>
+        <div className="mb-4">
           <input
-            type='text'
-            placeholder='Coupon code'
+            type="text"
+            placeholder="Coupon code"
             value={coupon}
-            onChange={e => setCoupon(e.target.value)}
-            className='w-full border p-2 rounded-md'
+            onChange={(e) => setCoupon(e.target.value)}
+            className="w-full border p-2 rounded-md"
           />
           <button
             onClick={applyCoupon}
-            className='mt-2 w-full p-2 bg-blue-500 text-white rounded-lg'
+            className="mt-2 w-full p-2 bg-blue-500 text-white rounded"
           >
             Apply Coupon
           </button>
         </div>
 
         <form onSubmit={handleFormSubmit}>
-          <input
-            type='number'
-            name='amount'
-            value={paymentData.amount}
-            disabled
-            className='w-full border p-2 text-center rounded-md'
-          />
-
           <button
-            type='submit'
+            type="submit"
             disabled={loading}
-            className={`w-full mt-4 p-2 rounded-lg font-semibold ${
-              loading ? 'bg-gray-400' : 'bg-green-500 hover:bg-green-600'
+            className={`w-full p-2 rounded font-semibold ${
+              loading ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"
             } text-white`}
           >
-            {loading ? 'Processing…' : 'Confirm Payment'}
+            {loading ? "Processing…" : "Confirm Payment"}
           </button>
         </form>
 
         {paymentStatus && (
-          <p
-            className={`text-center mt-4 ${
-              paymentStatus.includes('Failed') ? 'text-red-600' : 'text-green-600'
-            }`}
-          >
-            {paymentStatus}
-          </p>
+          <p className="text-center mt-4 text-sm">{paymentStatus}</p>
         )}
       </div>
     </div>

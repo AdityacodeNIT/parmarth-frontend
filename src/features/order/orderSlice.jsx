@@ -19,7 +19,7 @@ export const placeShiprocketOrder = createAsyncThunk(
 
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/shiprocket/order`,
+        `${import.meta.env.VITE_API_URL}/api/v1/shiprocket/order`,
         { items: current.items, paymentMethod: current.paymentMethod },
         { withCredentials: true }
       );
@@ -34,9 +34,9 @@ const initialState= {
     /* what the user is about to checkout */
     current: {
       source: null,        // 'cart' | 'buyNow'
-      items: [],           // [{ productId, quantity, Address_id }]
-      addressId: null,
-       orderDetails: null,
+      items: [], 
+      addressId: null,          // [{ productId, quantity, Address_id }]
+      orderDetails: null,
     },
     deliverycharge:0,
 
@@ -60,7 +60,7 @@ const orderSlice = createSlice({
     /* build from CART items */
 
     setOrderFromCart: (state, action) => {
-  const { cartItems, addressId,paymentMethod } = action.payload;
+  const { cartItems,addressId,paymentMethod } = action.payload;
 
   state.current = {
     items: cartItems.map(item => ({

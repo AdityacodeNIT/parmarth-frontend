@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { userAPI } from "@/api/userAPI";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -40,12 +41,7 @@ const Register = () => {
     });
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/register`,
-        payload,
-        { withCredentials: true }
-      );
-
+      const res = await userAPI.register(payload);
       if (res.status >= 200 && res.status < 300) {
         navigate("/userLogin");
       }

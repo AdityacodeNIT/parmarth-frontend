@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { productAPI } from "@/api/productAPi";
 
 const Productlist = () => {
   const [products, setProducts] = useState([]);
@@ -22,10 +23,8 @@ const Productlist = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v1/product/manageProduct`,
-          { withCredentials: true }
-        );
+        const res = await productAPI.getSellerProducts();
+          
         setProducts(res.data);
       } catch (err) {
         setError(err.message);
@@ -41,11 +40,7 @@ const Productlist = () => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;
 
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/v1/product/deleteProduct/${id}`,
-        { withCredentials: true }
-      );
-
+      await productAPI.delete(id);
       setProducts((prev) => prev.filter((p) => p._id !== id));
     } catch (err) {
       setError(err.message);

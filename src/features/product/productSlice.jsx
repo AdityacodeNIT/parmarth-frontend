@@ -1,4 +1,6 @@
 // features/product/productSlice.js
+import { productAPI } from '@/api/productAPi';
+import { userAPI } from '@/api/userAPI';
 import { createSlice, createAsyncThunk, current } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -7,12 +9,11 @@ export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
   async ({ category } = {}, { rejectWithValue }) => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v1/product`,
-        {
-          params: category ? { category } : {},
-        }
-      );
+      const res = await productAPI.getAll({
+        params: category ? { category } : {}
+      }
+      )
+       
 
       return res.data; // -> action.payload
     } catch (err) {
@@ -25,9 +26,7 @@ export const fetchProductById = createAsyncThunk(
   "product/fetchProductById",
   async (id, { rejectWithValue }) => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v1/product/${id}`
-      );
+      const res = await productAPI.getById(id);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.response?.data || "Failed to fetch product");

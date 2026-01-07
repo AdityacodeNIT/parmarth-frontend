@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import axios from "axios";
+import {addressAPI} from "@/api/addressAPI"
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const UserAddress = () => {
@@ -49,11 +50,7 @@ const UserAddress = () => {
     if (!validateForm()) return;
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/address/addAddress`,
-        AddressData,
-        { withCredentials: true }
-      );
+      const response = await addressAPI.add(AddressData);
 
       if (response.status === 201) {
         const redirectPath = searchParams.get('redirect') || '/BuyProduct';

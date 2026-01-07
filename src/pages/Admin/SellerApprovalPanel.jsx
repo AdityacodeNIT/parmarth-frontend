@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaCheck, FaTimes, FaTrashAlt, FaEye } from "react-icons/fa";
+import { userAPI } from "@/api/userAPI";
 
 const SellerApprovalPanel = () => {
   const [sellers, setSellers] = useState([]);
@@ -15,10 +16,7 @@ const SellerApprovalPanel = () => {
     const fetchSellers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/v1/users/sellers`,
-          { withCredentials: true }
-        );
+        const response = await userAPI.getAllSellers();
         setSellers(response.data.data || []);
       } catch (err) {
         setError(err.response?.data?.message || "Failed to fetch sellers");
@@ -32,11 +30,7 @@ const SellerApprovalPanel = () => {
   // ─────────── Approve / Revoke Seller ───────────
   const handleApproval = async (id, approved) => {
     try {
-      await axios.patch(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/sellers/${id}`,
-        { approved },
-        { withCredentials: true }
-      );
+      await userAPI.updateSellerApproval(id, { approved });
       setRefresh(!refresh);
     } catch (err) {
       alert(err.response?.data?.message || "Failed to update seller status");
@@ -47,10 +41,7 @@ const SellerApprovalPanel = () => {
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this seller?")) return;
     try {
-      await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/sellers/${id}`,
-        { withCredentials: true }
-      );
+      await userAPI.deleteSeller(id);
       setRefresh(!refresh);
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete seller");
@@ -60,10 +51,7 @@ const SellerApprovalPanel = () => {
   // ─────────── Fetch Single Seller for Modal ───────────
   const viewSellerDetails = async (id) => {
     try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/sellers/${id}`,
-        { withCredentials: true }
-      );
+      const res = await userAPI.getSellerById(id);
       setSelectedSeller(res.data.data);
     } catch (err) {
       alert(err.response?.data?.message || "Failed to fetch seller details");

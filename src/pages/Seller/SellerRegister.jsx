@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { userAPI } from "@/api/userAPI";
 
 const SellerRegister = () => {
   const navigate = useNavigate();
@@ -41,10 +42,8 @@ const SellerRegister = () => {
     );
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/seller/register`,
-        formDataToSend,
-        { withCredentials: true }
+      const response = await userAPI.register(
+        formDataToSend
       );
 
       if (response.status >= 200 && response.status < 300) {

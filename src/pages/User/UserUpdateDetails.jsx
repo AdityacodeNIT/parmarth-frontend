@@ -37,12 +37,7 @@ const UserUpdateDetails = () => {
     setError("");
 
     try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/updateUserdetail`,
-        updateData,
-        { withCredentials: true }
-      );
-
+      const response = await userAPI.updateAccountDetail(updateData);
       if (response.status >= 200 && response.status < 300) {
         dispatch(setUser(response.data));
         navigate("/user");

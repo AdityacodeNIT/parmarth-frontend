@@ -22,7 +22,7 @@ const Orderlist = () => {
     const fetchOrderData = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/shiprocket/getOrder`,
+          `${import.meta.env.VITE_API_URL}/api/v1/shiprocket/getOrder`,
           { withCredentials: true }
         );
         setOrderData(response.data.data.data);

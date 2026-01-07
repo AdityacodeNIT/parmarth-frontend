@@ -3,6 +3,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { SetSearchResults } from "@/features/search/searchslice.jsx";
+import { productAPI } from "@/api/productAPi";
 
 const SearchBar = () => {
   const dispatch = useDispatch();
@@ -13,10 +14,7 @@ const SearchBar = () => {
     if (!query.trim()) return;
 
     try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/product/searchProduct`,
-        { name: query }
-      );
+      const res = await productAPI.search({ name: query });
 
       dispatch(SetSearchResults(res.data));
       navigate("/searchResult") // ✅ Redux replaces childToParent

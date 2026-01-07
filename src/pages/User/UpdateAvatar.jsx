@@ -13,6 +13,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { useSelector,useDispatch } from "react-redux";
+import { userAPI } from "@/api/userAPI";
 
 const UpdateAvatar = () => {
   const [avatar, setAvatar] = useState(null);
@@ -40,10 +41,8 @@ const UpdateAvatar = () => {
       const formData = new FormData();
       formData.append("avatar", avatar);
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/users/updateAvatar`,
-        formData,
-        { withCredentials: true }
+      const response = await userAPI.updateAvatar(
+        formData
       );
 
       if (response.status >= 200 && response.status < 300) {

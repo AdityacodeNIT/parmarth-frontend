@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { productAPI } from "@/api/productAPi";
 
 /* -----------------------------
    CONSTANTS
@@ -214,11 +215,7 @@ const AddProduct = () => {
       formData.append("nutrition", JSON.stringify(product.nutrition));
       formData.append("dietary", JSON.stringify(product.dietary));
 
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/v1/product/addProduct`,
-        formData,
-        { withCredentials: true }
-      );
+      await productAPI.add(formData);
 
       toast.success("Product added successfully");
       navigate("/seller");
