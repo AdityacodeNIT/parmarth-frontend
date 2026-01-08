@@ -31,7 +31,7 @@ const Navbar = () => {
       <div className="flex w-full items-center justify-between px-4">
         {/* Logo */}
         <div className="text-xl md:text-3xl font-extrabold tracking-tight select-none">
-          Paustik
+          Eat Healthy
         </div>
 
         {/* Mobile Hamburger */}
