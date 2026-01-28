@@ -1,4 +1,4 @@
-# Adyog 🛍️🚀
+# Eat Healthy 🛍️🚀
 
 [![License](https://img.shields.io/github/license/yourusername/adyog)](https://github.com/yourusername/adyog/blob/main/LICENSE)
 [![React](https://img.shields.io/badge/react-%2361DAFB.svg?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
@@ -23,24 +23,24 @@ A blazing-fast and modern e-commerce platform built with React, Vite, and Tailwi
 
 ## Features ✨
 
--  🛍️  Browse and search through a wide variety of stationery items
--  🛒 Add items to your cart and manage your cart
--  💳 Secure payment gateway integration (Razorpay)
--  ❤️ Add products to your wishlist
--  📦 View your order history and details
--  👤 User authentication and profile management
--  🚀  Blazing-fast performance thanks to Vite
--  📱 Responsive design for seamless cross-device experience
--  ✨  Beautiful UI using Tailwind CSS
-
+- 🛍️ Browse & Search Products – Explore a wide range of healthy food items with powerful search functionality
+- 🛒 Shopping Cart Management – Add, remove, and update items in your cart effortlessly
+- 💳 Secure Payments – Seamless and secure checkout powered by Razorpay
+- ❤️ Wishlist Support – Save your favorite products for later
+- 📦 Order Management – View order history and detailed order information
+- 👤 User Authentication – Secure login, signup, and profile management
+- 🚀 High Performance – Blazing-fast load times using Vite
+- 📱 Responsive Design – Optimized for mobile, tablet, and desktop devices
+- ✨ Modern UI – Clean and elegant interface built with Tailwind CSS
+  
 
 ## Installation ⬇️
 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/adyog.git
-cd adyog
+git clone https://github.com/yourusername/parmarth-frontend.git
+cd parmarth-frontend
 ```
 
 2. Install dependencies:
@@ -76,8 +76,10 @@ npm run dev
 - Tailwind CSS
 - TypeScript
 - Node.js
+- Shadcn UI
 - React Router DOM
 - Razorpay
+- Shiprocket
 - @vercel/speed-insights
 - Font Awesome
 - Three.js (if used)
