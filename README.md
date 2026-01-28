@@ -1,6 +1,6 @@
 # Eat Healthy 🛍️🚀
 
-[![License](https://img.shields.io/github/license/yourusername/adyog)](https://github.com/AdityaCodeNIT/parmarth-frontend/LICENSE)
+[![License](https://img.shields.io/github/license/AdityaCodeNIT/parmarth-frontend)](./LICENSE)
 [![React](https://img.shields.io/badge/react-%2361DAFB.svg?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Vite.js](https://img.shields.io/badge/vite.js-%23646CFF.svg?style=for-the-badge&logo=vitejs&logoColor=white)](https://vitejs.dev/)
