@@ -73,27 +73,29 @@ npm run dev
 
 - React
 - Vite
-- Tailwind CSS
-- TypeScript
-- Node.js
+- Tailwind CSS 4.0
+- Javascript
+- TweakCN
 - Shadcn UI
 - React Router DOM
 - Razorpay
 - Shiprocket
 - @vercel/speed-insights
 - Font Awesome
-- Three.js (if used)
+- react-icons
+  
+  
 
 
 ## Demo 🚀
 
-[![Demo](https://img.shields.io/badge/Demo-Live%20Preview-brightgreen)](your_demo_link_here)
+[![Demo](https://img.shields.io/badge/Demo-Live%20Preview-brightgreen)]https://adyog-8tdv.vercel.app
 
 
 ## License 📄
 
-This project is licensed under the [ISC](https://github.com/yourusername/adyog/blob/main/LICENSE) license.
+This project is licensed under the [ISC](https://github.com/AdityaCodeNIT/parmarth-frontend/blob/main/LICENSE) license.
 
 ## Author 👤
 
-[Aditya Srivastav/GitHub username](your_github_profile_url)
+Aditya Srivastav
