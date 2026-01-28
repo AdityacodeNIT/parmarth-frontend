@@ -4,7 +4,6 @@
 [![React](https://img.shields.io/badge/react-%2361DAFB.svg?style=for-the-badge&logo=react&logoColor=white)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Vite.js](https://img.shields.io/badge/vite.js-%23646CFF.svg?style=for-the-badge&logo=vitejs&logoColor=white)](https://vitejs.dev/)
-(https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
 
 
@@ -62,11 +61,6 @@ npm run dev
 2. Run the development server using `npm run dev`.
 3. The application will automatically open in your browser at `http://localhost:3000`.
 4. Start exploring!
-
-
-## Screenshots 📸
-
-[![Screenshot](https://via.placeholder.com/1500x800.png)](https://via.placeholder.com/1500x800.png)
 
 
 ## Technologies Used 🛠️
