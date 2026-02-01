@@ -40,7 +40,7 @@ const SearchResult = () => {
         </div>
       ) : (
         <p className='text-center text-gray-400 text-lg mt-10'>
-          ❌ No results found. Try searching for something else.
+           No results found. Try searching for something else.
         </p>
       )}
 

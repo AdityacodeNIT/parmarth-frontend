@@ -20,7 +20,7 @@ const About = () => {
 
         {/* Header */}
         <header className="text-center space-y-4">
-          <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">
+          <h1 className=" text-4xl md:text-5xl font-semibold tracking-tight">
             About Eat Healthy
           </h1>
           <p className="text-muted-foreground max-w-3xl mx-auto text-lg leading-relaxed">

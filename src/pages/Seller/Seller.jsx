@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 const Seller = () => {
   const sellerDetail = useSelector(state => state.seller.sellerInfo);
+  console.log("Seller Detail from Redux:", sellerDetail);
 
   return (
     <div className='h-screen flex items-center justify-center bg-linear-to-r from-blue-800 to-gray-500'>
@@ -14,6 +15,7 @@ const Seller = () => {
         </p>
 
         <div className='mt-6 space-y-4'>
+
           {!sellerDetail ? (
             <>
               <Link
@@ -29,7 +31,11 @@ const Seller = () => {
                 Login
               </Link>
             </>
-          ) : (
+          ) 
+          : 
+          
+          (
+            
             <div className='text-left bg-gray-100 p-4 rounded-lg shadow-md'>
               <h3 className='text-lg font-semibold text-gray-900'>
                 Welcome, {sellerDetail.data.user.fullName}!
@@ -40,7 +46,7 @@ const Seller = () => {
               {sellerDetail.data.user.approved ? (
                 <Link
                   to='/addProduct'
-                  className='mt-4 block w-full py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-500 transition text-center'
+                  className='mt-4 block w-full py-2 bg-primary text-white font-semibold rounded-lg hover:bg-green-500 transition text-center'
                 >
                   Add Product
                 </Link>

@@ -1,17 +1,23 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchSellerDashboard } from "../../features/seller/sellerslice.jsx";
+import { fetchMe, fetchSellerDashboard } from "../../features/seller/sellerslice.jsx";
 import { Link } from "react-router-dom";
 
 const SellerDashboard = () => {
   const dispatch = useDispatch();
   const { sellerInfo, dashboard, loading, error } = useSelector((state) => state.seller);
+  console.log("Seller Dashboard State:", { sellerInfo, dashboard, loading, error });
 
-  useEffect(() => {
-    if (sellerInfo?.data?.user?.approved) {
-      dispatch(fetchSellerDashboard());
-    }
-  }, [dispatch, sellerInfo]);
+ useEffect(() => {
+  dispatch(fetchMe());
+}, [dispatch]);
+
+useEffect(() => {
+  if (sellerInfo?.data?.user?.approved) {
+    dispatch(fetchSellerDashboard());
+  }
+}, [dispatch, sellerInfo?.data?.user?.approved]);
+
 
   if (!sellerInfo) {
     return (

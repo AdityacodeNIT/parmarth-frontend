@@ -1,3 +1,4 @@
+import SellerRegister from "@/pages/Seller/SellerRegister";
 import api from "./axios";
 
 export const userAPI = {
@@ -7,6 +8,12 @@ export const userAPI = {
     api.post("/users/register", formData, {
       withCredentials: true,
       // DO NOT set Content-Type (axios + multer handle it)
+    }),
+
+
+   SellerRegister: (formData) =>
+    api.post("/seller/register", formData, {
+      withCredentials: true,
     }),
 
   login: (data) =>
@@ -65,11 +72,17 @@ export const userAPI = {
 
   /* ───────────── SELLERS (ADMIN) ───────────── */
 
-  getAllSellers: (status) =>
-    api.get("/users/sellers", {
-      withCredentials: true,
-    
-    }),
+getAllSellers: ({ status, search, page = 1, limit = 10 }) =>
+  api.get("/users/sellers", {
+    withCredentials: true,
+    params: {
+      status,
+      search,
+      page,
+      limit,
+    },
+  }),
+
 
   getSellerById: (id) =>
     api.get(`/users/sellers/${id}`, {

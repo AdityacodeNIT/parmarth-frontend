@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { userAPI } from "@/api/userAPI";
-import axios from "axios";
 
 export const verifyAuth = createAsyncThunk(
   "auth/verifyAuth",
@@ -41,10 +40,13 @@ const authSlice = createSlice({
       state.status = "unauthenticated";
       state.error = null;
     },
-     setUser: (state, action) => {
-    state.user = action.payload;
-    state.status = "authenticated";
-  },
+    setUser: (state, action) => {
+      state.user = action.payload;
+      state.status = "authenticated";
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -82,5 +84,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout,setUser } = authSlice.actions;
+export const { logout, setUser, clearError } = authSlice.actions;
 export default authSlice.reducer;

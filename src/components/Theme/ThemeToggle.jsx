@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Sun, Moon, Laptop } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const themes = ["light", "dark", "system"];
+const themes = ["light", "dark"];
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState("system");

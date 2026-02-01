@@ -43,11 +43,8 @@ if (status === "unauthenticated") {
       { to: "/logout", label: "Log Out" },
     ],
     seller: [
-      { to: "/sellerDashboard", label: "Seller Dashboard" },
-      { to: "/seller/products", label: "My Products" },
-      { to: "/seller/addProduct", label: "Add Product" },
-      { to: "/seller/orders", label: "Orders" },
-      { to: "/updateDetails", label: "Update Profile" },
+
+  { to: "/seller/dashboard", label: "Seller Dashboard" },
       { to: "/helpdesk", label: "Helpdesk" },
       { to: "/logout", label: "Log Out" },
     ],

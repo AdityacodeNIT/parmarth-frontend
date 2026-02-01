@@ -1,95 +1,226 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { setOrderFromBuyNow,setDeliverycharge, setOrderFromCart } from "../../features/product/orderSlice";
+import { useNavigate, useLocation } from "react-router-dom";
+import { setOrderFromBuyNow, setOrderFromCart } from "../../features/product/orderSlice";
 import { Button } from "../../components/ui/button";
-import useAddresses from "../../hooks/useAddresses.js"
+import { Alert, AlertDescription } from "../../components/ui/alert";
+import useAddresses from "../../hooks/useAddresses.js";
 import BillSummary from "./BillSummary";
 import AddressList from "../Address/AddressList";
 
 const BuyProduct = () => {
-
   const {
-   addressList,
-  addressId,
-  loading,
-  error,
-  serviceabilityResult,
-  checkingDelivery,
-  handleAddressSelection
-} = useAddresses();
+    addressList,
+    addressId,
+    loading,
+    error,
+    serviceabilityResult,
+    checkingDelivery,
+    shouldRedirectToAddAddress,
+    handleAddressSelection,
+    refetchAddresses
+  } = useAddresses();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
+  const [redirectCountdown, setRedirectCountdown] = useState(5);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
-const orderState = useSelector((state) => state.order);
-const { current, deliverycharge } = orderState;
+  const orderState = useSelector((state) => state.order);
+  const { current } = orderState;
 
-// For Buy Now
-const product = current?.product;
+  // For Buy Now
+  const product = current?.product;
+  const quantity = current?.quantity || 1;
 
-const quantity = current?.quantity || 1;
+  // For Cart Checkout
+  const items = current?.items || [];
+  const isCartCheckout = current?.source === "cart";
 
-// For Cart Checkout
-const items = current?.items || [];
-const isCartCheckout = current?.source === "cart";
+  const [paymentMethod, setPaymentMethod] = useState("");
 
-      const [paymentMethod, setPaymentMethod] = useState("");
   // Wait for persisted product before redirecting
-// New, corrected code in BuyProduct.jsx
+  useEffect(() => {
+    if (product === undefined && items.length === 0) return; // Wait for rehydration
 
+    // Only redirect if it's NOT a cart checkout AND there is no product
+    if (!isCartCheckout && (!product || !product.name)) {
+      navigate("/shop");
+    }
 
-useEffect(() => {
-  if (product === undefined && items.length === 0) return; // Wait for rehydration
+    // Also, handle the case where someone lands here from the cart, but the cart is empty
+    if (isCartCheckout && items.length === 0) {
+      navigate("/cart");
+    }
+  }, [product, items, isCartCheckout, navigate]);
 
-  // Only redirect if it's NOT a cart checkout AND there is no product
-  if (!isCartCheckout && (!product || !product.name)) {
-    navigate("/shop");
-  }
+  // Handle graceful redirect to add address when no addresses exist
+  useEffect(() => {
+    if (shouldRedirectToAddAddress && !loading) {
+      setIsRedirecting(true);
+      
+      // Start countdown
+      const countdownInterval = setInterval(() => {
+        setRedirectCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(countdownInterval);
+            // Redirect with return URL
+            const returnUrl = encodeURIComponent(location.pathname);
+            navigate(`/addressUpdate?redirect=${returnUrl}`);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
 
-  // Also, handle the case where someone lands here from the cart, but the cart is empty
-  if (isCartCheckout && items.length === 0) {
-    navigate("/cart");
-  }
+      return () => clearInterval(countdownInterval);
+    }
+  }, [shouldRedirectToAddAddress, loading, navigate, location.pathname]);
 
-}, [product, items, isCartCheckout, navigate]);
+  // Check if user returned from adding address - refetch addresses
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const addressAdded = urlParams.get('addressAdded');
+    
+    if (addressAdded === 'true') {
+      refetchAddresses();
+      // Clean up URL
+      navigate(location.pathname, { replace: true });
+    }
+  }, [location.search, refetchAddresses, navigate, location.pathname]);
 
+  const handleCheckout = () => {
+    if (!addressId || !serviceabilityResult?.available || !paymentMethod) {
+      alert("Please select a serviceable address and payment method.");
+      return;
+    }
 
-const handleCheckout = () => {
-  if (!addressId || !serviceabilityResult?.available || !paymentMethod) {
-    alert("Please select a serviceable address and payment method.");
-    return;
-  }
+    if (isCartCheckout) {
+      dispatch(setOrderFromCart({ cartItems: items, addressId, paymentMethod }));
+    } else {
+      // For buy now, set the single product order
+      dispatch(setOrderFromBuyNow({ product, addressId, quantity, paymentMethod }));
+    }
 
-  if (isCartCheckout) {
- dispatch(setOrderFromCart({ cartItems: items, addressId, paymentMethod }));
-  } else {
-    // For buy now, set the single product order
-    dispatch(setOrderFromBuyNow({ product, addressId, quantity, paymentMethod }));
-  }
-
- 
-setTimeout(() => {
-  if (paymentMethod === "Prepaid") navigate("/payments");
-  else if (paymentMethod === "cod") navigate("/cod");
-}, 100);
-};
-
-  const handleManageAddresses = () => {
-    navigate("/allAddresses?redirect=/BuyProduct");
+    setTimeout(() => {
+      if (paymentMethod === "Prepaid") navigate("/payments");
+      else if (paymentMethod === "cod") navigate("/cod");
+    }, 100);
   };
 
-// AFTER THE FIX (The correct code)
+  const handleManageAddresses = () => {
+    const returnUrl = encodeURIComponent(location.pathname);
+    navigate(`/allAddresses?redirect=${returnUrl}`);
+  };
 
-if (loading) return <div>Loading...</div>;
-if (error) return <div>{error}</div>;
+  const handleAddAddressNow = () => {
+    const returnUrl = encodeURIComponent(location.pathname);
+    navigate(`/addressUpdate?redirect=${returnUrl}`);
+  };
 
-// This combined check now correctly handles both cart and "buy now" flows
-// It only checks for a product if it's NOT a cart checkout.
-if (!isCartCheckout && (!product || !product.name)) {
-  return <div>Redirecting...</div>;
-}
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen space-y-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <p className="text-muted-foreground">Loading your addresses...</p>
+      </div>
+    );
+  }
+
+  // Redirecting state - graceful transition
+  if (isRedirecting && shouldRedirectToAddAddress) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen space-y-6 p-6">
+        <div className="max-w-md w-full space-y-6 text-center">
+          <div className="space-y-2">
+            <h2 className="text-3xl font-semibold">No Delivery Address Found</h2>
+            <p className="text-muted-foreground">
+              You need to add a delivery address to complete your order.
+            </p>
+          </div>
+
+          <Alert className="border-primary/50 bg-primary/5">
+            <AlertDescription className="text-center">
+              Redirecting to add address in <span className="font-bold text-primary text-xl">{redirectCountdown}</span> seconds...
+            </AlertDescription>
+          </Alert>
+
+          <div className="space-y-3">
+            <Button 
+              onClick={handleAddAddressNow} 
+              size="lg" 
+              className="w-full"
+            >
+              Add Address Now
+            </Button>
+            <Button 
+              onClick={() => {
+                setIsRedirecting(false);
+                navigate(-1);
+              }} 
+              variant="outline" 
+              size="lg" 
+              className="w-full"
+            >
+              Go Back
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state with retry option
+  if (error && !shouldRedirectToAddAddress) {
+    return (
+      <div className="flex flex-col justify-center items-center min-h-screen space-y-6 p-6">
+        <div className="max-w-md w-full space-y-6 text-center">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold text-destructive">Error Loading Addresses</h2>
+            <p className="text-muted-foreground">{error}</p>
+          </div>
+
+          <div className="space-y-3">
+            <Button 
+              onClick={refetchAddresses} 
+              size="lg" 
+              className="w-full"
+            >
+              Retry
+            </Button>
+            <Button 
+              onClick={handleAddAddressNow} 
+              variant="outline" 
+              size="lg" 
+              className="w-full"
+            >
+              Add New Address
+            </Button>
+            <Button 
+              onClick={() => navigate(-1)} 
+              variant="ghost" 
+              size="lg" 
+              className="w-full"
+            >
+              Go Back
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Product validation
+  if (!isCartCheckout && (!product || !product.name)) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-muted-foreground">Redirecting...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 bg-background text-foreground">

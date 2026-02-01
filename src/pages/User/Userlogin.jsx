@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Loader2, LogIn } from "lucide-react";
 
-import { loginUser, verifyAuth } from "@/features/Auth/authSlice";
+import { loginUser } from "@/features/Auth/authSlice";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ const Userlogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { status, error,user } = useSelector((state) => state.auth);
+  const { status, error, user } = useSelector((state) => state.auth);
 
   const [loginData, setLoginData] = useState({
     username: "",
@@ -35,17 +35,12 @@ const Userlogin = () => {
   };
 
   // Navigate after successful login
-useEffect(() => {
-  if (status === "authenticated") {
-  dispatch(loadWishlist());
-  }
-}, [status, dispatch]);
-
-useEffect(() => {
-  if (user) {
-    navigate("/user");
-  }
-}, [user, navigate]);
+  useEffect(() => {
+    if (status === "authenticated" && user) {
+      dispatch(loadWishlist());
+      navigate("/user");
+    }
+  }, [status, user, dispatch, navigate]);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">

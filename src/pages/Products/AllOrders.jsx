@@ -100,7 +100,7 @@ const AllOrders = () => {
               return (
                 <Link
                   key={order.id}
-                  to="/OrderItems"
+                  to="/orderitems"
                   onClick={() => dispatch(setOrderDetails(order))}
                 >
                   <Card className="hover:shadow-lg transition-shadow">

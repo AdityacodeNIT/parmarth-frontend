@@ -2,6 +2,7 @@ import Product from './pages/Products/Product.jsx';
 import ProductList from './pages/Products/ProductList.jsx';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import About from './pages/About/About.jsx';
+import HowItWorks from './pages/About/HowItWorks.jsx';
 
 import Cart from './pages/Products/Cart.jsx';
 import Navbar from './layout/Navbar.jsx';
@@ -27,7 +28,7 @@ import UpdateUserAccountDetails from './pages/User/UpdateUserAccountDetails.jsx'
 
 import UpdateDetails from './pages/User/UpdateDetails.jsx';
 import UpdateAvatar from './pages/User/UpdateAvatar.jsx';
-import AdminSection from './pages/Admin/AdminSection.jsx';
+import AdminSection from './pages/Admin/AdminLayout.jsx';
 import KeepAlive from './keepAlive.jsx';
 import AllOrders from './pages/Products/AllOrders.jsx';
 import OrderDetails from './pages/Products/OrderDetails.jsx';
@@ -41,9 +42,17 @@ import ManageSellers from './pages/Admin/ManageSellers.jsx';
 import UpdateProduct from './pages/Products/UpdateProudctDetails.jsx';
 import ProtectedRoute from './context/ProtectedRoutes.jsx';
 import Addresses from './pages/User/Addresses.jsx';
-import VerifyOtp from './pages/User/verifyOtp.jsx';
 import ManageAddresses from './pages/Address/ManageAddresses.jsx';
 import CashOnDelivery from './pages/Payment/Cod.jsx';
+import SellerDashboard from './pages/Seller/SellerDashboard.jsx';
+import AdminLayout from './pages/Admin/AdminLayout.jsx';
+
+import Userlist from './pages/Admin/Userlist.jsx';
+import Orderlist from './pages/Admin/Orderlist.jsx';
+import AdminProducts from './pages/Admin/AdminProducts.jsx';
+import SellerApprovalPanel from './pages/Admin/SellerApprovalPanel.jsx';
+import AdminDashboard from './pages/Admin/AdminDashboard.jsx';
+
 
 import { Toaster } from 'sonner';
 import { verifyAuth } from './features/Auth/authSlice.jsx';
@@ -65,6 +74,7 @@ function App() {
           <Route path='/product/:id' element={<Product />} />
           <Route path='/Cart' element={<Cart />} />
           <Route path='/Aboutus' element={<About />} />
+          <Route path='/how-it-works' element={<HowItWorks />} />
           <Route path='/register' element={<Register />} />
           <Route path='/userLogin' element={<Userlogin />} />
           <Route path='/user' element={<UserDetails />} />
@@ -74,15 +84,20 @@ function App() {
           <Route path='/wishlist' element={<Wishlisted />} />
           <Route path='/payments' element={<Payment />} />
           <Route path='/helpdesk' element={<Helpdesk />} />
-          <Route path='/verifyOtp' element={<VerifyOtp />} />
-          <Route
-            path='/add-product'
-            element={
-              <ProtectedRoute allowedRoles={['superadmin', 'seller']}>
-                <AddProduct />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/admin"
+  element={
+    <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+      <AdminLayout />
+    </ProtectedRoute>
+  }
+>
+  <Route index element={<AdminDashboard />} />
+  <Route path="users" element={<Userlist />} />
+  <Route path="products" element={<AdminProducts />} />
+  <Route path="orders" element={<Orderlist />} />
+  <Route path="sellers" element={<ManageSellers />} />
+</Route>
+
           <Route path='/update' element={<UserUpdateDetails />} />
           <Route path='/searchResult' element={<SearchResult />} />
           <Route path='/changePassword' element={<ChangePassword />} />
@@ -100,17 +115,17 @@ function App() {
           <Route path='/seller' element={<Seller />} />
           <Route path='/sellerRegister' element={<SellerRegister />} />
           <Route path='/sellerlogin' element={<Sellerlogin />} />
-          <Route
-            path='/admin'
-            element={
-              <ProtectedRoute allowedRoles={['superadmin', 'seller']}>
-                <AdminSection />
-              </ProtectedRoute>
-            }
-          />
           <Route path='/updateProduct/:id' element={<UpdateProduct />} />
 
-          <Route path='/sellers' element={<ManageSellers />} />
+<Route
+  path="/seller/dashboard"
+  element={
+    <ProtectedRoute allowedRoles={['seller']}>
+      <SellerDashboard />
+    </ProtectedRoute>
+  }
+/>
+
         </Routes>
         <KeepAlive />
         <SpeedInsights />

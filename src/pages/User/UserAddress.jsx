@@ -53,11 +53,19 @@ const UserAddress = () => {
       const response = await addressAPI.add(AddressData);
 
       if (response.status === 201) {
-        const redirectPath = searchParams.get('redirect') || '/BuyProduct';
-        navigate(redirectPath);
+        const redirectPath = searchParams.get('redirect');
+        
+        if (redirectPath) {
+          // Redirect back with success flag
+          navigate(`${redirectPath}?addressAdded=true`);
+        } else {
+          // Default redirect to BuyProduct
+          navigate('/BuyProduct?addressAdded=true');
+        }
       }
     } catch (error) {
       console.log("Issue in Adding the Addresses:", error);
+      alert("Failed to add address. Please try again.");
     }
   };
 
