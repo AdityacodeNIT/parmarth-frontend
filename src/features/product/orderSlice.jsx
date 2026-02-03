@@ -58,7 +58,7 @@ const orderSlice = createSlice({
   reducers: {
     /* build from CART items */
     setOrderFromCart: (state, action) => {
-  const { cartItems, addressId,paymentMethod } = action.payload;
+  const { cartItems, addressId, paymentMethod } = action.payload;
   state.current = {
     items: cartItems.map(item => ({
       productId: item._id || item.productId,
@@ -67,7 +67,7 @@ const orderSlice = createSlice({
       quantity: item.quantity,
     })),
     addressId,
-   paymentMethod,
+    paymentMethod: paymentMethod || 'Prepaid', // Ensure payment method is set with default
     source: "cart",
   };
 },
@@ -78,15 +78,15 @@ const orderSlice = createSlice({
     setOrderFromBuyNow(state, action) {
       const { product, addressId, quantity, paymentMethod } = action.payload;
       state.current.product = product;
-      state.current.quantity = quantity || 1; // default to 1 if not provided
+      state.current.quantity = quantity || 1;
       state.current.source = 'buyNow';
       state.current.items = [{
         productId: product._id,
-        quantity: quantity || 1, // default to 1 if not provided
+        quantity: quantity || 1,
         Address_id: addressId,
       }];
       state.current.addressId = addressId;
-      state.current.paymentMethod = paymentMethod; // Store paymentMethod at the top level
+      state.current.paymentMethod = paymentMethod || 'Prepaid'; // Ensure payment method is set with default
     },
 
     /* change address after the fact */
@@ -110,8 +110,13 @@ const orderSlice = createSlice({
     setOrderDetails(state, action) {
   state.orderDetails = action.payload;
 },
+
 setDeliverycharge(state,action){
   state.deliverycharge=action.payload
+},
+
+setPaymentMethod(state, action) {
+  state.current.paymentMethod = action.payload;
 }
 
 
@@ -144,8 +149,8 @@ export const {
   clearCurrentOrder,
   purgeOrderHistory,
   setOrderDetails,
-    setDeliverycharge  
-
+  setDeliverycharge,
+  setPaymentMethod,
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

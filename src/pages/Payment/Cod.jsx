@@ -1,8 +1,8 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectBaseAmount } from '../../utils/selectors.jsx';
-import { clearCurrentOrder, placeShiprocketOrder } from '../../features/order/orderSlice';
+import { clearCurrentOrder, placeShiprocketOrder, setPaymentMethod } from '../../features/product/orderSlice';
 import { clearCart } from '../../features/cart/cartSlice';
 
 const CashOnDelivery = () => {
@@ -10,35 +10,74 @@ const CashOnDelivery = () => {
   const navigate = useNavigate();
   const baseAmount = useSelector(selectBaseAmount);
   const deliverycharge = useSelector((s) => s.order.deliverycharge);
+  const currentOrder = useSelector((state) => state.order.current);
   const totalAmount = Math.ceil(baseAmount * 1.18+(deliverycharge || 0));
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Ensure payment method is set to COD when component mounts
+  useEffect(() => {
+    console.log('=== COD COMPONENT MOUNTED ===');
+    console.log('Current order state:', currentOrder);
+    console.log('Payment method:', currentOrder.paymentMethod);
+    console.log('Items:', currentOrder.items);
+    console.log('Address ID:', currentOrder.addressId);
+    
+    if (currentOrder.paymentMethod !== 'COD') {
+      console.log('⚠️ Payment method is not COD, setting it now...');
+      dispatch(setPaymentMethod('COD'));
+    } else {
+      console.log('✅ Payment method already set to COD');
+    }
+  }, []);
 
   const handleCodConfirm = async () => {
     setLoading(true);
     setStatus('Placing COD order…');
 
     try {
+      console.log('=== PLACING COD ORDER ===');
+      console.log('Current order state:', currentOrder);
+      console.log('Payment method:', currentOrder.paymentMethod);
+      console.log('Items to order:', currentOrder.items);
+      console.log('Address ID:', currentOrder.addressId);
+      
       const action = await dispatch(placeShiprocketOrder());
+      console.log('=== SHIPROCKET ORDER RESPONSE ===');
+      console.log('Action type:', action.type);
+      console.log('Action payload:', action.payload);
 
       if (placeShiprocketOrder.fulfilled.match(action)) {
+        console.log('✅ Order placed successfully!');
         dispatch(clearCart());
         dispatch(clearCurrentOrder());
 
         const orderRes = action.payload;
-        const successId = orderRes.order_id || orderRes.id || 'latest';
+        console.log('Order response:', orderRes);
+        
+        // Handle array response from Shiprocket
+        const firstOrder = Array.isArray(orderRes) ? orderRes[0] : orderRes;
+        const successId = firstOrder?.order_id || firstOrder?.id || 'latest';
+        console.log('Order ID:', successId);
 
         setStatus('Order placed successfully! Redirecting...');
         setTimeout(() => {
-          navigate(`/order-success/${successId}`);
+          navigate(`/order-success`);
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 1500);
       } else {
-        setStatus(`Failed to place order: ${action.payload || 'Unknown error'}`);
+        console.error('❌ Order placement failed');
+        console.error('Action:', action);
+        console.error('Error payload:', action.payload);
+        console.error('Error message:', action.error?.message);
+        
+        const errorMsg = action.payload || action.error?.message || 'Unknown error';
+        setStatus(`Failed to place order: ${errorMsg}`);
       }
     } catch (err) {
-      console.error(err);
-      setStatus('Something went wrong while placing the order.');
+      console.error('❌ COD order error:', err);
+      console.error('Error details:', err.message, err.stack);
+      setStatus('Something went wrong while placing the order. Please try again.');
     } finally {
       setLoading(false);
     }

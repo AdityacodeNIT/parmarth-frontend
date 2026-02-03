@@ -47,6 +47,9 @@ const initialState= {
     loading: false,
     error: null,
     
+    // Cache management
+    lastFetched: null, // Timestamp of last order fetch
+    cacheExpiry: 2 * 60 * 1000, // 2 minutes (orders change frequently)
   }
 /* ────────────────────────────────────────────────────────────
 Slice
@@ -60,7 +63,7 @@ const orderSlice = createSlice({
     /* build from CART items */
 
     setOrderFromCart: (state, action) => {
-  const { cartItems,addressId,paymentMethod } = action.payload;
+  const { cartItems, addressId, paymentMethod } = action.payload;
 
   state.current = {
     items: cartItems.map(item => ({
@@ -70,7 +73,7 @@ const orderSlice = createSlice({
       quantity: item.quantity,
     })),
     addressId,
-   paymentMethod,
+    paymentMethod: paymentMethod || 'Prepaid', // Ensure payment method is set
     source: "cart",
   };
 },
@@ -79,15 +82,15 @@ const orderSlice = createSlice({
     setOrderFromBuyNow(state, action) {
       const { product, addressId, quantity, paymentMethod } = action.payload;
       state.current.product = product;
-      state.current.quantity = quantity || 1; // default to 1 if not provided
+      state.current.quantity = quantity || 1;
       state.current.source = 'buyNow';
       state.current.items = [{
         productId: product._id,
-        quantity: quantity || 1, // default to 1 if not provided
+        quantity: quantity || 1,
         Address_id: addressId,
       }];
       state.current.addressId = addressId;
-      state.current.paymentMethod = paymentMethod; // Store paymentMethod at the top level
+      state.current.paymentMethod = paymentMethod || 'Prepaid'; // Ensure payment method is set
     },
 
 
@@ -106,6 +109,7 @@ const orderSlice = createSlice({
     /* wipe history on logout if desired */
     purgeOrderHistory(state) {
       state.orderSuccess = [];
+      state.lastFetched = null; // Clear cache timestamp
     },
     
     setOrderDetails(state, action) {
@@ -115,7 +119,15 @@ const orderSlice = createSlice({
 
 setDeliverycharge(state,action){
   state.deliverycharge=action.payload
-} 
+},
+
+invalidateOrderCache(state) {
+  state.lastFetched = null;
+},
+
+setPaymentMethod(state, action) {
+  state.current.paymentMethod = action.payload;
+},
 },
 
   extraReducers: builder => {
@@ -130,6 +142,7 @@ setDeliverycharge(state,action){
         state.orderId=action.payload._id
         state.orderSuccess.unshift(action.payload);   // history
         state.current = { source: null, items: [], addressId: null };
+        state.lastFetched = Date.now(); // Update cache timestamp
       })
       .addCase(placeShiprocketOrder.rejected, (state, action) => {
         state.loading = false;
@@ -145,6 +158,16 @@ export const {
   clearCurrentOrder,
   purgeOrderHistory,
   setOrderDetails,
-    setDeliverycharge  } = orderSlice.actions;
+  setDeliverycharge,
+  invalidateOrderCache,
+  setPaymentMethod,
+} = orderSlice.actions;
+
+// Selectors
+export const selectShouldRefetchOrders = (state) => {
+  const { lastFetched, cacheExpiry } = state.order;
+  if (!lastFetched) return true;
+  return Date.now() - lastFetched > cacheExpiry;
+};
 
 export default orderSlice.reducer;

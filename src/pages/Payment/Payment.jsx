@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,7 +7,8 @@ import { selectBaseAmount } from "../../utils/selectors.jsx";
 import {
   clearCurrentOrder,
   placeShiprocketOrder,
-} from "../../features/order/orderSlice";
+  setPaymentMethod,
+} from "../../features/product/orderSlice";
 import { clearCart } from "../../features/cart/cartSlice";
 import { paymentAPI } from "@/api/paymentAPI.js";
 
@@ -18,6 +19,7 @@ const Payment = () => {
   const user = useSelector((state) => state.auth.user);
   const baseAmount = useSelector(selectBaseAmount);
   const deliverycharge = useSelector((s) => s.order.deliverycharge);
+  const currentOrder = useSelector((state) => state.order.current);
 
   const totalAmount = Math.ceil(baseAmount * 1.18 + deliverycharge);
 
@@ -25,6 +27,15 @@ const Payment = () => {
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
   const [paymentStatus, setPaymentStatus] = useState(null);
+
+  // Ensure payment method is set to Prepaid when component mounts
+  useEffect(() => {
+    console.log('Payment Component mounted. Current order:', currentOrder);
+    if (currentOrder.paymentMethod !== 'Prepaid') {
+      console.log('Setting payment method to Prepaid');
+      dispatch(setPaymentMethod('Prepaid'));
+    }
+  }, []);
 
   /* ---------------- Coupon ---------------- */
   const applyCoupon = () => {
@@ -40,13 +51,17 @@ const Payment = () => {
     try {
       setPaymentStatus("Payment confirmed. Creating order…");
 
+      console.log('Creating order with payment method:', currentOrder.paymentMethod);
       const action = await dispatch(placeShiprocketOrder());
+      console.log('Order creation action:', action);
 
       if (placeShiprocketOrder.fulfilled.match(action)) {
         dispatch(clearCart());
         dispatch(clearCurrentOrder());
 
         const orderRes = action.payload;
+        console.log('Order placed successfully:', orderRes);
+        
         const successId = orderRes.order_id || orderRes.id || "latest";
 
         setPaymentStatus("Order placed! Redirecting…");
@@ -55,10 +70,12 @@ const Payment = () => {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }, 1200);
       } else {
-        setPaymentStatus("Order creation failed.");
+        console.error('Order placement failed:', action);
+        const errorMsg = action.payload || action.error?.message || 'Unknown error';
+        setPaymentStatus(`Failed to place order: ${errorMsg}`);
       }
     } catch (err) {
-      console.error(err);
+      console.error('Order creation error:', err);
       setPaymentStatus("Unexpected error while creating order.");
     }
   };
@@ -66,33 +83,44 @@ const Payment = () => {
   /* ---------------- POLL PAYMENT STATUS ---------------- */
   const pollPaymentStatus = (razorpayOrderId) => {
     let attempts = 0;
+    const maxAttempts = 15; // Increased from 10
 
     const interval = setInterval(async () => {
       try {
         attempts++;
+        console.log(`Polling payment status... Attempt ${attempts}/${maxAttempts}`);
 
         const { data } = await paymentAPI.getPaymentStatus(razorpayOrderId);
+        console.log('Payment status:', data.status);
 
         if (data.status === "captured") {
           clearInterval(interval);
+          console.log('Payment captured! Creating order...');
           await finishPaymentAndOrder();
         }
 
         if (data.status === "failed") {
           clearInterval(interval);
           setPaymentStatus("Payment failed. Amount not deducted.");
+          setLoading(false);
         }
 
-        if (attempts > 10) {
+        if (attempts >= maxAttempts) {
           clearInterval(interval);
           setPaymentStatus(
-            "Payment confirmation delayed. Please refresh or check later."
+            "Payment confirmation taking longer than expected. Your order will be processed if payment was successful."
           );
+          setLoading(false);
         }
       } catch (err) {
-        console.error(err);
+        console.error('Error polling payment status:', err);
+        if (attempts >= maxAttempts) {
+          clearInterval(interval);
+          setPaymentStatus("Unable to confirm payment status. Please check your orders page.");
+          setLoading(false);
+        }
       }
-    }, 2000);
+    }, 3000); // Increased from 2000ms to 3000ms
   };
 
   /* ---------------- PAYMENT SUBMIT ---------------- */
@@ -130,16 +158,24 @@ const Payment = () => {
 
         handler: async (response) => {
           try {
+            console.log('Razorpay payment response:', response);
             setPaymentStatus("Payment received. Confirming…");
+            setLoading(true);
 
             // Optional frontend verification (UX only)
-            await paymentAPI.paymentCallback(response);
+            try {
+              await paymentAPI.paymentCallback(response);
+              console.log('Payment callback successful');
+            } catch (callbackErr) {
+              console.error('Payment callback error (non-critical):', callbackErr);
+            }
 
             // ✅ Start polling backend (webhook is final truth)
             pollPaymentStatus(response.razorpay_order_id);
           } catch (err) {
-            console.error(err);
-            setPaymentStatus("Payment verification failed.");
+            console.error('Payment handler error:', err);
+            setPaymentStatus("Payment verification failed. Please contact support if amount was deducted.");
+            setLoading(false);
           }
         },
 

@@ -66,17 +66,29 @@ if (status === "unauthenticated") {
         {/* LEFT: PROFILE */}
         <Card className="lg:col-span-1">
           <CardContent className="p-8 flex flex-col items-center text-center space-y-6">
-            {data?.avatar ? (
-              <img
-                src={data.avatar}
-                alt="User Avatar"
-                className="w-28 h-28 rounded-full object-cover border border-border"
-              />
-            ) : (
-              <div className="w-28 h-28 rounded-full bg-muted border border-border flex items-center justify-center">
-                <User className="w-12 h-12 text-muted-foreground" />
+            {/* Avatar with Upload Overlay */}
+            <Link to="/updateAvatar" className="relative group cursor-pointer">
+              {data?.avatar ? (
+                <img
+                  src={data.avatar}
+                  alt="User Avatar"
+                  className="w-28 h-28 rounded-full object-cover border-2 border-border group-hover:border-primary transition-colors"
+                />
+              ) : (
+                <div className="w-28 h-28 rounded-full bg-muted border-2 border-border group-hover:border-primary flex items-center justify-center transition-colors">
+                  <User className="w-12 h-12 text-muted-foreground" />
+                </div>
+              )}
+              
+              {/* Hover Overlay */}
+              <div className="absolute inset-0 rounded-full bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white text-xs font-medium">
+                <svg className="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Change Photo</span>
               </div>
-            )}
+            </Link>
 
             <div className="space-y-1">
               <h2 className="text-2xl font-semibold">{data?.username}</h2>

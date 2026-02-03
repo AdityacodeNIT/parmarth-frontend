@@ -19,6 +19,7 @@ import { Separator } from "@/components/ui/separator";
 const OrderDetails = () => {
   const { orderDetails } = useSelector((state) => state.order);
   const [cancellationStatus, setCancellationStatus] = useState(null);
+  const [cancellingOrderId, setCancellingOrderId] = useState(null);
   const navigate = useNavigate();
 
   const orders = Array.isArray(orderDetails)
@@ -36,24 +37,56 @@ const OrderDetails = () => {
   }
 
   const handleCancelOrder = async (id) => {
+    console.log('Attempting to cancel order:', id);
+    setCancellingOrderId(id);
+    setCancellationStatus('Cancelling order...');
+    
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/v1/shiprocket/cancelOrder/${id}`,
         {},
         { withCredentials: true }
       );
+      
+      console.log('Cancel order response:', res);
+      
       if (res.status === 200) {
-        setCancellationStatus("Order cancelled successfully.");
-     
+        setCancellationStatus(
+          "✅ Cancellation request sent successfully! " +
+          "Note: It may take a few minutes for the shipping partner to update the status. " +
+          "Please check back in 2-3 minutes or click 'Back' and refresh the orders page."
+        );
       }
-    } catch {
-      setCancellationStatus("Unable to cancel order.");
+    } catch (error) {
+      console.error('Cancel order error:', error);
+      const errorMsg = error.response?.data?.message || error.message || 'Unable to cancel order';
+      setCancellationStatus(`Error: ${errorMsg}`);
+      setCancellingOrderId(null);
     }
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground px-6 py-10">
-      <h1 className="text-3xl font-bold text-center mb-10">Order Summary</h1>
+      <h1 className="text-3xl font-bold text-center mb-6">Order Summary</h1>
+
+      {/* Info Banner */}
+      <div className="max-w-6xl mx-auto mb-6">
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
+          <div className="text-amber-600 mt-0.5">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <p className="text-sm text-amber-900 font-medium">
+              Status updates may be delayed
+            </p>
+            <p className="text-xs text-amber-800 mt-1">
+              Order changes (like cancellations) are processed by our shipping partner Shiprocket. It typically takes 2-5 minutes for status updates to reflect in their system. Please be patient and refresh this page after a few minutes to see the updated status.
+            </p>
+          </div>
+        </div>
+      </div>
 
       <div className="max-w-6xl mx-auto space-y-10">
         {orders.map((order, idx) => (
@@ -130,7 +163,7 @@ const OrderDetails = () => {
               {/* ACTIONS */}
               <Separator />
 
-              <div className="flex flex-wrap gap-4 justify-between">
+              <div className="flex flex-wrap gap-4 justify-between items-center">
                 <div className="flex gap-3">
                   <Button variant="outline" onClick={() => window.print()}>
                     <Printer className="w-4 h-4 mr-2" />
@@ -145,18 +178,39 @@ const OrderDetails = () => {
 
                 <Button
                   variant="destructive"
-                  disabled={order.status === "Delivered"}
+                  disabled={
+                    order.status === "Delivered" || 
+                    order.status === "Cancelled" ||
+                    order.status === "Canceled" ||
+                    cancellingOrderId === order.id
+                  }
                   onClick={() => handleCancelOrder(order.id)}
+                  className="min-w-[140px]"
                 >
-                  <XCircle className="w-4 h-4 mr-2" />
-                  Cancel Order
+                  {cancellingOrderId === order.id ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Cancelling...
+                    </>
+                  ) : (
+                    <>
+                      <XCircle className="w-4 h-4 mr-2" />
+                      Cancel Order
+                    </>
+                  )}
                 </Button>
               </div>
 
               {cancellationStatus && (
-                <p className="text-sm text-muted-foreground">
-                  {cancellationStatus}
-                </p>
+                <div className={`mt-4 p-3 rounded-lg ${
+                  cancellationStatus.includes('success') 
+                    ? 'bg-green-100 text-green-800 border border-green-300' 
+                    : cancellationStatus.includes('Error')
+                    ? 'bg-red-100 text-red-800 border border-red-300'
+                    : 'bg-blue-100 text-blue-800 border border-blue-300'
+                }`}>
+                  <p className="text-sm font-medium">{cancellationStatus}</p>
+                </div>
               )}
             </CardContent>
           </Card>

@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchProducts } from "../../features/product/productSlice";
+import { fetchProducts, selectShouldRefetchProducts } from "../../features/product/productSlice";
 import { Link, useSearchParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
@@ -27,6 +27,9 @@ const ProductList = () => {
   const { products: productsData, loading, error } = useSelector(
     (state) => state.product
   );
+  
+  // Smart cache checking
+  const shouldRefetch = useSelector(selectShouldRefetchProducts);
 
   const [searchParams] = useSearchParams();
   const categorySlug = searchParams.get("category");
@@ -34,10 +37,15 @@ const ProductList = () => {
   // Convert slug → DB value
   const category = categorySlug ? categoryMap[categorySlug] : undefined;
 
-  /* ✅ FIXED useEffect DEPENDENCIES */
+  /* ✅ Smart caching: Only fetch if cache is expired */
   useEffect(() => {
-    dispatch(fetchProducts({ category }));
-  }, [dispatch, category]);
+    if (shouldRefetch) {
+      console.log('🔄 Cache expired, fetching fresh products...');
+      dispatch(fetchProducts({ category }));
+    } else {
+      console.log('✅ Using cached products');
+    }
+  }, [dispatch, category, shouldRefetch]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">

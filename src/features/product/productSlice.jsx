@@ -43,6 +43,10 @@ const productSlice = createSlice({
     currentProduct: null,
     loading: false,
     error: null,
+    // Cache management
+    lastFetched: null, // Timestamp of last fetch
+    productCache: {}, // Cache individual products by ID with timestamps
+    cacheExpiry: 5 * 60 * 1000, // 5 minutes in milliseconds
   },
   reducers: {
     clearProductState: (state) => {
@@ -56,7 +60,10 @@ const productSlice = createSlice({
       }, 0);
       return total;
     },
-    
+    invalidateCache: (state) => {
+      state.lastFetched = null;
+      state.productCache = {};
+    },
   },
   extraReducers: (builder) => {
   builder
@@ -67,6 +74,7 @@ const productSlice = createSlice({
     .addCase(fetchProducts.fulfilled, (state, action) => {
       state.loading = false;
       state.products = action.payload;
+      state.lastFetched = Date.now(); // Update cache timestamp
     })
     .addCase(fetchProducts.rejected, (state, action) => {
       state.loading = false;
@@ -79,6 +87,13 @@ const productSlice = createSlice({
     .addCase(fetchProductById.fulfilled,(state,action)=>{
       state.loading = false;
       state.currentProduct = action.payload;
+      // Cache individual product with timestamp
+      if (action.payload?._id) {
+        state.productCache[action.payload._id] = {
+          data: action.payload,
+          timestamp: Date.now(),
+        };
+      }
     })
      .addCase(fetchProductById.rejected, (state, action) => {
       state.loading = false;
@@ -88,5 +103,22 @@ const productSlice = createSlice({
 },
 
 });
+
+export const { clearProductState, totalProductPrice, invalidateCache } = productSlice.actions;
+
+// Selectors
+export const selectShouldRefetchProducts = (state) => {
+  const { lastFetched, cacheExpiry } = state.product;
+  if (!lastFetched) return true;
+  return Date.now() - lastFetched > cacheExpiry;
+};
+
+export const selectCachedProduct = (state, productId) => {
+  const cached = state.product.productCache[productId];
+  if (!cached) return null;
+  
+  const isExpired = Date.now() - cached.timestamp > state.product.cacheExpiry;
+  return isExpired ? null : cached.data;
+};
 
 export default productSlice.reducer;

@@ -3,7 +3,18 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setSellerInfo } from "../../features/seller/sellerslice.jsx";
-
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Store, LogIn } from "lucide-react";
 
 const SellerLogin = () => {
   const navigate = useNavigate();
@@ -24,6 +35,7 @@ const SellerLogin = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrorMessage("");
 
     try {
       const response = await axios.post(
@@ -33,13 +45,13 @@ const SellerLogin = () => {
       );
 
       if (response.status >= 200 && response.status < 300) {
-        // ✅ Update both context and Redux
         dispatch(setSellerInfo(response.data));
         navigate("/seller");
       }
     } catch (error) {
+      console.error('Seller login error:', error);
       setErrorMessage(
-        error.response?.data?.message || "Invalid login credentials."
+        error.response?.data?.message || "Invalid login credentials. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -47,81 +59,96 @@ const SellerLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-950 via-gray-900 to-gray-800 px-4 py-10">
-      <div className="w-full max-w-md bg-gray-900/90 border border-gray-700 shadow-2xl rounded-2xl p-8">
-        <h1 className="text-4xl font-extrabold text-center text-blue-400 mb-8 tracking-wide">
-          Seller Login
-        </h1>
-
-        <form onSubmit={handleFormSubmit} className="space-y-6">
-          {/* Username */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Username
-            </label>
-            <input
-              type="text"
-              name="username"
-              placeholder="Enter your username"
-              value={loginData.username}
-              onChange={handleInputChange}
-              required
-              className="w-full p-3 rounded-md bg-gray-800 border border-gray-700 text-gray-200 placeholder-gray-400 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-            />
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-10">
+      <Card className="w-full max-w-md shadow-xl">
+        <CardHeader className="space-y-3">
+          <div className="flex items-center justify-center mb-2">
+            <div className="p-3 bg-primary/10 rounded-full">
+              <Store className="w-8 h-8 text-primary" />
+            </div>
           </div>
+          <CardTitle className="text-2xl text-center">Seller Login</CardTitle>
+          <CardDescription className="text-center">
+            Access your seller dashboard
+          </CardDescription>
+        </CardHeader>
 
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-300 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={loginData.password}
-              onChange={handleInputChange}
-              required
-              className="w-full p-3 rounded-md bg-gray-800 border border-gray-700 text-gray-200 placeholder-gray-400 focus:outline-hidden focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-            />
-          </div>
+        <CardContent>
+          <form onSubmit={handleFormSubmit} className="space-y-4">
+            {/* Username */}
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                type="text"
+                name="username"
+                placeholder="Enter your username"
+                value={loginData.username}
+                onChange={handleInputChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
 
-          {/* Error Message */}
-          {errorMessage && (
-            <p className="text-red-500 text-sm font-medium text-center">
-              {errorMessage}
+            {/* Password */}
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                value={loginData.password}
+                onChange={handleInputChange}
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            {/* Error Message */}
+            {errorMessage && (
+              <Alert variant="destructive">
+                <AlertDescription>{errorMessage}</AlertDescription>
+              </Alert>
+            )}
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full"
+              size="lg"
+            >
+              {isLoading ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Logging in...
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Login
+                </>
+              )}
+            </Button>
+          </form>
+
+          {/* Links */}
+          <div className="mt-6 space-y-3 text-center text-sm">
+            <p className="text-muted-foreground">
+              Don't have a seller account?{" "}
+              <Link to="/sellerRegister" className="text-primary hover:underline font-medium">
+                Register here
+              </Link>
             </p>
-          )}
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`w-full py-3 mt-2 font-bold rounded-lg transition-transform transform focus:ring-2 focus:ring-blue-500 ${
-              isLoading
-                ? "bg-blue-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700 text-white hover:scale-105"
-            }`}
-          >
-            {isLoading ? "Logging in..." : "Login"}
-          </button>
-        </form>
-
-        {/* Links */}
-        <div className="mt-6 text-center text-gray-400">
-          <p className="text-sm">
-            Don’t have a seller account?{" "}
-            <Link to="/sellerRegister" className="text-blue-400 hover:underline">
-              Register here
-            </Link>
-          </p>
-          <p className="text-sm mt-2">
-            <Link to="/sellerForgotPassword" className="text-blue-400 hover:underline">
-              Forgot Password?
-            </Link>
-          </p>
-        </div>
-      </div>
+            <p className="text-muted-foreground">
+              <Link to="/sellerForgotPassword" className="text-primary hover:underline font-medium">
+                Forgot Password?
+              </Link>
+            </p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

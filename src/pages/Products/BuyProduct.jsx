@@ -104,9 +104,15 @@ const BuyProduct = () => {
       dispatch(setOrderFromBuyNow({ product, addressId, quantity, paymentMethod }));
     }
 
+    // Navigate based on payment method
     setTimeout(() => {
-      if (paymentMethod === "Prepaid") navigate("/payments");
-      else if (paymentMethod === "cod") navigate("/cod");
+      if (paymentMethod === "Prepaid") {
+        navigate("/payments");
+      } else if (paymentMethod === "COD" || paymentMethod === "cod") {
+        navigate("/cod");
+      } else {
+        alert("Invalid payment method selected");
+      }
     }, 100);
   };
 
